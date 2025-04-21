@@ -1,0 +1,65 @@
+.Head{
+    background: #fff;
+    text-align: left;
+}
+.leftSider{
+    text-align: left;
+}
+.companyName{
+    float: left;
+}
+.headBtn1{
+    float: right;
+    margin: 18px 0px 0 5px;
+}
+.headBtn2{
+    float: left;
+    margin: 18px 0px 0 0px;
+}
+.headBtn3{
+    float: left;
+    margin: 9px 0px 0 0px;
+    width: 100%;
+    height: 24px;
+}
+.searchText{
+    float: right;
+    margin: 18px 5px 0 5px;
+    width: 160px;
+}
+.search-btn{
+    margin: 0;
+}
+.logo{
+    width: 36px;
+    height: 36px;
+    margin: 12px 12px 0 -30px;
+    float: left;
+}
+.Siderbtn{
+    float: right;
+    margin: 5px 5px 0 5px;
+}
+.Siderbtn2{
+    float: right;
+    margin: 5px -5px 0 5px;
+    padding: 0 0 0 10px;
+}
+.contentLayout{
+    min-height: 800px;
+}
+/*忘记密码*/
+.phoneCodeInput{
+    float: left;
+    margin: 18px 0px 0 0px;
+    width: 200px;
+}
+.forgetBtn1{
+    float: right;
+    margin: 18px 0px 0 15px;
+}
+.forgetBtn2{
+    float: left;
+    margin: 18px 0px 0 15px;
+}
+
