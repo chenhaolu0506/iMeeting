@@ -17,5 +17,6 @@ public class CoordinateInfo {
     private Integer meetingId;
     private String note;
     private Integer status;
+    @Column(name = "before_meeting_id")
     private Integer prevMeetingId;
 }

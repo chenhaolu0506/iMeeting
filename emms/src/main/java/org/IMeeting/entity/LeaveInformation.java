@@ -8,14 +8,13 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "m_join_person")
-public class JoinPerson {
+@Table(name = "m_leave_information")
+public class LeaveInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer meetingId;
     private Integer userId;
     private Integer status;
-    @Column(name = "sign_time")
-    private String joinTime;
+    private String note;
 }
