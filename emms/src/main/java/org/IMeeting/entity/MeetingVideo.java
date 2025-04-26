@@ -5,17 +5,18 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-// Coordinate in this case is more like proposing a meeting
 @Getter
 @Setter
 @Entity
-@Table(name = "m_coordinateInfo")
-public class CoordinateInfo {
+@Table(name = "m_meeting_video")
+public class MeetingVideo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer meetingId;
-    private String note;
+    private String videoRoomName;
+    @Column(name = "create_user_id")
+    private Integer createUserId;
+    private String createTime;
     private Integer status;
-    private Integer beforeMeetingId;
+    private Integer tenantId;
 }

@@ -14,7 +14,7 @@ public class FileUpload {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(name = "meet_room_id")
-    private int meetingRoomId;
+    private int meetRoomId;
     @Column(name = "meeting_id")
     private int meetingId;
     private String fileName;

@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface CoordinateRepository extends JpaRepository<CoordinateInfo, Integer> {
-    List<CoordinateInfo> findByPrevMeetingIdAndStatus(Integer prevMeetingId, Integer status);
+    List<CoordinateInfo> findByBeforeMeetingIdAndStatus(Integer prevMeetingId, Integer status);
 
     @Transactional
     @Modifying(clearAutomatically = true)

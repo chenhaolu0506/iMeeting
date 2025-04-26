@@ -21,7 +21,7 @@ public class Meeting {
     @Column(name = "user_id")
     private Integer userId;
     @Column(name = "meetroom_id")
-    private Integer meetRoomId;
+    private Integer meetroomId;
     private Integer status;
     private Integer tenantId;
     private String meetDate;

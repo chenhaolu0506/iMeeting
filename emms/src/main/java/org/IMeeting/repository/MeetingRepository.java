@@ -47,7 +47,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer>, JpaS
     @Query(value = "update Meeting m set m.status=?2 where m.id=?1")
     int updateMeetingStatus(Integer meetingId,Integer status);
 
-    List<Meeting> findByBeginTimeAndEndTimeAndMeetingRoomIdAndStatusOrderByCreateTimeAsc(String beginTime, String endTime, Integer meetingRoomId, Integer status);
+    List<Meeting> findByBeginAndOverAndMeetroomIdAndStatusOrderByCreateTimeAsc(String beginTime, String endTime, Integer meetingRoomId, Integer status);
 
     @Transactional
     @Modifying
@@ -62,7 +62,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer>, JpaS
     @Query(value = "select m from Meeting m where m.userId=?1 and m.meetDate=?2 order by m.status ,m.begin")
     List<Meeting> findReservationByUserIdAndDate(Integer userId, String meetDate);
 
-    List<Meeting>findMeetingsByMeetingRoomIdAndStatus(int meetingRoomId,int status);
+    List<Meeting>findByMeetroomIdAndStatus(int meetingRoomId,int status);
 
     @Override
     void flush();
