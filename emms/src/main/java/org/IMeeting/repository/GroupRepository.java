@@ -18,5 +18,5 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
 
     @Modifying(clearAutomatically = true)
     @Query("update Group g set g.name = ?2 where g.id = ?1")
-    void updateGroupName(Integer groupId, String groupName);
+    int updateGroupName(Integer groupId, String groupName);
 }
