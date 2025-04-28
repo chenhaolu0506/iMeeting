@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MyReserveCount {
-    private String reserveDate;
-    private int reserveCount;
+    private String meetDate;
+    private long count;
 }

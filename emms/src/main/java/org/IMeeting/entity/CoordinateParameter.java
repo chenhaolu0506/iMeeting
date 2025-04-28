@@ -10,15 +10,15 @@ import java.util.List;
 public class CoordinateParameter {
     private String topic;
     private String content;
-    private Integer meetingRoomId;
+    private Integer meetRoomId;
     private String reserveDate;
-    private String startTime;
-    private String endTime;
-    private Integer preparationTime;
-    private Integer meetingLength;
-    private Integer alignWith; // 1: align with beginning, 2: align with end
-    private List<Integer> participantIds;
+    private String beginTime;
+    private String overTime;
+    private int prepareTime;
+    private int lastTime;
+    private int beforeOrLast;//1表示开始后 2表示结束前
+    private List<Integer> joinPeopleId;
     private String note;
-    private Integer prevMeetingId;
-    private List<ExternalParticipant> externalParticipants;
+    private Integer beforeMeetingId;
+    private List<OutsideJoinPerson> outsideJoinPersons;
 }

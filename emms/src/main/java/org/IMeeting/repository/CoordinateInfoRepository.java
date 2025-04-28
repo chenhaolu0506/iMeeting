@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface CoordinateRepository extends JpaRepository<CoordinateInfo, Integer> {
+public interface CoordinateInfoRepository extends JpaRepository<CoordinateInfo, Integer> {
     List<CoordinateInfo> findByBeforeMeetingIdAndStatus(Integer prevMeetingId, Integer status);
 
     @Transactional

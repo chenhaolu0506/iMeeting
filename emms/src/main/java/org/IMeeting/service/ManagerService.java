@@ -1,5 +1,6 @@
 package org.IMeeting.service;
 
+import org.IMeeting.entity.MenuInfo;
 import org.IMeeting.entity.RoleMenuParam;
 import org.IMeeting.entity.ServerResult;
 
@@ -11,4 +12,5 @@ public interface ManagerService {
     ServerResult insertRole(RoleMenuParam roleMenuPara, HttpServletRequest request);
     ServerResult updateRole(RoleMenuParam roleMenuPara);
     ServerResult toManager(Integer userId);
+    MenuInfo findById(Integer menuId);
 }

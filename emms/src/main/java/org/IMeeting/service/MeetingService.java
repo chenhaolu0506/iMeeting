@@ -17,13 +17,13 @@ public interface MeetingService {
     ServerResult getOneDayReserve(OneDayReservation oneDayReservation);
     ServerResult reserveMeeting(ReserveParam reserveParam, HttpServletRequest request) throws Exception;
     ServerResult robMeeting(ReserveParam reserveParam, HttpServletRequest request);
-    ServerResult coordinateMeeting(ReserveParam reserveParam, HttpServletRequest request);
+    ServerResult coordinateMeeting(CoordinateParameter coordinateParameter, HttpServletRequest request);
     ServerResult cancelMeeting(Integer meetingId);
     Meeting findByMeetingId(Integer meetingId);
     ServerResult showMyReserve(HttpServletRequest request);
     ServerResult specifiedMyReserve(HttpServletRequest request, String yearMonth);
     ServerResult oneReserveDetail(Integer meetingId);
-    ServerResult oneDayMyReserve(String yearMonth,HttpServletRequest request);
+    ServerResult oneDayMyReserve(String reserveDate,HttpServletRequest request);
     MeetingRoom findByMeetRoomId(Integer meetingRoomId);
     ServerResult disagreeCoordinate(Integer coordinateId);
     ServerResult agreeCoordinate(Integer coordinateId);

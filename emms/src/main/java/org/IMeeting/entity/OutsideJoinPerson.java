@@ -15,5 +15,5 @@ public class OutsideJoinPerson {
     private Integer id;
     private String name;
     private String phone;
-    private String meetingId;
+    private Integer meetingId;
 }
