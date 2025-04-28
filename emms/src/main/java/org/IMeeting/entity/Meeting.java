@@ -30,4 +30,14 @@ public class Meeting {
     private Integer lastTime;
     @Column(name = "depart_id")
     private Integer departId;
+
+    @OneToOne
+    @JoinColumn(name = "user_id",insertable = false,updatable = false,nullable = false)
+    private UserInfo userinfo;
+    @OneToOne
+    @JoinColumn(name = "meetroom_id",insertable = false,updatable = false,nullable = false)
+    private MeetingRoom meetroom;
+    @OneToOne
+    @JoinColumn(name = "depart_id",insertable = false,updatable = false,nullable = false)
+    private Department depart;
 }

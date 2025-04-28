@@ -85,7 +85,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer>, JpaS
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "update Meeting m set m.over=?2,m.status=?3,m.lastTime=?4 where m.id=?1")
-    int updateEndTime(Integer meetingId, String over, Integer status, Integer lastTime);
+    int updateOver(Integer meetingId, String over, Integer status, Integer lastTime);
 
     @Transactional
     @Modifying(clearAutomatically = true)
@@ -112,7 +112,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer>, JpaS
     @Query(value = "select m from Meeting m where m.meetDate=?1 and m.status=?2 and meetroomId=?3 order by m.begin asc")
     List<Meeting> selectByMeetingDateAndStatusAndMeetingRoomId(String meetDate,Integer status,int meetRoomId);
     @Query(value = "select m from Meeting m where m.meetDate=?1 and (m.status=1 or m.status=3) and meetroomId=?2  order by m.begin asc")
-    List<Meeting> selectFutureMeetingByMeetingDateAndMeetingRoomId(String meetDate,int meetRoomId);
+    List<Meeting> selectByMeetDateWhereStatusIsOneOrThree(String meetDate,int meetRoomId);
     @Query(value = "select  m from Meeting m , JoinPerson n where  m.meetDate>=?2 and m.meetDate<=?3 and (m.status=1 or m.status=3) and n.userId=?1 and n.meetingId=m.id order by m.begin")
     List<Meeting> findMeetingByUserIdAndDate(Integer userId,String beginDate,String overDate);
     @Query(value="select  m from Meeting m where m.userId=?1 and m.meetDate>=?2 and m.meetDate<=?3 and m.status=4 order by m.meetDate")
@@ -128,9 +128,11 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer>, JpaS
     List<Meeting> findByMeetingRoomIdAndMeetingDateOrderByBeginTime(Integer meetRoomId,String meetDate);
     /*-------------华丽分割线-------------*/
     @Query(value = "select  m from Meeting m where m.tenantId=?1 and m.meetDate>=?2 and m.meetDate<=?3 and m.status=4 group by m.departId")
-    List<Meeting>findOverMeetingByTenantIdAndDateGroupByDepartment(Integer tenantId,String begin,String over);
+    List<Meeting>selectGroupByDepart(Integer tenantId,String begin,String over);
     @Query(value = "select  m from Meeting m where m.tenantId=?1 and m.meetDate>=?2 and m.meetDate<=?3 and m.status=4 group by m.userId")
-    List<Meeting>findOverMeetingByTenantIdAndDateGroupByUser(Integer tenantId,String begin,String over);
+    List<Meeting>selectGroupByUser(Integer tenantId,String begin,String over);
+    @Query(value = "select  m from Meeting m where m.tenantId=?1 and m.meetDate>=?2 and m.meetDate<=?3 and m.status=4 group by m.meetroomId")
+    List<Meeting>selectGroupByMeetRoom(Integer tenantId,String begin,String over);
     @Query(value = "select sum(m.lastTime) from Meeting m where m.userId=?1 and m.meetDate>=?2 and m.meetDate<=?3 and m.status=4")
     int countHoursByUserAndDate(Integer userId,String begin,String over);
     @Query(value = "select sum(m.lastTime) from Meeting m where m.departId=?1 and m.meetDate>=?2 and m.meetDate<=?3 and m.status=4")

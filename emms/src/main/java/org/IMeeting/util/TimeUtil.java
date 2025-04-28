@@ -46,7 +46,7 @@ public class TimeUtil {
         return result;
     }
     //计算两个时间之间的分钟
-    public static long reduceMinute(String startTime,String endTime) throws ParseException {
+    public static long minuteDifference(String startTime,String endTime) throws ParseException {
         //看自己的时间格式选择对应的转换对象
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");

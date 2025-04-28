@@ -27,6 +27,6 @@ public interface JoinPersonRepository extends JpaRepository<JoinPerson, Integer>
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query("update JoinPerson j set j.status = ?3 where j.meetingId = ?1 and j.userId = ?2")
-    int updateStatus(Integer meetingId, Integer userId, Integer status);
+    @Query("update JoinPerson j set j.status = ?1 where j.meetingId = ?2 and j.userId = ?3")
+    int updateStatus(Integer status,Integer meetingId,Integer userId);
 }

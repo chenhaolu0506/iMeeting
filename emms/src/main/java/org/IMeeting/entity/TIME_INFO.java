@@ -6,12 +6,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TIME_INFO {
-    private TIME startTime;
-    private TIME overTime;
+    private TIME Start_time;
+    private TIME End_time;
 
     public TIME_INFO(TIME startTime, TIME overTime) {
         super();
-        this.startTime = startTime;
-        this.overTime = overTime;
+        this.Start_time = startTime;
+        this.End_time = overTime;
     }
 }

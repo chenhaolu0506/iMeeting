@@ -5,12 +5,21 @@ import org.IMeeting.repository.*;
 import org.IMeeting.service.DepartmentService;
 import org.IMeeting.service.MeetingService;
 import org.IMeeting.service.UserInfoService;
+import org.IMeeting.util.MeetUtil;
+import org.IMeeting.util.NumUtil;
 import org.IMeeting.util.TimeUtil;
+import org.apache.poi.hssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -739,5 +748,634 @@ public class MeetingServiceImpl implements MeetingService {
         return serverResult;
     }
 
+    @Override
+    public MeetingRoom findByMeetRoomId(Integer meetingRoomId) {
+        Optional<MeetingRoom> meetingRoom = meetingRoomRepository.findById(meetingRoomId);
+        return meetingRoom.orElse(null);
+    }
 
+    // 拒绝会议调用
+    @Override
+    public ServerResult disagreeCoordinate(Integer coordinateId) {
+        CoordinateInfo coordinateInfo = findByCoordinateId(coordinateId);
+        int updateCoordinate = 0;
+        int updateMeeting = 0;
+        if (coordinateInfo != null) {
+            updateCoordinate = coordinateInfoRepository.updateCoordinateStatus(coordinateId, 2);
+            updateMeeting = meetingRepository.updateMeetingStatus(coordinateInfo.getMeetingId(), 7);
+        }
+        ServerResult serverResult = new ServerResult();
+        if (updateCoordinate != 0 && updateMeeting != 0) {
+            serverResult.setStatus(true);
+        }
+        return serverResult;
+    }
+
+    // 同意会议调用
+    @Override
+    public ServerResult agreeCoordinate(Integer coordinateId) {
+        CoordinateInfo coordinateInfo = findByCoordinateId(coordinateId);
+        if (coordinateInfo != null) {
+            Integer meetingId = coordinateInfo.getMeetingId();
+            Meeting meeting = findByMeetingId(meetingId);
+            String beginTime = meeting.getBegin();
+            String endTime = meeting.getOver();
+            meetingRepository.updateMeetingStatus(meetingId, 1);
+            List<JoinPerson> joinPersonList = joinPersonRepository.findByMeetingId(meetingId);
+            String message = "您有一个新的会议，点击查看详情";
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String nowTime = sdf.format(new Date());
+            for (JoinPerson joinPerson : joinPersonList) {
+                PushMessage pushMessage = new PushMessage();
+                pushMessage.setReceiveId(joinPerson.getUserId());
+                pushMessage.setStatus(0);
+                pushMessage.setMessage(message);
+                pushMessage.setMeetingId(meetingId);
+                pushMessage.setTime(nowTime);
+                pushMessageRepository.saveAndFlush(pushMessage);
+            }
+            Meeting beforeMeeting = findByMeetingId(coordinateInfo.getBeforeMeetingId());
+            String beforeBegin = beforeMeeting.getBegin();
+            String beforeOver = beforeMeeting.getOver();
+            if (beforeBegin.equals(beginTime)) {
+                meetingRepository.updateBeginTime(coordinateInfo.getBeforeMeetingId(), endTime);
+            } else if (beforeOver.equals(endTime)) {
+                meetingRepository.updateEndTime(coordinateInfo.getBeforeMeetingId(), beginTime);
+            }
+            coordinateInfoRepository.updateCoordinateStatus(coordinateId, 1);
+            List<CoordinateInfo> coordinateInfos = coordinateInfoRepository.findByBeforeMeetingIdAndStatus(coordinateInfo.getBeforeMeetingId(), 0);
+            for (CoordinateInfo coordinateInfo1 : coordinateInfos) {
+                coordinateInfoRepository.updateCoordinateStatus(coordinateInfo1.getId(), 2);
+                meetingRepository.updateMeetingStatus(coordinateInfo1.getMeetingId(), 0);
+            }
+        }
+        ServerResult serverResult = new ServerResult();
+        serverResult.setStatus(true);
+        return serverResult;
+    }
+
+    @Override
+    public CoordinateInfo findByCoordinateId(Integer coordinateId) {
+        Optional<CoordinateInfo> coordinateInfo = coordinateInfoRepository.findById(coordinateId);
+        return coordinateInfo.orElse(null);
+    }
+
+    // 修改会议室，会议时间
+    @Override
+    public ServerResult rescheduleMeeting(ReserveParam reserveParam, HttpServletRequest request) throws Exception {
+        cancelMeeting(reserveParam.getMeetingId());
+        return reserveMeeting(reserveParam, request);
+    }
+
+    // 修改会议室以及会议时间以外的内容
+    @Override
+    public ServerResult editMeetingDetail(ReserveParam reserveParam, HttpServletRequest request) {
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        Integer meetingId = reserveParam.getMeetingId();
+        meetingRepository.updateMetaData(meetingId, reserveParam.getTopic(), reserveParam.getContent(), reserveParam.getPrepareTime());
+        List<OutsideJoinPerson> outsideJoinPersonList = outsideJoinPersonRepository.findByMeetingId(meetingId);
+        outsideJoinPersonRepository.deleteByMeetingId(meetingId);
+        for (OutsideJoinPerson outsideJoinPerson : outsideJoinPersonList) {
+            OutsideJoinPerson outsideJoinPerson1 = new OutsideJoinPerson();
+            outsideJoinPerson1.setMeetingId(meetingId);
+            outsideJoinPerson1.setName(outsideJoinPerson.getName());
+            outsideJoinPerson1.setPhone(outsideJoinPerson.getPhone());
+            outsideJoinPersonRepository.saveAndFlush(outsideJoinPerson1);
+        }
+        joinPersonRepository.deleteByMeetingId(meetingId);
+        boolean isCreatorInJoinList = false;
+        List<Integer> joinPersonIds = reserveParam.getJoinPersonIds();
+        Meeting meeting = findByMeetingId(meetingId);
+        String message = "您有一个会议信息修改，点击查看详情";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(new Date());
+        for (Integer joinPersonId : joinPersonIds) {
+            if (joinPersonId.equals(userId)) {
+                isCreatorInJoinList = true;
+            }
+            JoinPerson joinPerson = new JoinPerson();
+            joinPerson.setMeetingId(meetingId);
+            joinPerson.setUserId(joinPersonId);
+            joinPerson.setStatus(0);
+            joinPersonRepository.saveAndFlush(joinPerson);
+            PushMessage pushMessage = new PushMessage();
+            pushMessage.setReceiveId(joinPersonId);
+            pushMessage.setStatus(0);
+            pushMessage.setMessage(message);
+            pushMessage.setMeetingId(meetingId);
+            pushMessage.setTime(nowTime);
+            pushMessageRepository.saveAndFlush(pushMessage);
+        }
+        if (!isCreatorInJoinList) {
+            JoinPerson joinPerson = new JoinPerson();
+            joinPerson.setMeetingId(meetingId);
+            joinPerson.setUserId(userId);
+            joinPerson.setStatus(0);
+            joinPersonRepository.saveAndFlush(joinPerson);
+            PushMessage pushMessage = new PushMessage();
+            pushMessage.setReceiveId(userId);
+            pushMessage.setStatus(0);
+            pushMessage.setMessage(message);
+            pushMessageRepository.saveAndFlush(pushMessage);
+        }
+        ServerResult serverResult = new ServerResult();
+        serverResult.setStatus(true);
+        serverResult.setMessage("预订信息修改成功");
+        return serverResult;
+    }
+
+    // 提前结束会议
+    @Override
+    public ServerResult advanceOver(Integer meetingId) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String nowTime = sdf.format(new Date());
+        Meeting meeting = findByMeetingId(meetingId);
+        int lastTime = 0;
+        try{
+            lastTime = (int) TimeUtil.minuteDifference(meeting.getBegin(), nowTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int bol = meetingRepository.updateOver(meetingId, nowTime, 4, lastTime);
+        ServerResult serverResult = new ServerResult();
+        if (bol > 0) {
+            serverResult.setStatus(true);
+            serverResult.setMessage("会议提前结束成功");
+        } else {
+            serverResult.setStatus(false);
+            serverResult.setMessage("操作失败");
+        }
+        return serverResult;
+    }
+
+    // 显示自己参加的会议
+    @Override
+    public ServerResult selectMyJoinMeeting(HttpServletRequest request, String yearMonth) {
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        List<Meeting> meetings = meetingRepository.groupByMeetingDate(userId, yearMonth + "%");
+        List<MyJoinCount> myJoinCounts = new ArrayList<>();
+        for (Meeting meeting : meetings) {
+            MyJoinCount myJoinCount = new MyJoinCount();
+            myJoinCount.setMeetDate(meeting.getMeetDate());
+            myJoinCount.setNotStartCount(meetingRepository.countNotStartMeeting(userId, meeting.getMeetDate(), 1));
+            myJoinCount.setEndedCount(meetingRepository.countOverMeeting(userId, meeting.getMeetDate(), 4));
+            myJoinCounts.add(myJoinCount);
+        }
+        ServerResult serverResult = new ServerResult();
+        serverResult.setStatus(true);
+        serverResult.setData(myJoinCounts);
+        return serverResult;
+    }
+
+    // 到会议预约开始时间将预约成功状态变为进行中，预约中变为预约失败，调用中变为调用失败
+    @Override
+    public void updateMeetingStatus(String nowTime, Integer beforeStatus, Integer afterStatus) {
+        meetingRepository.updateMeetingStatus(nowTime, beforeStatus, afterStatus);
+    }
+
+    // 到会议结束时间将进行中状态变为会议结束
+    @Override
+    public void updateMeetingOverStatus(String nowTime, Integer beforeStatus, Integer afterStatus) {
+        meetingRepository.updateMeetingStatus(nowTime, beforeStatus, afterStatus);
+    }
+
+    // 根据日期查询自己参加的会议
+    @Override
+    public ServerResult selectMyJoinMeetingByDate(String meetDate, HttpServletRequest request) {
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        List<Meeting> meetings = meetingRepository.findMeetingsByUserAndDate(userId, meetDate);
+        List<ReserverRecord> reserverRecords = new ArrayList<>();
+        for (Meeting meeting : meetings) {
+            ReserverRecord reserverRecord = new ReserverRecord();
+            reserverRecord.setBegin(meeting.getBegin());
+            reserverRecord.setCreateTime(meeting.getCreateTime());
+            reserverRecord.setOver(meeting.getOver());
+            reserverRecord.setTopic(meeting.getTopic());
+            reserverRecord.setLastTime(meeting.getLastTime());
+            UserInfo userInfo = userInfoService.getUserInfo(meeting.getUserId());
+            reserverRecord.setPeopleName(userInfo.getName());
+            reserverRecord.setPhone(userInfo.getPhone());
+            Department department = userInfoService.getDepartment(userInfo.getDepartId());
+            reserverRecord.setDepartmentName(department.getName());
+            reserverRecord.setId(meeting.getId());
+            String status = "";
+            switch (meeting.getStatus()) {
+                case 1:
+                    status = "未开始";
+                    break;
+                case 3:
+                    status = "进行中";
+                    break;
+                case 4:
+                    status = "已结束";
+                    break;
+            }
+            reserverRecord.setStatus(status);
+            reserverRecords.add(reserverRecord);
+        }
+        ServerResult serverResult = new ServerResult();
+        serverResult.setStatus(true);
+        serverResult.setData(reserverRecords);
+        return serverResult;
+    }
+
+    // 请假，请假原因可略,参数为请假原因，会议id
+    @Override
+    public ServerResult sendLeaveInformation(LeaveInformation leaveInformation, HttpServletRequest request) {
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        leaveInformation.setStatus(0);
+        leaveInformation.setUserId(userId);
+        leaveInformationRepository.saveAndFlush(leaveInformation);
+        joinPersonRepository.updateStatus(2, leaveInformation.getMeetingId(), leaveInformation.getUserId());
+        ServerResult serverResult = new ServerResult();
+        serverResult.setStatus(true);
+        serverResult.setMessage("请假已申请");
+        return serverResult;
+    }
+
+    // 根据日期显示未开始和进行中会议的请假请求总数和未处理请假数量
+    @Override
+    public ServerResult countLeaveInformation(HttpServletRequest request) {
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        List<Meeting> meetings = meetingRepository.selectByUserIdAndStatus(userId);
+        List<LeaveInformationCount> leaveInformationCounts = new ArrayList<>();
+        for (Meeting meeting : meetings) {
+            LeaveInformationCount leaveInformationCount = new LeaveInformationCount();
+            leaveInformationCount.setMeetingTime(meeting.getBegin() + "-" + meeting.getOver());
+            leaveInformationCount.setMeetingId(meeting.getId());
+            leaveInformationCount.setTopic(meeting.getTopic());
+            leaveInformationCount.setTotalCount(leaveInformationRepository.countByMeetingId(meeting.getId()));
+            leaveInformationCount.setUnprocessedCount(leaveInformationRepository.countUnprocessedByMeetingId(meeting.getId()));
+            leaveInformationCounts.add(leaveInformationCount);
+        }
+        ServerResult serverResult = new ServerResult();
+        serverResult.setStatus(true);
+        serverResult.setData(leaveInformationCounts);
+        return serverResult;
+    }
+
+    // 显示某一场会议的所有请假信息
+    @Override
+    public ServerResult showOneMeetingLeaveInfo(Integer meetingId) {
+        List<LeaveInformation> leaveInformations = leaveInformationRepository.findByMeetingIdOrderByStatus(meetingId);
+        List<LeaveInfoResult> leaveInfoResults = new ArrayList<>();
+        for (LeaveInformation leaveInformation : leaveInformations) {
+            LeaveInfoResult leaveInfoResult = new LeaveInfoResult();
+            leaveInfoResult.setLeaveInfoId(leaveInformation.getId());
+            UserInfo userInfo = userInfoService.getUserInfo(leaveInformation.getUserId());
+            leaveInfoResult.setName(userInfo.getName());
+            leaveInfoResult.setPhoneNumber(userInfo.getPhone());
+            leaveInfoResult.setNote(leaveInformation.getNote());
+            leaveInfoResult.setStatus(leaveInformation.getStatus());
+            leaveInfoResults.add(leaveInfoResult);
+        }
+        ServerResult serverResult = new ServerResult();
+        serverResult.setData(leaveInfoResults);
+        serverResult.setStatus(true);
+        return serverResult;
+    }
+
+    @Override
+    public ServerResult findPushMessage(HttpServletRequest request) {
+        ServerResult serverResult = new ServerResult();
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        if (userId == null) {
+            return serverResult;
+        }
+        List<PushMessage> pushMessages = pushMessageRepository.findByReceiveIdAndStatus(userId, 0);
+        for (PushMessage pushMessage : pushMessages) {
+            pushMessageRepository.updateStatus(pushMessage.getId(), userId);
+        }
+        serverResult.setData(pushMessages);
+        serverResult.setStatus(true);
+        return serverResult;
+    }
+
+    @Override
+    public LeaveInformation findById(Integer id) {
+        Optional<LeaveInformation> leaveInformation = leaveInformationRepository.findById(id);
+        return leaveInformation.orElse(null);
+    }
+
+    // 计算相似度
+    @Override
+    public double countSimilar(double[] source, double[] target, double[] weight) {
+        int numberOfRoomProperties = source.length;
+        double dotProduct = 0; //点积
+        double magnitudeSource = 0; //源向量的模
+        double magnitudeTarget = 0; //目标向量的模
+        for (int i = 0; i < numberOfRoomProperties; i++) {
+            source[i] *= weight[i];
+            target[i] *= weight[i];
+        }
+
+        double mid = source[numberOfRoomProperties - 1] + target[numberOfRoomProperties - 1];
+        source[numberOfRoomProperties-1] = (target[numberOfRoomProperties-1]+mid)/(source[numberOfRoomProperties-1]+mid);
+        if (source[numberOfRoomProperties - 1] > 1) {
+            target[numberOfRoomProperties - 1] = 0;
+        } else {
+            target[numberOfRoomProperties - 1] = 1;
+        }
+        for (int i = 0; i < numberOfRoomProperties; i++) {
+            dotProduct += source[i] * target[i];
+            magnitudeSource += source[i] * source[i];
+            magnitudeTarget += target[i] * target[i];
+        }
+        return dotProduct / (Math.sqrt(magnitudeSource) * Math.sqrt(magnitudeTarget));
+    }
+
+    @Override
+    public List<String> findFreeTime(Integer meetRoomId, HttpServletRequest request) {
+        Integer tenantId = (Integer) request.getSession().getAttribute("tenantId");
+        MeetingRoomParameter meetingRoomParameter = meetingRoomParameterRepository.findByTenantId(tenantId);
+        String beginTime = meetingRoomParameter.getBegin();
+        String overTime = meetingRoomParameter.getOver();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String today = sdf.format(new Date()).substring(0, 10);
+        String nowTime = sdf.format(new Date()).substring(11);
+        List<Meeting> meetings = meetingRepository.selectByMeetDateWhereStatusIsOneOrThree(today, meetRoomId);
+        return MeetUtil.returnFreeTime(nowTime, overTime, meetings);;
+    }
+
+    // 查询
+    @Override
+    public List findBySpecification(SelectMeetingParameter selectMeetingParameter, HttpServletRequest request) {
+        Integer tenantId = (Integer) request.getSession().getAttribute("tenantId");
+        Specification<Meeting> specification = new Specification<Meeting>() {
+            @Override
+            public Predicate toPredicate(Root<Meeting> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                Predicate tenantPredicate = criteriaBuilder.equal(root.get("tenantId"), tenantId);
+                predicates.add(tenantPredicate);
+                if (!StringUtils.isEmpty(selectMeetingParameter.getTopic())){
+                    Predicate topicPredicate = criteriaBuilder.like(root.get("topic"), "%" + selectMeetingParameter.getTopic() + "%");
+                    predicates.add(topicPredicate);
+                }
+                if (!StringUtils.isEmpty(selectMeetingParameter.getReserveName())){
+                    Join<Meeting, UserInfo> userInfoJoin = root.join("userInfo", JoinType.LEFT);
+                    Predicate reserveNamePredicate = criteriaBuilder.like(userInfoJoin.get("name"), "%" + selectMeetingParameter.getReserveName() + "%");
+                    predicates.add(reserveNamePredicate);
+                }
+                if (!StringUtils.isEmpty(selectMeetingParameter.getDepartmentId())){
+                    Predicate departmentIdPredicate = criteriaBuilder.equal(root.get("departmentId"), selectMeetingParameter.getDepartmentId());
+                    predicates.add(departmentIdPredicate);
+                }
+                if (!StringUtils.isEmpty(selectMeetingParameter.getMeetingRoomId())){
+                    Predicate meetingRoomIdPredicate = criteriaBuilder.equal(root.get("meetroomId"), selectMeetingParameter.getMeetingRoomId());
+                    predicates.add(meetingRoomIdPredicate);
+                }
+                if (!StringUtils.isEmpty(selectMeetingParameter.getSelectBeginTime()) && !StringUtils.isEmpty(selectMeetingParameter.getSelectOverTime())) {
+                    Predicate meetDatePredicate = criteriaBuilder.between(root.get("meetDate"), selectMeetingParameter.getSelectBeginTime(), selectMeetingParameter.getSelectOverTime());
+                    predicates.add(meetDatePredicate);
+                }
+                if (!StringUtils.isEmpty(selectMeetingParameter.getStatus())) {
+                    Integer status = null;
+                    switch (selectMeetingParameter.getStatus()) {
+                        case "预约失败":
+                            status = 6;
+                            break;
+                        case "预约成功":
+                            status = 1;
+                            break;
+                        case "预约中":
+                            status = 2;
+                            break;
+                        case "会议进行中":
+                            status = 3;
+                            break;
+                        case "会议结束":
+                            status = 4;
+                            break;
+                        case "取消会议":
+                            status = 5;
+                            break;
+                        case "调用失败":
+                            status = 7;
+                            break;
+                        case "调用中":
+                            status = 8;
+                            break;
+                    }
+                    Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), status);
+                    predicates.add(statusPredicate);
+                }
+                query.orderBy(criteriaBuilder.asc(root.get("begin")), criteriaBuilder.asc(root.get("status")));
+                Predicate[] predicatesArray = new Predicate[predicates.size()];
+                return criteriaBuilder.and(predicates.toArray(predicatesArray));
+            }
+        };
+        return meetingRepository.findAll(specification);
+    }
+
+    @Override
+    public void exportMeetingRecord(List<Meeting> meetings, HttpServletResponse response) throws IOException {
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("会议记录");
+
+        String fileName = "meetingRecord" + ".xls";//设置要导出的文件的名字
+        //新增数据行，并且设置单元格数据
+
+        int rowNum = 1;
+
+        String[] headers = {"主题", "预定人", "会议室", "开始时间", "结束时间", "准备时间", "部门"};
+        //headers表示excel表中第一行的表头
+
+        HSSFRow row = sheet.createRow(0);
+        //在excel表中添加表头
+
+        for (int i = 0; i < headers.length; i++) {
+            HSSFCell cell = row.createCell(i);
+            HSSFRichTextString text = new HSSFRichTextString(headers[i]);
+            cell.setCellValue(text);
+        }
+        Integer meetRoomId;
+        Integer departId;
+        Department depart;
+        //在表中存放查询到的数据放入对应的列
+        for (Meeting meeting : meetings) {
+            HSSFRow row1 = sheet.createRow(rowNum);
+            row1.createCell(0).setCellValue(meeting.getTopic());
+            row1.createCell(1).setCellValue(meeting.getUserinfo().getName());
+            meetRoomId = meeting.getMeetroomId();
+            MeetingRoom meetroom = findByMeetRoomId(meetRoomId);
+            row1.createCell(2).setCellValue(meetroom.getName());
+            row1.createCell(3).setCellValue(meeting.getBegin());
+            row1.createCell(4).setCellValue(meeting.getOver());
+            row1.createCell(5).setCellValue(meeting.getPrepareTime());
+            departId = meeting.getDepartId();
+            if (departId != null) {
+                depart = departmentService.findByDepartmentId(departId);
+                row1.createCell(6).setCellValue(depart.getName());
+            } else {
+                row1.createCell(6).setCellValue("");
+            }
+            rowNum++;
+        }
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+        response.flushBuffer();
+        workbook.write(response.getOutputStream());
+    }
+
+    @Override
+    public List countTimeByDepart(Integer tenantId, String begin, String over) {
+        List<DepartmentTime> departmentTimes = new ArrayList<>();
+        int place = 0;
+        int num = 0;
+        List<Object> result = new ArrayList<>();
+        List<Meeting> meetings = meetingRepository.selectGroupByDepart(tenantId, begin, over);
+        for (int i = 0; i < meetings.size(); i++) {
+            Meeting meeting = meetings.get(i);
+            Integer departId = meeting.getDepartId();
+            Department department = departmentService.findByDepartmentId(departId);
+            DepartmentTime departmentTime = new DepartmentTime();
+            departmentTime.setDepartmentName(department.getName());
+            int time = meetingRepository.countNumberOfMeetingsByDepartmentAndDate(departId, begin, over);
+            departmentTime.setId(i + 1);
+            departmentTime.setTime(time);
+            if (time > num) {
+                num = time;
+                place = i;
+            }
+            departmentTimes.add(departmentTime);
+        }
+        result.add(departmentTimes);
+        result.add(place);
+        return result;
+    }
+
+    @Override
+    public List countTimeByPeople(Integer tenantId, String begin, String over) {
+        List<UserTime> userTimes = new ArrayList<>();
+        int place = 0;
+        int num = 0;
+        List<Object> result = new ArrayList<>();
+        List<Meeting> meetings = meetingRepository.selectGroupByUser(tenantId, begin, over);
+        for (int i = 0; i < meetings.size(); i++) {
+            Meeting meeting = meetings.get(i);
+            Integer userId = meeting.getUserId();
+            UserInfo userInfo = userInfoService.getUserInfo(userId);
+            UserTime userTime = new UserTime();
+            userTime.setUserName(userInfo.getName());
+            int time = meetingRepository.countNumberOfMeetingsByUserAndDate(userId, begin, over);
+            userTime.setTime(time);
+            userTime.setId(i + 1);
+            if (time > num) {
+                num = time;
+                place = i;
+            }
+            userTimes.add(userTime);
+        }
+        result.add(userTimes);
+        result.add(place);
+        return result;
+    }
+
+    @Override
+    public List countTimeByMeetingRoom(Integer tenantId, String begin, String over) {
+        List<MeetingRoomTime> meetingRoomTimes = new ArrayList<>();
+        int place = 0;
+        int num = 0;
+        List<Object> result = new ArrayList<>();
+        List<Meeting> meetings = meetingRepository.selectGroupByMeetRoom(tenantId, begin, over);
+        for (int i = 0; i < meetings.size(); i++) {
+            Meeting meeting = meetings.get(i);
+            Integer meetingRoomId = meeting.getMeetroomId();
+            MeetingRoom meetingRoom = findByMeetRoomId(meeting.getMeetroomId());
+            MeetingRoomTime meetRoomTime = new MeetingRoomTime();
+            meetRoomTime.setMeetingRoomName(meetingRoom.getName());
+            int time = meetingRepository.countNumberOfMeetingsByMeetingRoomAndDate(meetingRoomId, begin, over);
+            meetRoomTime.setId(i + 1);
+            meetRoomTime.setTime(time);
+            if (time > num) {
+                num = time;
+                place = i;
+            }
+            meetingRoomTimes.add(meetRoomTime);
+        }
+        result.add(meetingRoomTimes);
+        result.add(place);
+        return result;
+    }
+
+    @Override
+    public List countHourByDepart(Integer tenantId, String begin, String over) {
+        List<DepartmentHour> departmentHours = new ArrayList<>();
+        int place = 0;
+        double num = 0;
+        List<Object> result = new ArrayList<>();
+        List<Meeting> meetings = meetingRepository.selectGroupByDepart(tenantId, begin, over);
+        for (int i = 0; i < meetings.size(); i++) {
+            Meeting meeting = meetings.get(i);
+            Integer departmentId = meeting.getDepartId();
+            Department depart = departmentService.findByDepartmentId(departmentId);
+            DepartmentHour departmentHour = new DepartmentHour();
+            departmentHour.setDepartmentName(depart.getName());
+            double hour = NumUtil.hold2((meetingRepository.countHoursByDepartmentAndDate(departmentId, begin, over)) * 0.0166667);
+            departmentHour.setHour(hour);
+            departmentHour.setId(i + 1);
+            if (hour > num) {
+                num = hour;
+                place = i;
+            }
+            departmentHours.add(departmentHour);
+        }
+        result.add(departmentHours);
+        result.add(place);
+        return result;
+    }
+
+    @Override
+    public List countHourByPeople(Integer tenantId, String begin, String over) {
+        List<UserHour> userHours = new ArrayList<>();
+        int place = 0;
+        double num = 0;
+        List<Object> result = new ArrayList<>();
+        List<Meeting> meetings = meetingRepository.selectGroupByUser(tenantId, begin, over);
+        for (int i = 0; i < meetings.size(); i++) {
+            Meeting meeting = meetings.get(i);
+            Integer userId = meeting.getUserId();
+            UserInfo userInfo = userInfoService.getUserInfo(userId);
+            UserHour userHour = new UserHour();
+            userHour.setUserName(userInfo.getName());
+            double hour = NumUtil.hold2((meetingRepository.countHoursByUserAndDate(userId, begin, over)) * 0.0166667);
+            userHour.setHour(hour);
+            userHour.setId(i + 1);
+            if (hour > num) {
+                num = hour;
+                place = i;
+            }
+            userHours.add(userHour);
+        }
+        result.add(userHours);
+        result.add(place);
+        return result;
+    }
+
+    @Override
+    public List countHourByMeetingRoom(Integer tenantId, String begin, String over) {
+        List<MeetingRoomHour> meetingRoomHours = new ArrayList<>();
+        List<Meeting> meetings = meetingRepository.selectGroupByMeetRoom(tenantId, begin, over);
+        int place = 0;
+        double num = 0;
+        for (int i = 0; i < meetings.size(); i++) {
+            Meeting meeting = meetings.get(i);
+            Integer meetingRoomId = meeting.getMeetroomId();
+            MeetingRoom meetingRoom = findByMeetRoomId(meeting.getMeetroomId());
+            MeetingRoomHour meetingRoomHour = new MeetingRoomHour();
+            meetingRoomHour.setMeetRoomName(meetingRoom.getName());
+            double hour = NumUtil.hold2((meetingRepository.countHoursByMeetingRoomAndDate(meetingRoomId, begin, over)) * 0.0166667);
+            if (hour > num) {
+                num = hour;
+                place = i;
+            }
+            meetingRoomHour.setHour(hour);
+            meetingRoomHour.setId(i + 1);
+            meetingRoomHours.add(meetingRoomHour);
+        }
+        List<Object> list = new ArrayList<>();
+        list.add(meetingRoomHours);
+        list.add(place);
+        return list;
+    }
 }

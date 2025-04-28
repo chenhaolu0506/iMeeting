@@ -1,8 +1,8 @@
 package org.IMeeting.util;
 
-import com.IMeeting.entity.Meeting;
-import com.IMeeting.entity.TIME;
-import com.IMeeting.entity.TIME_INFO;
+import org.IMeeting.entity.Meeting;
+import org.IMeeting.entity.TIME;
+import org.IMeeting.entity.TIME_INFO;
 
 import java.util.ArrayList;
 import java.util.List;
