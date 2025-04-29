@@ -43,7 +43,7 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Integer> {
     @Transactional
     @Modifying(clearAutomatically = true)//刷新hibernate的一级缓存
     @Query(value = "update UserInfo m set m.status=0 where m.id=?1")
-    int deleteStatusById(Integer id);
+    int deleteUserInfoById(Integer id);
 
     @Transactional
     @Modifying(clearAutomatically = true)//刷新hibernate的一级缓存
