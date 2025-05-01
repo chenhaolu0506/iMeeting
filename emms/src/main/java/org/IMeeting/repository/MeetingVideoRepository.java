@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface MeetingVideoRepository extends JpaRepository<MeetingVideo, Integer> {
     @Query(value = "select m from MeetingVideo m,VideoRight n where n.userId=?1 and n.videoId=m.id and m.status=1")
-    List<MeetingVideo> findByMeetingId(Integer meetingId);
+    List<MeetingVideo> findByUserId(Integer userId);
 
     List<MeetingVideo>findByCreateUserIdAndId(Integer userId,Integer id);
 }

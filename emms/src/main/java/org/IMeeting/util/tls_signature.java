@@ -23,7 +23,7 @@ import java.util.zip.Inflater;
 
 
 
-public class tls_sigature {
+public class tls_signature {
     public static class GenTLSSignatureResult
     {
         public String errMessage;
