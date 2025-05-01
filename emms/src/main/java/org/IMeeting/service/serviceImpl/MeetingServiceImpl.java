@@ -1094,7 +1094,7 @@ public class MeetingServiceImpl implements MeetingService {
         String today = sdf.format(new Date()).substring(0, 10);
         String nowTime = sdf.format(new Date()).substring(11);
         List<Meeting> meetings = meetingRepository.selectByMeetDateWhereStatusIsOneOrThree(today, meetRoomId);
-        return MeetUtil.returnFreeTime(nowTime, overTime, meetings);;
+        return MeetUtil.returnFreeTime(nowTime, overTime, meetings);
     }
 
     // 查询
