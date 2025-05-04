@@ -54,7 +54,7 @@ public class IdentityController {
             String msg = roleId == null ? "no" : "yes";
             serverResult.setMessage(msg);
         } else {
-            serverResult.setMessage("账号密码错误");
+            serverResult.setMessage("账号或密码错误");
         }
         return serverResult;
     }
