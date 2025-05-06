@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import {Layout} from "antd/lib/layout";
 import { Carousel, Button } from 'antd';
-import '@/css/Welcome.css';
+import '../css/Welcome.css';
 import Img1 from '../img/welcome/outDoor.png';
 import Img2 from '../img/welcome/ArcSoft.png';
 import Img3 from '../img/welcome/room1.png';

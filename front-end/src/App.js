@@ -10,13 +10,15 @@ import LeftSider from './pages/LeftSider';
 import BasicPage from './pages/basicPage';
 import Login from './pages/Login';
 import Demo from './pages/Demo';
+import Welcome from './pages/Welcome';
+
 
 // import Head from './pages/Head';
 
 function App() {
   return (
     <div className="App">
-        <Head/>
+        <Welcome/>
     </div>
   );
 }
