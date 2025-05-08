@@ -40,7 +40,7 @@ import java.util.List;
 
 @Repository
 public interface MeetingRepository extends JpaRepository<Meeting, Integer>, JpaSpecificationExecutor<Meeting> {
-    List<Meeting> findByMeetingRoomIdAndMeetingDateAndStatusOrderByBeginTime(Integer meetingRoomId, String meetingDate, Integer status);
+    List<Meeting> findByMeetroomIdAndMeetDateAndStatusOrderByBegin(Integer meetingRoomId, String meetingDate, Integer status);
 
     @Transactional
     @Modifying
@@ -74,7 +74,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer>, JpaS
 
     @Transactional
     @Modifying
-    @Query(value = "update Meeting m set m.end=?2 where m.id=?1")
+    @Query(value = "update Meeting m set m.over=?2 where m.id=?1")
     int updateEndTime(Integer meetingId, String end);
 
     @Transactional
@@ -101,7 +101,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer>, JpaS
     List<Meeting> findMeetingsByUserAndMonth(Integer userId,String yearMonth);
     @Query(value = "select count(m) from Meeting m ,JoinPerson n where n.userId=?1 and m.id=n.meetingId and m.meetDate =?2 and m.status=?3")
     int countNotStartMeeting(Integer userId,String meetDate,Integer status);
-    @Query(value = "select count(m) from Meeting m ,JoinPerson n where n.userId=?1 and m.id=n.meetingId and m.meetDate =?2 and m.status=?4")
+    @Query(value = "select count(m) from Meeting m ,JoinPerson n where n.userId=?1 and m.id=n.meetingId and m.meetDate =?2 and m.status=?3")
     int countOverMeeting(Integer userId,String meetDate,Integer status);
     @Query(value = "select m from Meeting m ,JoinPerson n where n.userId=?1 and m.id=n.meetingId and m.meetDate =?2 and (m.status=1 or m.status=3 or m.status=4)order by m.status")
     List<Meeting> findMeetingsByUserAndDate(Integer userId,String date);
@@ -125,7 +125,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer>, JpaS
     List<Meeting> findOverMeetingByTenantIdAndDateGroupByRoom(Integer tenantId, String beginDate, String overDate);
     @Query(value="select  count (m) from Meeting m where m.meetDate>=?1 and m.meetDate<=?2 and m.status=4 and m.meetroomId=?3 ")
     int countOverMeetingByDateAndRoom(String beginDate, String overDate,Integer roomId);
-    List<Meeting> findByMeetingRoomIdAndMeetingDateOrderByBeginTime(Integer meetRoomId,String meetDate);
+    List<Meeting> findByMeetroomIdAndMeetDateOrderByBegin(Integer meetRoomId, String meetDate);
     /*-------------华丽分割线-------------*/
     @Query(value = "select  m from Meeting m where m.tenantId=?1 and m.meetDate>=?2 and m.meetDate<=?3 and m.status=4 group by m.departId")
     List<Meeting>selectGroupByDepart(Integer tenantId,String begin,String over);

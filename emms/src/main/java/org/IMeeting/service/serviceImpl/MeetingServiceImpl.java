@@ -72,7 +72,7 @@ public class MeetingServiceImpl implements MeetingService {
         for (MeetingRoom meetingRoom : allMeetingRooms) {
             int bol = 0;
             Integer meetingRoomId = meetingRoom.getId();
-            List<MeetingRoomDepartment> meetingRoomDepartments = meetingRoomDepartmentRepository.findByMeetingRoomId(meetingRoomId);
+            List<MeetingRoomDepartment> meetingRoomDepartments = meetingRoomDepartmentRepository.findByMeetroomId(meetingRoomId);
             if (meetingRoomDepartments.isEmpty()){
                 bol = 1;
             } else {
@@ -119,9 +119,9 @@ public class MeetingServiceImpl implements MeetingService {
         List<List> todayMeetings = new ArrayList<>();
         for (MeetingRoom meetingRoom : meetingRooms) {
             List<MeetingRoomEquip> meetingRoomEquips = selectMeetingRoomEquip(meetingRoom.getId());
-            List<Meeting> meetings = meetingRepository.findByMeetingRoomIdAndMeetingDateAndStatusOrderByBeginTime(meetingRoom.getId(), time, 1);
-            List<Meeting> meetings3 = meetingRepository.findByMeetingRoomIdAndMeetingDateAndStatusOrderByBeginTime(meetingRoom.getId(), time, 3);
-            List<Meeting> meetings4 = meetingRepository.findByMeetingRoomIdAndMeetingDateAndStatusOrderByBeginTime(meetingRoom.getId(), time, 4);
+            List<Meeting> meetings = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoom.getId(), time, 1);
+            List<Meeting> meetings3 = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoom.getId(), time, 3);
+            List<Meeting> meetings4 = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoom.getId(), time, 4);
             meetings.addAll(meetings3);
             meetings.addAll(meetings4);
             todayMeetings.add(meetings);
@@ -146,7 +146,7 @@ public class MeetingServiceImpl implements MeetingService {
     public ServerResult getRoomReserver(Integer meetingRoomId, String reserveDate){
         ServerResult serverResult = new ServerResult();
         List<ReserverRecord> reserverRecords = new ArrayList<>();
-        List<Meeting> meetings3 = meetingRepository.findByMeetingRoomIdAndMeetingDateAndStatusOrderByBeginTime(meetingRoomId, reserveDate, 3);
+        List<Meeting> meetings3 = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoomId, reserveDate, 3);
         for (Meeting meeting : meetings3) {
             ReserverRecord reserverRecord = new ReserverRecord();
             reserverRecord.setBegin(meeting.getBegin());
@@ -166,7 +166,7 @@ public class MeetingServiceImpl implements MeetingService {
             reserverRecord.setId(meeting.getId());
             reserverRecords.add(reserverRecord);
         }
-        List<Meeting> meetings1 = meetingRepository.findByMeetingRoomIdAndMeetingDateAndStatusOrderByBeginTime(meetingRoomId, reserveDate, 1);
+        List<Meeting> meetings1 = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoomId, reserveDate, 1);
         for (Meeting meeting : meetings1) {
             ReserverRecord reserverRecord = new ReserverRecord();
             reserverRecord.setBegin(meeting.getBegin());
@@ -186,7 +186,7 @@ public class MeetingServiceImpl implements MeetingService {
             reserverRecord.setId(meeting.getId());
             reserverRecords.add(reserverRecord);
         }
-        List<Meeting> meetings4 = meetingRepository.findByMeetingRoomIdAndMeetingDateAndStatusOrderByBeginTime(meetingRoomId, reserveDate, 4);
+        List<Meeting> meetings4 = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoomId, reserveDate, 4);
         for (Meeting meeting : meetings4) {
             ReserverRecord reserverRecord = new ReserverRecord();
             reserverRecord.setBegin(meeting.getBegin());
@@ -217,9 +217,9 @@ public class MeetingServiceImpl implements MeetingService {
         ServerResult serverResult = new ServerResult();
         List<List> meetings = new ArrayList<>();
         for (Integer meetingRoomId : oneDayReservation.getMeetingRooms()) {
-            List<Meeting> meetings1 = meetingRepository.findByMeetingRoomIdAndMeetingDateAndStatusOrderByBeginTime(meetingRoomId, oneDayReservation.getReserveDate(), 1);
-            List<Meeting> meetings2 = meetingRepository.findByMeetingRoomIdAndMeetingDateAndStatusOrderByBeginTime(meetingRoomId, oneDayReservation.getReserveDate(), 3);
-            List<Meeting> meetings3 = meetingRepository.findByMeetingRoomIdAndMeetingDateAndStatusOrderByBeginTime(meetingRoomId, oneDayReservation.getReserveDate(), 4);
+            List<Meeting> meetings1 = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoomId, oneDayReservation.getReserveDate(), 1);
+            List<Meeting> meetings2 = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoomId, oneDayReservation.getReserveDate(), 3);
+            List<Meeting> meetings3 = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoomId, oneDayReservation.getReserveDate(), 4);
             meetings1.addAll(meetings2);
             meetings1.addAll(meetings3);
             meetings.add(meetings1);

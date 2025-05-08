@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -51,8 +50,8 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
         List<Equip> equips = equipRepository.findByTenantId(tenantId);
         List<MeetingRoomEquip> meetingRoomEquips = meetingRoomEquipRepository.findByMeetroomId(meetingRoomId);
         List<Department> departments = departmentRepository.findByTenantId(tenantId);
-        List<MeetingRoomDepartment> meetingRoomDepartments1 = meetingRoomDepartmentRepository.findByMeetingRoomIdAndStatus(meetingRoomId, 1);
-        List<MeetingRoomDepartment> meetingRoomDepartments0 = meetingRoomDepartmentRepository.findByMeetingRoomIdAndStatus(meetingRoomId, 0);
+        List<MeetingRoomDepartment> meetingRoomDepartments1 = meetingRoomDepartmentRepository.findByMeetroomIdAndStatus(meetingRoomId, 1);
+        List<MeetingRoomDepartment> meetingRoomDepartments0 = meetingRoomDepartmentRepository.findByMeetroomIdAndStatus(meetingRoomId, 0);
         List<Object> results = new ArrayList<>();
         results.add(meetingRoom);
         results.add(equips);

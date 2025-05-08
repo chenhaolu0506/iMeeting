@@ -248,7 +248,8 @@ public class IdentityController {
     //增加一个员工,需要传递的参数为worknum(必填),name(必填),phone,departId,positionId,roleId
     @RequestMapping("/userInfo/insertOne")
     public ServerResult insertOne(@RequestBody UserInfo userInfo, HttpServletRequest request) {
-        Integer tenantId = (Integer) request.getSession().getAttribute("tenantId");
+//        Integer tenantId = (Integer) request.getSession().getAttribute("tenantId");
+        Integer tenantId = userInfo.getTenantId();
         if (tenantId == null) {
             return new ServerResult();
         }

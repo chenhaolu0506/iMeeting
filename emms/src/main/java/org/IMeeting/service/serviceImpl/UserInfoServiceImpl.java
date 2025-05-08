@@ -43,6 +43,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public UserInfo login(String username, String password) {
         UserInfo userInfo = userInfoRepository.findByUsername(username);
+        System.out.println("userInfo=" + userInfo);
         if (userInfo != null && BCrypt.checkpw(password, userInfo.getPassword())) {
             return userInfo;
         }
@@ -112,6 +113,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (!tenantOptional.isPresent()) {
             return ServerResult.failWithMessage("租户不存在");
         }
+        System.out.println(tenantOptional.isPresent());
         userInfo.setUsername(tenantOptional.get().getNum() + "-" + userInfo.getWorknum());
         userInfo.setTenantId(tenantId);
         String hashedPassword = BCrypt.hashpw(userInfo.getPassword(), BCrypt.gensalt());

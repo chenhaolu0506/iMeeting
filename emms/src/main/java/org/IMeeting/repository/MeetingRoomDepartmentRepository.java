@@ -11,9 +11,9 @@ import java.util.List;
 
 @Repository
 public interface MeetingRoomDepartmentRepository extends JpaRepository<MeetingRoomDepartment, Integer> {
-    List<MeetingRoomDepartment> findByMeetingRoomId(Integer meetingRoomId);
+    List<MeetingRoomDepartment> findByMeetroomId(Integer meetingRoomId);
     List<MeetingRoomDepartment> findByDepartId(Integer departId);
-    List<MeetingRoomDepartment> findByMeetingRoomIdAndStatus(Integer meetingRoomId, Integer status);
+    List<MeetingRoomDepartment> findByMeetroomIdAndStatus(Integer meetingRoomId, Integer status);
 
     @Transactional
     @Modifying(clearAutomatically = true)

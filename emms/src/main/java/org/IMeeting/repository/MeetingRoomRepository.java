@@ -16,7 +16,7 @@ public interface MeetingRoomRepository extends JpaRepository<MeetingRoom, Intege
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "select m from MeetingRoom m , Meeting n where m.id=n.meetRoomId and n.begin=?1")
+    @Query(value = "select m from MeetingRoom m , Meeting n where m.id=n.meetroomId and n.begin=?1")
     List<MeetingRoom> findByBeginTime(String beginTime);
 
     @Transactional

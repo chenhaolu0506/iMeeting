@@ -128,7 +128,7 @@ public class MeetingRoomController {
     @RequestMapping("/selectByDateAndMeetingRoom")
     public ServerResult selectByDateAndMeetingRoom(@RequestParam("meetRoomId") Integer meetingRoomId, @RequestParam("selectDate") String selectDate){
         ServerResult serverResult = new ServerResult();
-        List<Meeting> meetings = meetingRepository.findByMeetingRoomIdAndMeetingDateOrderByBeginTime(meetingRoomId, selectDate);
+        List<Meeting> meetings = meetingRepository.findByMeetroomIdAndMeetDateOrderByBegin(meetingRoomId, selectDate);
         serverResult.setData(meetings);
         serverResult.setStatus(true);
         return serverResult;
