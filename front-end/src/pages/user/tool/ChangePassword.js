@@ -61,6 +61,61 @@ class ChangePassword extends Component {
     }
 
     changePassword = () => {
-        
+        const url = global.localhostUrl + "changePwd?newPassword=" + this.state.newPassword + "&oldPassword=" + this.state.oldPassword;
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include", // 跨域携带cookie
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({}),
+        }).then(res => res.json())
+        .then(json => {
+            const data = json;
+            console.log(data);
+            if (data.status) {
+                message.success("密码修改成功");
+                this.setState({
+                    visible: false,
+                });
+            } else {
+                message.error(data.message);
+            }
+        }).catch(function (e) {
+            console.log(e);
+            alert('系统错误');
+        });
+    }
+
+    render() {
+        return (
+            <div style={this.props.style}>
+                <Button type="primary" onClick={this.showModal}>修改密码</Button>
+                <Modal
+                    title="修改密码"
+                    visible={this.state.visible}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                    okType={"primary"}
+                    okText={"修改"}
+                    cancelText={"返回"}
+                >
+                    <Row>
+                        <Col span={24}>
+                            <Input.Password  style={{marginTop:10}} value={this.state.oldPassword} placeholder='输入旧密码' onChange={this.oldPasswordChange}/>
+                        </Col>
+                        <Col span={24}>
+                            <Input.Password  style={{marginTop:10}} value={this.state.newPassword} placeholder='输入新密码' onChange={this.newPasswordChange}/>
+                        </Col>
+                        <Col span={24}>
+                            <Input.Password  style={{marginTop:10}} value={this.state.newConfig} placeholder='再次输入新密码' onChange={this.newConfigChange}/>
+                        </Col>
+                    </Row>
+                </Modal>
+            </div>
+        );
     }
 }
+
+export default ChangePassword;
