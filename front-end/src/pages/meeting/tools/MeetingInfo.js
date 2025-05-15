@@ -385,3 +385,5 @@ class MeetingInfo extends Component {
         );
     }
 }
+
+export default MeetingInfo;
