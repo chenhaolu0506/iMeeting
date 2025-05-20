@@ -9,7 +9,7 @@ import FreeTimePopover from '../meeting/tools/FreeTimePopover';
 import NoMeeting from '../meeting/tools/noMeeting3.png';
 import '../../css/meeting.less';
 
-class BookMeetingManager extends Component {
+class BookMeetingManage extends Component {
     componentDidMount() {
         this.reserveIndex();
         this.selectAllPeople();
@@ -428,4 +428,4 @@ class BookMeetingManager extends Component {
     }
 }
 
-export default BookMeetingManager;
+export default BookMeetingManage;
