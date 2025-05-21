@@ -5,7 +5,7 @@ import { Axis, Chart, Coord, Geom, Label, Tooltip } from "bizcharts";
 import DataSet from "@antv/data-set";
 import moment from "moment";
 import "../../css/graph.less";
-import global from "../../../global";
+import global from "../../global";
 
 class ManageIndex extends Component {
     componentDidMount() { //初始化

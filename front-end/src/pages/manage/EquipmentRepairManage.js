@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Table, Card, Col, Row, Button, Tooltip, message, Input, Drawer, Modal, Select } from "antd";
 import { SearchOutlined, EditOutlined, CheckOutlined } from "@ant-design/icons";
-import global from "../../../global";
+import global from "../../global";
 import Highlighter from 'react-highlight-words';
 class EquipmentRepairManage extends Component {
     componentDidMount() {

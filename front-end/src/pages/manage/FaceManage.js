@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Table, Card, Col, Row, Button, Tooltip, message, Upload, Modal, Input } from "antd";
 import { PlusOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, SearchOutlined } from "@ant-design/icons";
-import global from "../../../global";
+import global from "../../global";
 import Highlighter from "react-highlight-words";
 
 const props = {

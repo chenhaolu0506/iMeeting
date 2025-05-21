@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Table, Card, Col, Row, Button, Tooltip, message, Input, Drawer, Modal } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import global from "../../../global";
+import global from "../../global";
 import Highlighter from 'react-highlight-words';
 import WeeklyMeetingCreateForm from './tools/WeeklyMeetingCreateForm';
 

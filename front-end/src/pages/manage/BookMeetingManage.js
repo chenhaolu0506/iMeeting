@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import moment from "moment";
 import { Slider, Switch, InputNumber, Row, Col, Card, Button, message, DatePicker, Modal, Table, Checkbox } from "antd";
-import global from "../../../global";
+import global from "../../global";
 import ShowMeeting from '../meeting/tools/ShowMeeting';
 import CollectionCreateFormManage from "./tools/CollectionCreateFormManage";
 import MeetingGraph from '../meeting/tools/MeetingGraph';

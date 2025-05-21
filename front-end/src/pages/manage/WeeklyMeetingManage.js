@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Table, Card, Col, Row, Button, Tooltip, message, Input, Drawer, Modal } from "antd";
-import { SearchOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { SearchOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import global from "../../global";
 import Highlighter from 'react-highlight-words';
-class EquipmentManage extends Component {
+
+class WeeklyMeetingManage extends Component {
     componentDidMount() {
-        this.selectAll();
+        this.manageFindAll();
     }
     state = {
         dataSource: [],
@@ -16,7 +17,7 @@ class EquipmentManage extends Component {
         modalVisible: false,
         searchText: "",
     }
-
+    //表格查询
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
             setSelectedKeys, selectedKeys, confirm, clearFilters,
@@ -73,8 +74,6 @@ class EquipmentManage extends Component {
         clearFilters();
         this.setState({ searchText: '' });
     }
-
-
     handleCancel = (e) => {
         this.setState({
             modalVisible: false,
@@ -113,53 +112,8 @@ class EquipmentManage extends Component {
     }
 
     /////////////////////////////////////////////////////////////////////
-    insertOne = () => {
-        const url = global.localhostUrl + "equip/insertOne?equipName=" + this.state.equipName;
-        fetch(url, {
-            method: "POST",
-            mode: "cors",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({}),
-        }).then(res => res.json())
-            .then(json => {
-                const data = json;
-                if (data.status) {
-                    message.success("操作成功！")
-                }
-                this.selectAll();
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
-    }
-
-    updateOne = () => {
-        const url = global.localhostUrl + "equip/updateOne?equipName=" + this.state.equipName + "&equipId=" + this.state.equipId;
-        fetch(url, {
-            method: "POST",
-            mode: "cors",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({}),
-        }).then(res => res.json())
-            .then(json => {
-                const data = json;
-                if (data.status) {
-                    message.success("操作成功！")
-                }
-                this.selectAll();
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
-    }
-    deleteOne = () => {
-        const url = global.localhostUrl + "equip/deleteOne?equipId=" + this.state.equipId;
+    agreeOne = (id) => {
+        const url = global.localhostUrl + "weeklyMeeting/approveWeeklyMeeting?id=" + id;
         fetch(url, {
             method: "POST",
             mode: "cors",
@@ -176,15 +130,39 @@ class EquipmentManage extends Component {
                 } else {
                     message.error(data.message);
                 }
-                this.selectAll();
+                this.manageFindAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+    }
+    disagreeOne = (id) => {
+        const url = global.localhostUrl + "weeklyMeeting/rejectWeeklyMeeting?id=" + id;
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({}),
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message);
+                } else {
+                    message.error(data.message);
+                }
+                this.manageFindAll();
             }).catch(function (e) {
                 console.log("fetch fail");
                 alert('系统错误');
             });
     }
 
-    selectAll = () => {
-        const url = global.localhostUrl + "equip/selectAll";
+    manageFindAll = () => {
+        const url = global.localhostUrl + "weeklyMeeting/manageWeeklyMeetings";
         fetch(url, {
             method: "POST",
             mode: "cors",
@@ -197,10 +175,7 @@ class EquipmentManage extends Component {
             .then(json => {
                 const data = json;
                 this.setState({
-                    dataSource: data.data,
-                    drawerVisible: false,
-                    addOrChange: false,
-                    modalVisible: false,
+                    dataSource: data.data
                 })
             }).catch(function (e) {
                 console.log("fetch fail");
@@ -216,20 +191,91 @@ class EquipmentManage extends Component {
                     return (<div>{i + 1}</div>)
                 }
             }, {
-                title: "名称",
-                dataIndex: "name",
-                key: "name",
-                ...this.getColumnSearchProps("name")
+                title: "会议室",
+                render: (item) => {
+                    return item.meetroom.name
+                }
+            }, {
+                title: "星期",
+                dataIndex: "week",
+                render: (item) => {
+                    switch (item) {
+                        case 0:
+                            return "星期日"
+                        case 1:
+                            return "星期一"
+                        case 2:
+                            return "星期二"
+                        case 3:
+                            return "星期三"
+                        case 4:
+                            return "星期四"
+                        case 5:
+                            return "星期五"
+                        case 6:
+                            return "星期六"
+                        default:
+                            return null
+                    }
+                }
+            }, {
+                title: "会议开始时间",
+                dataIndex: "meetBegin",
+                key: "meetBegin",
+                ...this.getColumnSearchProps("meetBegin")
+            }, {
+                title: "会议结束时间",
+                dataIndex: "meetOver",
+                key: "meetOver",
+                ...this.getColumnSearchProps("meetOver")
+            }, , {
+                title: "创建时间",
+                dataIndex: "createTime",
+                key: "createTime",
+                ...this.getColumnSearchProps("createTime")
+            }, {
+                title: "申请人",
+                render: (item) => {
+                    return <Tooltip
+                        title={
+                            <div>
+                                部门：{item.depart.name}
+                                <br />
+                                联系方式：{item.userinfo.phone}
+                                <br />
+                            </div>
+                        }
+                    >
+                        {item.userinfo.name}
+                    </Tooltip>
+                }
+            }, {
+                title: "状态",
+                dataIndex: "status",
+                render: (item) => {
+                    switch (item) {
+                        case 0:
+                            return "未处理"
+                        case 1:
+                            return "已通过"
+                        case 2:
+                            return "不通过"
+                        case 3:
+                            return "已取消"
+                        default:
+                            return null
+                    }
+                }
             }, {
                 title: "操作",
                 render: (item) => {
                     return (
                         <div>
-                            <Tooltip title="修改">
-                                <Button onClick={(ev) => { this.showUpdate(ev, item.id, item.name) }}><EditOutlined /></Button>
+                            <Tooltip title="通过">
+                                <Button onClick={() => { this.agreeOne(item.id) }}><CheckOutlined /></Button>
                             </Tooltip>
-                            <Tooltip title="删除">
-                                <Button onClick={(ev) => { this.showDelete(ev, item.id) }}><DeleteOutlined style={{ color: "red" }} /></Button>
+                            <Tooltip title="不通过">
+                                <Button onClick={() => { this.disagreeOne(item.id) }}><CloseOutlined style={{ color: "red" }} /></Button>
                             </Tooltip>
                         </div>
                     )
@@ -240,52 +286,14 @@ class EquipmentManage extends Component {
             <div >
                 <Row>
                     <Col span={18} offset={3}>
-                        <Card
-                            title={<h2 style={{ float: 'left', marginBottom: -3 }}>设备管理</h2>}
-                            extra={
-                                <div style={{ width: 200 }} >
-                                    <Row>
-                                        <Col span={24}>
-                                            <Button type="primary" onClick={this.showAddEquip}>添加设备</Button>
-                                        </Col>
-                                    </Row>
-                                </div>
-                            }
-                        >
+                        <Card title={<h2 style={{ float: 'left', marginBottom: -3 }}>每周例会管理</h2>}>
                             <Table rowKey={record => record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
                         </Card>
                     </Col>
                 </Row>
-                <Drawer
-                    title={
-                        this.state.addOrChange ?
-                            <Button href="#" type={"primary"} onClick={this.insertOne}>添加</Button>
-                            :
-                            <Button href="#" type={"primary"} onClick={this.updateOne}>保存修改</Button>
-                    }
-                    placement="right"
-                    closable={false}
-                    onClose={this.onClose}
-                    open={this.state.drawerVisible}
-                    width={"60%"}
-                >
-                    <Card>
-                        设备名称：
-                        <Input value={this.state.equipName} onChange={this.equipNameChange} />
-                    </Card>
-                </Drawer>
-                <Modal
-                    open={this.state.modalVisible}
-                    onOk={this.deleteOne}
-                    onCancel={this.handleCancel}
-                    okText={"确定"}
-                    cancelText={"我再想想"}
-                >
-                    <h3>您确定要删除此设备吗</h3>
-                </Modal>
             </div>
         );
     }
 }
 
-export default EquipmentManage;
+export default WeeklyMeetingManage;

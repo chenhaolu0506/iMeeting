@@ -4,7 +4,7 @@ import { DataSet } from "@antv/data-set";
 import moment from 'moment';
 import { Col, Divider, Row, Tooltip as TooltipAnt, Collapse, message } from 'antd';
 import "../../css/graph.less";
-import global from "../../../global";
+import global from "../../global";
 import { CaretDownFilled, CaretUpFilled, ExclamationCircleOutlined } from '@ant-design/icons';
 
 const visitData = [];

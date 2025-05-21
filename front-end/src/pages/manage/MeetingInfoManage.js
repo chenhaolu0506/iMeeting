@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Table, Card, Col, Row, Button, Select, DatePicker, Input, Tooltip, message } from "antd";
-import global from "../../../global";
+import global from '../../global';
 import moment from "moment";
 import Highlighter from 'react-highlight-words';
 import OneMeetingDrawer from "../meeting/tools/OneMeetingDrawer";

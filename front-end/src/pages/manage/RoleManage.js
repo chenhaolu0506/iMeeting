@@ -1,22 +1,30 @@
 import React, { Component } from 'react';
-import { Table, Card, Col, Row, Button, Tooltip, message, Input, Drawer, Modal } from "antd";
-import { SearchOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Table, Card, Col, Row, Button, Tooltip, message, Input, Drawer, Tree } from "antd";
+import { SearchOutlined, EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 import global from "../../global";
-import Highlighter from 'react-highlight-words';
-class EquipmentManage extends Component {
+import Highlighter from "react-highlight-words";
+
+class RoleManage extends Component {
     componentDidMount() {
         this.selectAll();
     }
     state = {
-        dataSource: [],
-        equipName: "",
-        equipId: 0,
+        dataSource: [
+            {
+                id: 2,
+                name: "管理员",
+                tenantId: 1,
+            }
+        ],
+        allMenuList: [],
         drawerVisible: false,
-        addOrChange: false,
-        modalVisible: false,
-        searchText: "",
+        roleName: "",
+        menuList: [],
+        addOrChange: true,
+        roleId: 0,
+        checkedKeys: [],
     }
-
+    //表格查询
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
             setSelectedKeys, selectedKeys, confirm, clearFilters,
@@ -68,53 +76,99 @@ class EquipmentManage extends Component {
         confirm();
         this.setState({ searchText: selectedKeys[0] });
     }
-
     handleReset = (clearFilters) => {
         clearFilters();
         this.setState({ searchText: '' });
     }
-
-
-    handleCancel = (e) => {
-        this.setState({
-            modalVisible: false,
-        });
-    }
-    onClose = (e) => {
+    onClose = () => {
         this.setState({
             drawerVisible: false,
         });
-    }
-    showDelete = (ev, id) => {
+    };
+    showDrawer = () => {
         this.setState({
-            modalVisible: true,
-            equipId: id,
-        });
-    }
-    showUpdate = (ev, id, name) => {
-        this.setState({
-            addOrChange: false,
             drawerVisible: true,
-            equipName: name,
-            equipId: id,
         });
     }
-    showAddEquip = () => {
+    showAddRole = () => {
         this.setState({
+            roleName: "",
+            menuList: [],
+            drawerVisible: true,
             addOrChange: true,
-            drawerVisible: true,
-            equipName: "",
+            checkedKeys: [],
         });
     }
-    equipNameChange = (e) => {
+    roleNameChange = (e) => {
         this.setState({
-            equipName: e.target.value,
+            roleName: e.target.value,
         });
     }
+    onSelect = (selectedKeys, info) => {
+        console.log('selected', selectedKeys, info);
+    }
 
+    onCheck = (checkedKeys, info) => {
+        console.log('onCheck', checkedKeys, info);
+        this.setState({
+            checkedKeys: checkedKeys,
+        })
+    }
     /////////////////////////////////////////////////////////////////////
-    insertOne = () => {
-        const url = global.localhostUrl + "equip/insertOne?equipName=" + this.state.equipName;
+    // 添加角色
+    insertOneRole = () => {
+        const url = global.localhostUrl + "manager/insertOneRole";
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({
+                roleName: this.state.roleName,
+                menus: this.state.checkedKeys,
+            }),
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+    }
+    // 修改角色
+    updateOneRole = () => {
+        const url = global.localhostUrl + "manager/updateOneRole";
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({
+                roleId: this.state.roleId,
+                roleName: this.state.roleName,
+                menus: this.state.checkedKeys,
+            }),
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+    }
+    //查看角色权限
+    selectOneRole = (ev, text, name) => {
+        const url = global.localhostUrl + "manager/selectOneRole?roleId=" + text;
         fetch(url, {
             method: "POST",
             mode: "cors",
@@ -126,40 +180,23 @@ class EquipmentManage extends Component {
         }).then(res => res.json())
             .then(json => {
                 const data = json;
-                if (data.status) {
-                    message.success("操作成功！")
-                }
-                this.selectAll();
+                let checkedKeys = data.data.map(item => item.menuId);
+                this.setState({
+                    drawerVisible: true,
+                    menuList: data.data,
+                    roleName: name,
+                    roleId: text,
+                    addOrChange: false,
+                    checkedKeys: checkedKeys,
+                })
             }).catch(function (e) {
                 console.log("fetch fail");
                 alert('系统错误');
             });
     }
-
-    updateOne = () => {
-        const url = global.localhostUrl + "equip/updateOne?equipName=" + this.state.equipName + "&equipId=" + this.state.equipId;
-        fetch(url, {
-            method: "POST",
-            mode: "cors",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({}),
-        }).then(res => res.json())
-            .then(json => {
-                const data = json;
-                if (data.status) {
-                    message.success("操作成功！")
-                }
-                this.selectAll();
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
-    }
-    deleteOne = () => {
-        const url = global.localhostUrl + "equip/deleteOne?equipId=" + this.state.equipId;
+    //删除角色
+    deleteOneRole = (ev, text) => {
+        const url = global.localhostUrl + "manager/deleteOneRole?roleId=" + text;
         fetch(url, {
             method: "POST",
             mode: "cors",
@@ -176,15 +213,15 @@ class EquipmentManage extends Component {
                 } else {
                     message.error(data.message);
                 }
-                this.selectAll();
             }).catch(function (e) {
                 console.log("fetch fail");
                 alert('系统错误');
             });
     }
 
+    // 获取所有角色
     selectAll = () => {
-        const url = global.localhostUrl + "equip/selectAll";
+        const url = global.localhostUrl + "manager/selectAll";
         fetch(url, {
             method: "POST",
             mode: "cors",
@@ -197,10 +234,8 @@ class EquipmentManage extends Component {
             .then(json => {
                 const data = json;
                 this.setState({
-                    dataSource: data.data,
-                    drawerVisible: false,
-                    addOrChange: false,
-                    modalVisible: false,
+                    allMenuList: data.data[0],
+                    dataSource: data.data[1],
                 })
             }).catch(function (e) {
                 console.log("fetch fail");
@@ -219,17 +254,21 @@ class EquipmentManage extends Component {
                 title: "名称",
                 dataIndex: "name",
                 key: "name",
-                ...this.getColumnSearchProps("name")
+                ...this.getColumnSearchProps("name"),
             }, {
                 title: "操作",
                 render: (item) => {
                     return (
                         <div>
-                            <Tooltip title="修改">
-                                <Button onClick={(ev) => { this.showUpdate(ev, item.id, item.name) }}><EditOutlined /></Button>
+                            <Tooltip title="查看">
+                                <Button onClick={(ev) => { this.selectOneRole(ev, item.id, item.name) }}>
+                                    <EyeOutlined />
+                                </Button>
                             </Tooltip>
                             <Tooltip title="删除">
-                                <Button onClick={(ev) => { this.showDelete(ev, item.id) }}><DeleteOutlined style={{ color: "red" }} /></Button>
+                                <Button onClick={(ev) => { this.deleteOneRole(ev, item.id) }}>
+                                    <DeleteOutlined style={{ color: "red" }} />
+                                </Button>
                             </Tooltip>
                         </div>
                     )
@@ -241,12 +280,12 @@ class EquipmentManage extends Component {
                 <Row>
                     <Col span={18} offset={3}>
                         <Card
-                            title={<h2 style={{ float: 'left', marginBottom: -3 }}>设备管理</h2>}
+                            title={<h2 style={{ float: 'left', marginBottom: -3 }}>权限管理</h2>}
                             extra={
                                 <div style={{ width: 200 }} >
                                     <Row>
                                         <Col span={24}>
-                                            <Button type="primary" onClick={this.showAddEquip}>添加设备</Button>
+                                            <Button type="primary" onClick={this.showAddRole}>添加角色</Button>
                                         </Col>
                                     </Row>
                                 </div>
@@ -259,9 +298,9 @@ class EquipmentManage extends Component {
                 <Drawer
                     title={
                         this.state.addOrChange ?
-                            <Button href="#" type={"primary"} onClick={this.insertOne}>添加</Button>
+                            <Button href="#" type={"primary"} onClick={this.insertOneRole}>添加</Button>
                             :
-                            <Button href="#" type={"primary"} onClick={this.updateOne}>保存修改</Button>
+                            <Button href="#" type={"primary"} onClick={this.updateOneRole}>保存修改</Button>
                     }
                     placement="right"
                     closable={false}
@@ -270,22 +309,29 @@ class EquipmentManage extends Component {
                     width={"60%"}
                 >
                     <Card>
-                        设备名称：
-                        <Input value={this.state.equipName} onChange={this.equipNameChange} />
+                        角色名：
+                        <Input value={this.state.roleName} onChange={this.roleNameChange} />
+                        拥有权限：
+                        <Tree
+                            checkable
+                            onSelect={this.onSelect}
+                            onCheck={this.onCheck}
+                            checkedKeys={this.state.checkedKeys}
+                        >
+                            {
+                                this.state.allMenuList.map((item) => {
+                                    return (
+                                        <Tree.TreeNode title={item.menuName} key={item.id}>
+
+                                        </Tree.TreeNode>
+                                    )
+                                })
+                            }
+                        </Tree>
                     </Card>
                 </Drawer>
-                <Modal
-                    open={this.state.modalVisible}
-                    onOk={this.deleteOne}
-                    onCancel={this.handleCancel}
-                    okText={"确定"}
-                    cancelText={"我再想想"}
-                >
-                    <h3>您确定要删除此设备吗</h3>
-                </Modal>
             </div>
         );
     }
 }
-
-export default EquipmentManage;
+export default RoleManage;

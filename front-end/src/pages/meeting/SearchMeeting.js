@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, Col, Row, Badge, Calendar } from "antd";
-import global from "../../../global";
+import global from "../../global";
 import '../../css/meeting.less';
 import MyMeetingInfo from "./tools/MyMeetingInfo";
 
