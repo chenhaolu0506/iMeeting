@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { message, Input, Modal, Button, Card, Row, Col } from "antd";
 import global from "../../../global";
-import ChangePassword from "./tool/ChangePassword";
+import ChangePassword from "./tools/ChangePasswordd";
 
 class UserInfo extends Component {
     componentDidMount() {

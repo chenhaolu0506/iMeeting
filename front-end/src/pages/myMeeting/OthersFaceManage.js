@@ -1,0 +1,340 @@
+import React, { Component } from 'react';
+import { Table, Card, Col, Row, Button, message, Upload, Modal, Input } from "antd";
+import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
+import global from "../../global";
+import Highlighter from "react-highlight-words";
+
+const props = {
+    withCredentials: true,
+    name: 'file',
+    headers: {
+        authorization: 'authorization-text',
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Headers": "DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Origin": "*",
+    }
+};
+
+class OthersFaceManage extends Component {
+    componentDidMount() {
+        this.selectAll();
+    }
+    state = {
+        previewVisible: false,
+        fileModalVisible: false,
+        previewImage: '',
+        fileList: [],
+        worknum: "",
+        dataSource: [],
+        faceId: 0,
+        modalVisible: false,
+    }
+    //表格查询
+    getColumnSearchProps = (dataIndex) => ({
+        filterDropdown: ({
+            setSelectedKeys, selectedKeys, confirm, clearFilters,
+        }) => (
+            <div style={{ padding: 8 }}>
+                <Input
+                    ref={node => { this.searchInput = node; }}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
+                    style={{ width: 188, marginBottom: 8, display: 'block' }}
+                />
+                <Button
+                    type="primary"
+                    onClick={() => this.handleSearch(selectedKeys, confirm)}
+                    icon="search"
+                    size="small"
+                    style={{ width: 90, marginRight: 8 }}
+                >
+                    查找
+                </Button>
+                <Button
+                    onClick={() => this.handleReset(clearFilters)}
+                    size="small"
+                    style={{ width: 90 }}
+                >
+                    重置
+                </Button>
+            </div>
+        ),
+        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+        onFilter: (value, record) => record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+        onFilterDropdownVisibleChange: (visible) => {
+            if (visible) {
+                setTimeout(() => this.searchInput.select());
+            }
+        },
+        render: (text) => (
+            <Highlighter
+                highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                searchWords={[this.state.searchText]}
+                autoEscape
+                textToHighlight={text.toString()}
+            />
+        ),
+    })
+    handleSearch = (selectedKeys, confirm) => {
+        confirm();
+        this.setState({ searchText: selectedKeys[0] });
+    }
+
+    handleReset = (clearFilters) => {
+        clearFilters();
+        this.setState({ searchText: '' });
+    }
+    fileHandleCancel = () => this.setState({ previewVisible: false })
+    modalHandleCancel = () => this.setState({ fileModalVisible: false })
+    showFileModal = () => this.setState({ fileModalVisible: true })
+
+    fileHandlePreview = (file) => {
+        this.setState({
+            previewImage: file.url || file.thumbUrl,
+            previewVisible: true,
+        });
+    }
+
+    fileHandleChange = ({ fileList }) => {
+        if (fileList.length !== 0) {
+            if (fileList[0].response !== undefined) {
+                if (fileList[0].response.status) {
+                    message.success(fileList[0].response.message);
+                } else {
+                    message.warning(fileList[0].response.message);
+                }
+            }
+        }
+        this.setState({
+            fileList
+        })
+    }
+
+    handleCancel = (e) => {
+        this.setState({
+            modalVisible: false,
+        });
+    }
+    showDelete = (ev, id) => {
+        this.setState({
+            modalVisible: true,
+            faceId: id,
+        });
+    }
+    worknumChange = (e) => {
+        this.setState({
+            worknum: e.target.value,
+        })
+    }
+    /////////////////////////////////////////////////////////////////////
+    //通过
+    pass = (ev, id) => {
+        const url = global.localhostUrl + "face/pass?faceId=" + id;
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({}),
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+    }
+    //不通过
+    reject = (ev, id) => {
+        const url = global.localhostUrl + "face/reject?faceId=" + id;
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({}),
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+    }
+
+    deleteOne = () => {
+        const url = global.localhostUrl + "face/deleteOne?faceId=" + this.state.faceId;
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({}),
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message);
+                } else {
+                    message.error(data.message);
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+    }
+
+    selectAll = () => {
+        const url = global.localhostUrl + "abnormal/selectAbnormal";
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({}),
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    dataSource: data.data,
+                    modalVisible: false,
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+    }
+    render() {
+        const columns = [
+            {
+                title: "序号",
+                key: "id",
+                render: (item, data, i) => {
+                    return (<div>{i + 1}</div>)
+                }
+            }, {
+                title: "异常人员名称",
+                render: () => {
+                    return (
+                        "陌生人"
+                    )
+                }
+            }, {
+                title: "检测时间",
+                dataIndex: "time",
+                key: "time",
+                render: (item) => {
+                    return item
+                }
+            }, {
+                title: "会议ID",
+                dataIndex: "meetingId",
+                key: "meetingId",
+                render: () => {
+                    return (
+                        "会议室一"
+                    )
+                }
+            }, {
+                title: "图片",
+                dataIndex: "imgUrl",
+                key: "imgUrl",
+                render: (item, data, i) => {
+                    switch (i) {
+                        default:
+                            return (<img style={{ width: 111, height: 111 }} src={item} title={"图片"} />)
+                    }
+                }
+            }
+        ];
+        const uploadButton = (
+            <div>
+                <PlusOutlined />
+                <div className="ant-upload-text">上传</div>
+            </div>
+        );
+        return (
+            <div >
+                <Row>
+                    <Col span={18} offset={3}>
+                        <Card
+                            title={<h2 style={{ float: 'left', marginBottom: -3 }}>异常人员</h2>}
+                            extra={
+                                <div style={{ width: 200 }}  >
+                                    {/* <Button onClick={this.showFileModal} > 一键报警 </Button> */}
+                                </div>
+                            }>
+                            <Modal
+                                className="clearfix"
+                                open={this.state.fileModalVisible}
+                                onCancel={this.modalHandleCancel}
+                                onOk={this.modalHandleCancel}
+                                okText={"退出"}
+                                cancelText={"返回"}
+                            >
+                                <Row>
+                                    <Col span={16}>
+                                        <Input
+                                            ref={ele => this.searchInput = ele}
+                                            placeholder="输入工号"
+                                            value={this.state.worknum}
+                                            onChange={this.worknumChange}
+                                        />
+                                    </Col>
+                                    <Col span={8}>
+                                        <Upload
+                                            {...props}
+                                            name="file"
+                                            listType="picture-card"
+                                            fileList={this.state.fileList}
+                                            action={global.localhostUrl + "face/insertByManager?worknum=" + this.state.worknum}
+                                            onPreview={this.fileHandlePreview}
+                                            onChange={this.fileHandleChange}
+                                        >
+                                            {this.state.fileList.length >= 1 ? null : uploadButton}
+                                        </Upload>
+                                        <Modal visible={this.state.previewVisible} footer={null} onCancel={this.fileHandleCancel}>
+                                            <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
+                                        </Modal>
+                                    </Col>
+                                </Row>
+                            </Modal>
+                            <Table rowKey={record => record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
+                        </Card>
+                    </Col>
+                </Row>
+                <Modal
+                    open={this.state.modalVisible}
+                    onOk={this.deleteOne}
+                    onCancel={this.handleCancel}
+                    okText={"确定"}
+                    cancelText={"我再想想"}
+                >
+                    <h3>您确定要删除此记录吗</h3>
+                </Modal>
+            </div>
+        );
+    }
+}
+
+export default OthersFaceManage;

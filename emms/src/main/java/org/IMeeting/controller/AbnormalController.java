@@ -17,10 +17,10 @@ public class AbnormalController {
     private AbnormalRepository abnormalRepository;
 
 //    Retrieve abnormal info for the current user
-    @RequestMapping("/selectByAbnormal")
-    public ServerResult selectByAbnormal(HttpServletRequest request) {
+    @RequestMapping("/selectAbnormal")
+    public ServerResult selectAbnormal(HttpServletRequest request) {
         int userId = (int) request.getSession().getAttribute("userId");
-        List<AbnormalInfo> abnormalInfos = abnormalRepository.selectByAbnormal(userId);
+        List<AbnormalInfo> abnormalInfos = abnormalRepository.selectAbnormal(userId);
         ServerResult serverResult = new ServerResult();
         serverResult.setStatus(true);
         serverResult.setData(abnormalInfos);

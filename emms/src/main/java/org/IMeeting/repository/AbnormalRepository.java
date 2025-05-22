@@ -18,7 +18,7 @@ public interface AbnormalRepository extends JpaRepository<AbnormalInfo, Integer>
     int changeStatus(int id);
 
     @Query("select a from AbnormalInfo a where a.userId = ?1 and a.status=1 order by a.isRead, a.time")
-    List<AbnormalInfo>selectByAbnormal(int userId);
+    List<AbnormalInfo>selectAbnormal(int userId);
 
     @Transactional
     @Modifying(clearAutomatically = true)
