@@ -1,0 +1,183 @@
+import React, { Component } from 'react';
+import { Card, Col, Row, Badge, Calendar } from "antd";
+import global from '../../global'
+import '../../css/meeting.less';
+import MyJoinMeetingInfo from "./tools/MyJoinMeetingInfo";
+
+class MyJoinMeeting extends Component {
+    componentDidMount() {
+        this.showMyReserve();
+    }
+    state = {
+        bookRule: {
+            id: 1,
+            begin: "07:00",
+            over: "18:30",
+            dateLimit: "7",
+            timeLimit: "120",
+            timeInterval: "15",
+            tenantId: 1
+        },
+        bookTool: [],
+        roomList: [
+            {
+                "id": 1,
+                "name": "A01会议室",
+                "num": "A01",
+                "place": "笃行楼一楼A01室",
+                "contain": 40,
+                "availStatus": 1,
+                "nowStatus": 0,
+                "tenantId": 1
+            },
+        ],
+        roomTools: [],
+        bookVisible: false,
+        deleteVisible: false,
+        stopVisible: false,
+        othersList: [],
+        searchDate: "2019-01-17",
+        meetingId: "",
+        changeAble: false,
+        coordinate: false,
+        meetInfo: [],
+        meetDateInfo: [],
+    };
+    onClose = () => {
+        this.setState({
+            bookVisible: false,
+        });
+    };
+    showDrawer = () => {
+        this.setState({
+            bookVisible: true,
+        });
+    };
+    // 渲染日期
+    dateCellRender = (value) => {
+        let time = value.format("YYYY-MM-DD");
+        let listData = [];
+        this.state.meetDateInfo.forEach((item) => {
+            if (time === item.meetDate) {
+                listData.push({
+                    meetDate: item.meetDate,
+                    type: "warning",
+                    notStartCount: "有" + item.notStartCount + "个未开始会议",
+                    overCount: "有" + item.overCount + "个已结束会议",
+                });
+            }
+        });
+        return (
+            <ul className="events">
+                {
+                    listData.map(item => (
+                        <li key={item.meetDate}>
+                            {item.notStartCount === "有0个未开始会议" ? "" : <Badge status="success" text={item.notStartCount} />}
+                            {item.overCount === "有0个已结束会议" ? "" : <Badge status="default" text={item.overCount} />}
+                        </li>
+                    ))
+                }
+            </ul>
+        );
+    }
+
+    //显示我参加的会议
+    showMyReserve = () => {
+        const url = global.localhostUrl + "meeting/toSelectMyJoinMeeting";
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({}),
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    meetDateInfo: data.data,
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+    }
+
+    //选择某月进行显示
+    showMyReserveOneMonth = (yearMonth) => {
+        const url = global.localhostUrl + "meeting/specifiedMyJoinMeeting?yearMonth=" + yearMonth;
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({}),
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    meetDateInfo: data.data,
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+    }
+
+    //选择某日进行显示
+    showMyReserveOneDate = (reserveDate) => {
+        const url = global.localhostUrl + "meeting/selectMyJoinMeetingByDate?meetDate=" + reserveDate;
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({}),
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    meetInfo: data.data,
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+    }
+    onChange = (e) => {
+        this.showMyReserveOneMonth(e.format("YYYY-MM"));
+        this.showMyReserveOneDate(e.format("YYYY-MM-DD"));
+    }
+    render() {
+        return (
+            <div >
+                <Row>
+                    <Col span={18} offset={3}>
+                        <Card>
+                            <Calendar dateCellRender={this.dateCellRender} onChange={this.onChange} />
+                        </Card>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={18} offset={3}>
+                        <Card
+                            title={
+                                <div>
+                                    <h3 style={{ float: 'left', marginBottom: -10 }}>会议情况</h3>
+                                </div>
+                            }
+                        >
+                            <MyJoinMeetingInfo dataSource={this.state.meetInfo}></MyJoinMeetingInfo>
+                        </Card>
+                    </Col>
+                </Row>
+            </div>
+        );
+    }
+}
+export default MyJoinMeeting;

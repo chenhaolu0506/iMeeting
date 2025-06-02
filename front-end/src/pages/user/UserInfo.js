@@ -1,13 +1,12 @@
-import React, { Component } from "react";
-import { message, Input, Modal, Button, Card, Row, Col } from "antd";
-import global from "../../../global";
-import ChangePassword from "./tools/ChangePasswordd";
-
+import React, { Component } from 'react';
+import {message,Input,Modal,Button,Card,Row,Col} from "antd";
+import global from '@/global';
+import ChangePassword from "@/pages/user/tool/ChangePassword";
 class UserInfo extends Component {
-    componentDidMount() {
+    componentDidMount(){
         this.getUserInfo();
-    }
 
+    }
     constructor(props){
         super(props);
         this.state = {
@@ -28,36 +27,40 @@ class UserInfo extends Component {
         }
     }
 
+
     /////////////////////////////////////////////////Input输入的及时改变/////////////////////////////////////////////////
-    newPhoneChange = (e) => {
+    // username被修改
+    //手机号被修改
+    newPhoneChange=(e)=>{
         this.setState({ newPhone : e.target.value })
     }
-    phoneCodeChange = (e) => {
+    //验证码被修改
+    phoneCodeChange=(e)=>{
         this.setState({ phone_code : e.target.value })
     }
-    nameChange = (e) => {
+    nameChange=(e)=>{
         this.setState({ name : e.target.value })
     }
-    departNameChange = (e) => {
+    departNameChange=(e)=>{
         this.setState({ departName : e.target.value })
     }
-    positionNameChange = (e) => {
+    positionNameChange=(e)=>{
         this.setState({ positionName : e.target.value })
     }
-    workNumChange = (e) => {
+    workNumChange=(e)=>{
         this.setState({ workNum : e.target.value })
     }
-    phoneChange = (e) => {
+    phoneChange=(e)=>{
         this.setState({ phone : e.target.value })
     }
-    resumeChange = (e) => {
+    //简介被修改
+    resumeChange=(e)=>{
         this.setState({ resume : e.target.value })
     }
-
     /////////////////////////////////////////////////找回密码/////////////////////////////////////////////////
-    // 验证验证码
-    compareCode = () => {
-        if(this.state.phone_code === this.state.pwd_code){
+    //验证验证码
+    compareCode=()=>{
+        if(this.state.phone_code===this.state.pwd_code){
             message.success("验证成功！");
             this.setState({
                 visible: false,
@@ -68,11 +71,12 @@ class UserInfo extends Component {
         }
     }
     //获取验证码60s
-    codeTime = () => {
-        const timer = setInterval(() => {
-            if(this.state.codeTime > 0){
+    codeTime=()=>{
+        const timer =setInterval(()=> {
+            // console.log(this.state.codeTime);
+            if(this.state.codeTime>0){
                 this.setState({
-                    codeTime:this.state.codeTime - 1
+                    codeTime:this.state.codeTime-1
                 });
             }else{
                 this.setState({
@@ -82,7 +86,6 @@ class UserInfo extends Component {
             }
         }, 1000);
     }
-
     /////////////////////////////////////////////////对话框/////////////////////////////////////////////////
     //弹出对话框
     showModal = () => {
@@ -106,119 +109,147 @@ class UserInfo extends Component {
     /////////////////////////////////////////////////请求/////////////////////////////////////////////////
     //get用户信息
     getUserInfo=()=>{
-        const url = global.localhostUrl + "showUserinfo";
-        fetch(url, {
+        const url1=global.localhostUrl+"showUserinfo";
+        // const url1="http://39.106.56.132:8080/IMeeting/showUserinfo";
+        fetch(url1, {
             method: "POST",
-            mode: "cors",
-            credentials:"include",
+            //type:"post",
+            //url:"http://39.106.56.132:8080/userinfo/tologin",
+            mode: "cors",//支持跨域
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-        .then(json => {
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
             const data = json;
             console.log(data);
-            this.setState(data.data);
+            this.setState(data.data,function () {});
+
         }).catch(function (e) {
-            console.log(e);
+            console.log("fetch fail");
             alert('系统错误');
         });
     }
-
-    // 修改
-    updateResume = () => {
-        const url = global.localhostUrl + "updateResume?resume=" + this.state.resume;
-        fetch(url, {
+    //修改
+    updateResume=()=>{
+        const url1=global.localhostUrl+"updateResume?resume="+this.state.resume;
+        // const url1="http://39.106.56.132:8080/IMeeting/updateResume?resume="+this.state.resume;
+        fetch(url1, {
             method: "POST",
-            mode: "cors",
-            credentials:"include",
+            //type:"post",
+            //url:"http://39.106.56.132:8080/userinfo/tologin",
+            mode: "cors",//支持跨域
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-        .then(json => {
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
             const data = json;
             if(data.status){
-                message.success("修改成功");
+                message.success("修改成功！");
             }
             console.log(data);
         }).catch(function (e) {
-            console.log(e);
+            console.log("fetch fail");
             alert('系统错误');
         });
-    }
 
-    // 发送验证码请求
+    }
+    //发送验证码请求
     getPhoneCode = () =>{
-        const phone = this.state.newPhone;
-        const url = global.localhostUrl + "getCode?phone=" + phone;
-        if(phone === ""){
+
+        const phone=this.state.newPhone;//this.state.username;
+        // const url="http://39.106.56.132:8080/IMeeting/getCode?phone="+phone;
+        const url=global.localhostUrl+"getCode?phone="+phone;
+        if(phone===""){
             message.warning("手机号不能为空！");
         }else{
             fetch(url, {
                 method: "POST",
+                //type:"post",
+                //url:"http://39.106.56.132:8080/userinfo/tologin",
                 mode: "cors",
-                credentials:"include",
+                credentials:"include",//跨域携带cookie
                 headers: {
                     "Content-Type": "application/json;charset=utf-8",
                 },
                 body: JSON.stringify({}),
-            }).then(res => res.json())
-            .then(json => {
+            }).then(function (res) {//function (res) {} 和 res => {}效果一致
+                return res.json()
+            }).then(json => {
+                // get result
                 const data = json;
-                if(data.status === true){
-                    message.success("请求发送成功");
+                // console.log(data);
+                if(data.status===true){
+                    message.success("请求发送成功！");
                     this.setState({
                         pwd_code:data.data,
                         disabled_getCode:true,
                         codeTime:60,
-                    }, this.codeTime);
+                    },this.codeTime);
 
                 }else if(!data.status){
-                    message.error("手机号码不正确");
+                    message.error("手机号码不正确！");
                 }
             }).catch(function (e) {
-                console.log(e);
+                console.log("fetch fail");
                 alert('系统错误');
             });
+
         }
     }
+    //修改手机号
+    changePhone = () =>{
 
-    // 修改手机号
-    changePhone = () => {
-        const phone = this.state.newPhone;
-        const url = global.localhostUrl + "recordPhone?phone="+phone;
+    const phone=this.state.newPhone;//this.state.username;
+    const url=global.localhostUrl+"recordPhone?phone="+phone;
+    // const url="http://39.106.56.132:8080/IMeeting/recordPhone?phone="+phone;
         fetch(url, {
             method: "POST",
+            //type:"post",
+            //url:"http://39.106.56.132:8080/userinfo/tologin",
             mode: "cors",
-            credentials:"include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-        .then(json => {
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
             const data = json;
-            if(data.status === true){
-                message.success("手机号修改成功");
+            // console.log(data);
+            if(data.status===true){
+                message.success("手机号修改成功！");
                 this.setState({
-                    phone: this.state.newPhone
-                }, this.codeTime);
-            }else{
+                    phone:this.state.newPhone
+                },this.codeTime);
+            }else if(!data.status){
                 message.error("手机号修改失败！");
             }
+
         }).catch(function (e) {
-            console.log(e);
+            console.log("fetch fail");
             alert('系统错误');
         });
-    }
 
+
+    }
     /////////////////////////////////////////////////主函数/////////////////////////////////////////////////
     render() {
+
         return (
-            <div>
+            <div >
+                {/*<Button onClick={this.getUserInfo}>get</Button>*/}
                 <Row style={{marginTop:10,borderRadius:10}}>
                     <Col span={18} offset={3} >
                         <Card
@@ -231,11 +262,13 @@ class UserInfo extends Component {
 
                                         </Col>
                                         <Col span={12}>
-                                            <Button href="#" type={"primary"} onClick={this.updateResume}>保存</Button>
+                                            <Button href="#" type={"primary"} onClick={this.updateResume} >保存</Button>
+
                                         </Col>
                                     </Row>
                                 </div>
                             }
+                            // style={{ width: 300 }}
                         >
                             <h3 style={{float:'left',marginTop:10}}>姓名</h3>
                             <Input placeholder='姓名' value={this.state.name} onChange={this.nameChange} disabled />
@@ -247,7 +280,7 @@ class UserInfo extends Component {
                             <Input placeholder='工号' value={this.state.worknum} onChange={this.workNumChange} disabled/>
                             <h3 style={{float:'left',marginTop:10}}>手机号</h3>
                             <div style={{float:'left',width:"100%"}}></div>
-                            <Input style={{float:'left', width:"70%" }} placeholder='手机号'value={this.state.phone} onChange={this.phoneChange} disabled/>
+                            <Input style={{float:'left', width:"70%" }} placeholder='手机号'value={this.state.phone} onChange={this.phoneChange} disabled />
                             <Button style={{float:'left',marginLeft:"5%",width:"25%"}} type="primary" onClick={this.showModal}>修改</Button>
                             <div style={{float:'left',width:"100%"}}></div>
                             <h3 style={{float:'left',marginTop:10}}>简介</h3><Input.TextArea rows={4}  placeholder='简介' value={this.state.resume} onChange={this.resumeChange}/>
@@ -275,9 +308,14 @@ class UserInfo extends Component {
                     {this.state.codeTime>0?"请"+this.state.codeTime+"秒后再试":"获取验证码"}
                 </Button>
                 </Modal>
+
+
+
+
             </div>
         );
     }
 }
+
 
 export default UserInfo;

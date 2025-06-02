@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Button, Card, Input, message, Steps} from 'antd';
+import {Button, Card, Input, message,Steps} from 'antd';
 class Login extends Component {
 
     constructor(props, context) {

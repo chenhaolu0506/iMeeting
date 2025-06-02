@@ -1,0 +1,13 @@
+
+.welPage{
+    text-align: center;
+}
+.welImg{
+    background: #61dafb;
+}
+.welCar{
+    margin:auto;
+    width: 70%;
+    height: auto;
+    max-width: 800px;
+}

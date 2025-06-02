@@ -25,7 +25,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.IMeeting.config.Constant.DEFAULT_PASSWORD;
-
+@CrossOrigin(
+        origins = "http://localhost:3000",
+        methods = {RequestMethod.GET, RequestMethod.POST},
+        allowedHeaders = "*",
+        allowCredentials = "true"
+)
 @RestController
 public class IdentityController {
     @Autowired

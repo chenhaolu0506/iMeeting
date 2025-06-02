@@ -44,9 +44,13 @@ public class UserInfoServiceImpl implements UserInfoService {
     public UserInfo login(String username, String password) {
         UserInfo userInfo = userInfoRepository.findByUsername(username);
         System.out.println("userInfo=" + userInfo);
-        if (userInfo != null && BCrypt.checkpw(password, userInfo.getPassword())) {
+        if (userInfo != null && password.equals(userInfo.getPassword())) {
             return userInfo;
         }
+
+//        if (userInfo != null && BCrypt.checkpw(password, userInfo.getPassword())) {
+//            return userInfo;
+//        }
         return null;
     }
 

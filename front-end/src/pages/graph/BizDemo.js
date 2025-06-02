@@ -1,12 +1,28 @@
 import React, { Component } from 'react';
-import { Chart, Geom, Axis, Tooltip, Coord, Label } from "bizcharts";
-import { DataSet } from "@antv/data-set";
-import moment from 'moment';
-import { Col, Divider, Row, Tooltip as TooltipAnt, Collapse, message } from 'antd';
-import "../../css/graph.less";
-import global from "../../global";
-import { CaretDownFilled, CaretUpFilled, ExclamationCircleOutlined } from '@ant-design/icons';
 
+import {
+    // G2,
+    Chart,
+    Geom,
+    Axis,
+    Tooltip,
+    Coord, Label,
+    // Label,
+    // Legend,
+    // View,
+    // Guide,
+    // Shape,
+    // Facet,
+    // Util
+} from "bizcharts";
+import DataSet from "@antv/data-set";
+import {Col, Divider, Row, Icon, Tooltip as TooltipAnt, Collapse, message} from "antd";
+import moment from 'moment';
+import "@/css/graph/graph.less"
+import global from '@/global';
+
+
+// mock data
 const visitData = [];
 
 const beginDay = new Date().getTime();
@@ -18,24 +34,25 @@ for (let i = 0; i < fakeY.length; i += 1) {
         y: fakeY[i],
     });
 }
-
 class BizDemo extends Component {
-    componentWillReceiveProps(e) {
-        if (e.loginFlag !== this.props.loginFlag) {
+    componentWillReceiveProps(e){
+        console.log("propsChange",e)
+        if(e.loginFlag!==this.props.loginFlag){
             this.indexData();
         }
     }
     componentDidMount() { //初始化
-        const resizeEvent = new Event('resize', { bubbles: true, cancelable: true });
-        window.dispatchEvent(resizeEvent);
+        const e = document.createEvent("Event");
+        e.initEvent('resize', true, true);
+        window.dispatchEvent(e);
         this.indexData();
     }
     state = {
-        meetingList: [],
+        meetingList:[],
         autoHideXLabels: false,
-        roomPercent: "14%",
-        meetingCount: 0,
-        data1: [
+        roomPercent:"14%",
+        meetCount:0,
+        data1 : [
             {
                 year: "2月1日",
                 sales: 5
@@ -93,13 +110,13 @@ class BizDemo extends Component {
                 sales: 8
             }
         ],
-        lineData: [
+        lineData:[
             {
                 country: "空闲会议室",
                 population: 78
             }
         ],
-        pieData: [
+        pieData:[
             {
                 item: "会议室一",
                 count: 40
@@ -121,55 +138,54 @@ class BizDemo extends Component {
                 count: 9
             }
         ],
-        areaData: [
+        areaData:[
             {
                 year: "6%",
                 value: 6
-            }, {
+            },{
                 year: "7%",
                 value: 7
-            }, {
+            },{
                 year: "9%",
                 value: 9
-            }, {
+            },{
                 year: "7%",
                 value: 7
-            }, {
+            },{
                 year: "10%",
                 value: 10
-            }, {
+            },{
                 year: "14%",
                 value: 14
-            }, {
+            },{
                 year: "15%",
                 value: 15
-            }, {
+            },{
                 year: "16%",
                 value: 16
-            }, {
+            },{
                 year: "14%",
                 value: 14
             }
         ],
-        free: 100
+        free:100
 
     };
-
     ////////////////////////////////////////////////
-    indexData = () => {
+    indexData=()=>{
         let data1 = [
             {
                 year: "2月1日",
                 sales: 5
             }
         ]
-        let lineData = [
+        let lineData=[
             {
                 country: "空闲会议室",
                 population: 78
             }
         ]
-        let pieData = [
+        let pieData=[
             {
                 item: "会议室一",
                 count: 40
@@ -191,65 +207,76 @@ class BizDemo extends Component {
                 count: 9
             }
         ]
-        let meetingCount = 0
-        let meetingList = []
-        const url = global.localhostUrl + "meeting/indexData";
+        let areaData=[
+            {
+                year: "1991",
+                value: 15468
+            }
+        ]
+        let roomPercent="14%"
+        let meetCount=0
+        let meetingList=[]
+        const url=global.localhostUrl+"meeting/indexData";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-            .then(json => {
-                const data = json;
-                if (data.status === true) {
-                    lineData = [
-                        {
-                            country: "空闲会议室",
-                            population: data.data[1],
-                        }
-                    ];
-                    data1 = []
-                    data.data[3].map((item, i) => {
-                        meetingCount = meetingCount + item
-                        data1.push({
-                            year: moment().add(-13 + i, 'days').format('MM月DD日'),
-                            sales: item,
-                        })
-                    });
-
-                    pieData = []
-                    data.data[6].map(item => {
-                        pieData.push({
-                            item: item[0],
-                            count: item[1]
-                        })
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
+            const data = json;
+            console.log(data);
+            if(data.status===true){
+                lineData=[
+                    {
+                        country: "空闲会议室",
+                        population: data.data[1],
+                    }
+                ];
+                data1=[]
+                data.data[3].map((item,i)=>{
+                    meetCount=meetCount+item
+                    data1.push({
+                        year: moment().add(-13+i,'days').format('MM月DD日'),
+                        sales: item,
                     })
+                });
 
-                    meetingList = data.data[0]
-                    data.data[4].map(item => {
-                        return meetingList.push(item)
+                pieData=[]
+                data.data[6].map(item=>{
+                    pieData.push({
+                        item: item[0],
+                        count: item[1]
                     })
+                })
 
-                    this.setState({
-                        meetingList: data.data[0],
-                        lineData: lineData,
-                        pieData: pieData,
-                        data1: data1,
-                        free: data.data[1],
-                        meetingCount: meetingCount,
-                    }, () => {
-                        const resizeEvent = new Event('resize', { bubbles: true, cancelable: true });
-                        window.dispatchEvent(resizeEvent);
-                    })
-                }
-            }).catch(function (e) {
-                console.log(e);
-                alert('系统错误');
-            });
+                meetingList=data.data[0]
+                data.data[4].map(item=>{
+                    return meetingList.push(item)
+                })
+
+                this.setState({
+                    meetingList:data.data[0],
+                    lineData:lineData,
+                    pieData:pieData,
+                    data1:data1,
+                    free:data.data[1],
+                    meetCount:meetCount,
+                },()=>{
+                    const e = document.createEvent("Event");
+                    e.initEvent('resize', true, true);
+                    window.dispatchEvent(e);
+                })
+            }
+        }).catch(function (e) {
+            console.log("fetch fail");
+            alert('系统错误');
+        });
     }
     render() {
         const { DataView } = DataSet;
@@ -273,19 +300,19 @@ class BizDemo extends Component {
             as: "percent"
         });
 
-        const mode1 = { //自适应大小1号
-            xs: { span: 24, offset: 0 },
-            sm: { span: 20, offset: 2 },
-            md: { span: 12, offset: 0 },
-            lg: { span: 8, offset: 0 },
-            xl: { span: 6, offset: 0 },
+        const mode1={//自适应大小1号
+            xs:{span:24,offset:0},
+            sm:{span:20,offset:2},
+            md:{span:12,offset:0},
+            lg:{span:8,offset:0},
+            xl:{span:6,offset:0},
         }
-        const mode2 = { //自适应大小1号
-            xs: { span: 24, offset: 0 },
-            sm: { span: 24, offset: 0 },
-            md: { span: 24, offset: 0 },
-            lg: { span: 16, offset: 0 },
-            xl: { span: 18, offset: 0 },
+        const mode2={//自适应大小1号
+            xs:{span:24,offset:0},
+            sm:{span:24,offset:0},
+            md:{span:24,offset:0},
+            lg:{span:16,offset:0},
+            xl:{span:18,offset:0},
         }
 
         const cols2 = {
@@ -296,8 +323,11 @@ class BizDemo extends Component {
                 }
             }
         };
+        const text = `
+          风湿病是一组侵犯关节、骨骼、肌肉、血管及有关软组织或结缔组织为主的疾病，其中多数为自身免疫性疾病。发病多较隐蔽而缓慢，病程较长，且大多具有遗传倾向。 诊断及治疗均有一定难度；血液中多可检查出不同的自身抗体，可能与不同HLA亚型有关；对非甾类抗炎药(NSAID)，糖皮质激素和免疫抑制剂有较好的短期或长期的缓解性反应。
+         `;
         return (
-            <div style={{ padding: 10 }}>
+            <div style={{padding:10}}>
                 <Row gutter={16}>
                     <Col {...mode1}>
                         <CardJGN
@@ -314,20 +344,20 @@ class BizDemo extends Component {
                                 >
                                     {/*<Axis name="year" />*/}
                                     {/*<Axis*/}
-                                    {/*name="value"*/}
-                                    {/*label={{*/}
-                                    {/*formatter: val => {*/}
-                                    {/*return (val / 10000).toFixed(1) + "k";*/}
-                                    {/*}*/}
-                                    {/*}}*/}
+                                        {/*name="value"*/}
+                                        {/*label={{*/}
+                                            {/*formatter: val => {*/}
+                                                {/*return (val / 10000).toFixed(1) + "k";*/}
+                                            {/*}*/}
+                                        {/*}}*/}
                                     {/*/>*/}
                                     <Tooltip
                                         crosshairs={{
                                             type: "line"
                                         }}
                                     />
-                                    <Geom type="area" position="year*value" color={"#8f65dd"} />
-                                    <Geom type="line" position="year*value" size={2} color={"#8f65dd"} />
+                                    <Geom type="area" position="year*value" color={"#8f65dd"}/>
+                                    <Geom type="line" position="year*value" size={2} color={"#8f65dd"}/>
                                 </Chart>
                             }
                         />
@@ -336,7 +366,7 @@ class BizDemo extends Component {
                         <CardJGN
                             title={"近两周的开会总次数"}
                             text={"数量"}
-                            center={this.state.meetingCount}
+                            center={this.state.meetCount}
                             chart={
                                 <Chart
                                     height={50}
@@ -381,7 +411,7 @@ class BizDemo extends Component {
                     <Col {...mode1} >
                         <CardJGN
                             title={"当前时段空闲会议室"}
-                            center={this.state.free + "%"}
+                            center={this.state.free+"%"}
                             text={"实时"}
                             chart={
                                 <Chart
@@ -391,10 +421,10 @@ class BizDemo extends Component {
                                     padding={'auto'}
                                     scale={
                                         {
-                                            'population': {
-                                                type: "linear",
-                                                min: 0,
-                                                max: 100,
+                                            'population':{
+                                                type:"linear",
+                                                min:0,
+                                                max:100,
                                             }
                                         }
                                     }
@@ -434,26 +464,26 @@ class BizDemo extends Component {
                             title={"会议室排名"}
                             center={
                                 <div >
-                                    1.会议室二<CaretUpFilled style={{ color: "red" }} />
+                                    1.会议室二<Icon style={{color:"red"}} type="caret-up" theme="filled" />
                                 </div>
                             }
                             text={"数据"}
                             chart={
-                                <div style={{ height: "56px" }}>
+                                <div style={{height:"56px"}}>
                                     <Row>
                                         <Col span={24}>
-                                            <div style={{ float: "left", paddingLeft: "20px" }}>
-                                                2.会议室一{" 88"}<CaretDownFilled style={{ color: "green" }} />
+                                            <div style={{float:"left",paddingLeft:"20px"}}>
+                                                2.会议室一{" 88"}<Icon style={{color:"green"}} type="caret-down" theme="filled" />
                                             </div>
                                         </Col>
                                         <Col span={24}>
-                                            <div style={{ float: "left", paddingLeft: "20px" }}>
-                                                3.会议室三{"  68"}<CaretUpFilled style={{ color: "red" }} />
+                                            <div style={{float:"left",paddingLeft:"20px"}}>
+                                                3.会议室三{"  68"}<Icon style={{color:"red"}} type="caret-up" theme="filled" />
                                             </div>
                                         </Col>
                                         <Col span={24}>
-                                            <div style={{ float: "left", paddingLeft: "20px" }}>
-                                                4.会议室四{"  65"}<CaretDownFilled style={{ color: "green" }} />
+                                            <div style={{float:"left",paddingLeft:"20px"}}>
+                                                4.会议室四{"  65"}<Icon style={{color:"green"}} type="caret-down" theme="filled" />
                                             </div>
                                         </Col>
                                     </Row>
@@ -467,13 +497,16 @@ class BizDemo extends Component {
                             center={"我的会议"}
                             text={"数据"}
                             chart={
-                                <div style={{ margin: "20px" }}>
-                                    <Collapse>
+                                <div style={{margin:"20px"}}>
+                                    <Collapse
+                                        // defaultActiveKey={['0']}
+                                        onChange={()=>{}}
+                                    >
                                         {
-                                            this.state.meetingList.map((item, i) => {
+                                            this.state.meetingList.map((item,i)=>{
                                                 return (
                                                     <Collapse.Panel
-                                                        header={item.topic + " " + item.meetDate.split("-")[1] + "月" + item.meetDate.split("-")[2] + "日 " + item.begin.split(" ")[1] + "-" + item.over.split(" ")[1] + " " + item.meetroom.name + " 发起人：" + item.userinfo.name}
+                                                        header={item.topic + " " + item.meetDate.split("-")[1] + "月" + item.meetDate.split("-")[2] + "日 " + item.begin.split(" ")[1]+"-"+item.over.split(" ")[1]+" "+item.meetroom.name+" 发起人："+item.userinfo.name}
                                                         key={i}
                                                     >
                                                         <p>{item.content}</p>
@@ -501,6 +534,11 @@ class BizDemo extends Component {
                                 >
                                     <Coord type="theta" radius={1} />
                                     <Axis name="percent" />
+                                    {/*<Legend*/}
+                                    {/*position="right"*/}
+                                    {/*offsetY={-window.innerHeight / 2 + 120}*/}
+                                    {/*offsetX={-100}*/}
+                                    {/*/>*/}
                                     <Tooltip
                                         showTitle={false}
                                         itemTpl="<li><span style=&quot;background-color:{color};&quot; class=&quot;g2-tooltip-marker&quot;></span>{name}: {value}</li>"
@@ -520,10 +558,20 @@ class BizDemo extends Component {
                                             }
                                         ]}
                                         style={{
-                                            lineWidth: 1, //间隔
-                                            stroke: "#fff", //间隔颜色
+                                            lineWidth: 1,//间隔
+                                            stroke: "#fff",//间隔颜色
                                         }}
                                     >
+                                        {/*<Label*/}
+                                        {/*content="percent"*/}
+                                        {/*offset={-40}*/}
+                                        {/*textStyle={{*/}
+                                        {/*rotate: 0,*/}
+                                        {/*textAlign: "center",*/}
+                                        {/*shadowBlur: 2,*/}
+                                        {/*shadowColor: "rgba(0, 0, 0, .45)"*/}
+                                        {/*}}*/}
+                                        {/*/>*/}
                                         <Label
                                             content="item"
                                             offset={-40}
@@ -539,26 +587,47 @@ class BizDemo extends Component {
                             }
                         />
                     </Col>
+
+                    {/*<Col {...mode1} >*/}
+                        {/*<CardJGN*/}
+                            {/*text={"图表"}*/}
+                        {/*/>*/}
+                    {/*</Col>*/}
+                    {/*<Col {...mode1} >*/}
+                        {/*<CardJGN*/}
+                            {/*text={"图表"}*/}
+                        {/*/>*/}
+                    {/*</Col>*/}
+                    {/*<Col {...mode1} >*/}
+                        {/*<CardJGN*/}
+                            {/*text={"图表"}*/}
+                        {/*/>*/}
+                    {/*</Col>*/}
+                    {/*<Col {...mode1} >*/}
+                        {/*<CardJGN*/}
+                            {/*text={"图表"}*/}
+                        {/*/>*/}
+                    {/*</Col>*/}
                 </Row>
 
             </div>
         );
     }
 }
-class CardJGN extends Component {
-    render() {
+class CardJGN extends Component{
+    render(){
         return (
             <div className={'card'}>
-                <div style={{ width: "100%", height: "88px" }}>
+                <div style={{width:"100%",height:"88px"}}>
                     <Row>
                         <Col>
-                            <div style={{ margin: "20px" }}>
-                                <div style={{ float: "left" }}>
+                            <div style={{margin:"20px"}}>
+                                <div style={{float:"left"}}>
                                     {this.props.title}
                                 </div>
-                                <div style={{ float: "right" }}>
+                                <div style={{float:"right"}}>
                                     <TooltipAnt title="指标说明">
-                                        <ExclamationCircleOutlined />
+                                        <Icon type="exclamation-circle" />
                                     </TooltipAnt>
                                 </div>
                             </div>
@@ -566,8 +635,10 @@ class CardJGN extends Component {
                     </Row>
                     <Row>
                         <Col>
-                            <div style={{ fontSize: "30px", float: "left", marginLeft: "20px" }}>
-                                {this.props.center}
+                            <div style={{fontSize:"30px",float:"left",marginLeft:"20px"}}>
+                                {
+                                    this.props.center
+                                }
                             </div>
                         </Col>
                     </Row>

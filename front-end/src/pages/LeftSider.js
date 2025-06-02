@@ -1,6 +1,5 @@
-import React, { Component } from "react";
-import { Menu, Button, Layout } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import React, { Component } from 'react';
+import {Icon, Menu,Button,Layout} from "antd";
 
 class LeftSider extends Component {
     constructor(props, context) {
@@ -13,7 +12,7 @@ class LeftSider extends Component {
         }
     }
 
-    display_name() {
+    display_name() { //编辑按钮的单击事件，修改状态机display_name的取值
         if (this.state.display_name === 'none') {
             this.setState({
                 menu_mode: 'inline',
@@ -30,7 +29,6 @@ class LeftSider extends Component {
 
         }
     }
-
     menu_mode() { //编辑按钮的单击事件，修改状态机display_name的取值
         if (this.state.menu_mode === 'inline') {
             this.setState({
@@ -44,10 +42,11 @@ class LeftSider extends Component {
 
         }
     }
+
     render() {
         const tit1=
             <div >
-                <UserOutlined /><span ><span style={{display:this.state.display_name}}>User</span></span>
+                <Icon type={'user'}/><span ><span style={{display:this.state.display_name}}>User</span></span>
             </div>
         return (
             <Layout >

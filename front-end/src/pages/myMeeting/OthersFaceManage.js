@@ -1,40 +1,57 @@
 import React, { Component } from 'react';
-import { Table, Card, Col, Row, Button, message, Upload, Modal, Input } from "antd";
-import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
-import global from "../../global";
+import {Table, Card, Col, Row, Button, Tooltip, Icon, message, Upload, Modal, Input} from "antd";
+import global from '@/global';
 import Highlighter from "react-highlight-words";
+import face1 from "@/pages/myMeeting/tool/face1.jpg";
+import face2 from "@/pages/myMeeting/tool/face2.jpg";
+import face3 from "@/pages/myMeeting/tool/face3.jpg";
+import face4 from "@/pages/myMeeting/tool/face4.jpg";
 
 const props = {
-    withCredentials: true,
+// onPreview={this.fileHandlePreview}
+// onChange={this.fileHandleChange}
+    withCredentials:true,
     name: 'file',
     headers: {
         authorization: 'authorization-text',
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Headers": "DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-        "Access-Control-Allow-Origin": "*",
-    }
+        "Access-Control-Allow-Credentials" : true ,
+        "Access-Control-Allow-Headers" : "DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type",
+        "Access-Control-Allow-Methods" : "GET, POST, OPTIONS",
+        "Access-Control-Allow-Origin" : "*",
+    },
+    // onPreview(e){this.fileHandlePreview(e)},
+    // onChange(info) {
+    //     if (info.file.status !== 'uploading') {
+    //         console.log(info.file, info.fileList);
+    //         if(info.file.response.status){
+    //             message.success(info.file.response.message);
+    //         }else {
+    //             message.warning(info.file.response.message);
+    //
+    //         }
+    //     }
+    // },
 };
 
 class OthersFaceManage extends Component {
-    componentDidMount() {
+    componentDidMount(){
         this.selectAll();
     }
-    state = {
+    state={
         previewVisible: false,
         fileModalVisible: false,
         previewImage: '',
         fileList: [],
-        worknum: "",
-        dataSource: [],
-        faceId: 0,
+        worknum:"",
+        dataSource:[],
+        faceId:0,
         modalVisible: false,
     }
-    //表格查询
+    //表格查询...this.getColumnSearchProps("name"),
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
-            setSelectedKeys, selectedKeys, confirm, clearFilters,
-        }) => (
+                             setSelectedKeys, selectedKeys, confirm, clearFilters,
+                         }) => (
             <div style={{ padding: 8 }}>
                 <Input
                     ref={node => { this.searchInput = node; }}
@@ -51,18 +68,18 @@ class OthersFaceManage extends Component {
                     size="small"
                     style={{ width: 90, marginRight: 8 }}
                 >
-                    查找
+                    Search
                 </Button>
                 <Button
                     onClick={() => this.handleReset(clearFilters)}
                     size="small"
                     style={{ width: 90 }}
                 >
-                    重置
+                    Reset
                 </Button>
             </div>
         ),
-        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+        filterIcon: filtered => <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />,
         onFilter: (value, record) => record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
         onFilterDropdownVisibleChange: (visible) => {
             if (visible) {
@@ -87,9 +104,12 @@ class OthersFaceManage extends Component {
         clearFilters();
         this.setState({ searchText: '' });
     }
+    //表格查询
+
     fileHandleCancel = () => this.setState({ previewVisible: false })
     modalHandleCancel = () => this.setState({ fileModalVisible: false })
-    showFileModal = () => this.setState({ fileModalVisible: true })
+    showFileModal=()=> this.setState({ fileModalVisible: true })
+
 
     fileHandlePreview = (file) => {
         this.setState({
@@ -98,12 +118,15 @@ class OthersFaceManage extends Component {
         });
     }
 
-    fileHandleChange = ({ fileList }) => {
-        if (fileList.length !== 0) {
-            if (fileList[0].response !== undefined) {
-                if (fileList[0].response.status) {
+    fileHandleChange = ( {fileList} ) => {
+        console.log( "log:",fileList );
+        // console.log( "log1:",fileList[0].response );
+        if(fileList.length !== 0){
+            if(fileList[0].response!== undefined){
+                // console.log( "log2:",fileList[0].response );
+                if(fileList[0].response.status){
                     message.success(fileList[0].response.message);
-                } else {
+                }else {
                     message.warning(fileList[0].response.message);
                 }
             }
@@ -114,162 +137,194 @@ class OthersFaceManage extends Component {
     }
 
     handleCancel = (e) => {
+        console.log(e);
         this.setState({
             modalVisible: false,
         });
     }
-    showDelete = (ev, id) => {
+    showDelete=(ev,id)=>{
         this.setState({
             modalVisible: true,
-            faceId: id,
+            faceId:id,
         });
     }
-    worknumChange = (e) => {
+    worknumChange=(e)=>{
         this.setState({
-            worknum: e.target.value,
+            worknum:e.target.value,
         })
     }
     /////////////////////////////////////////////////////////////////////
-    //通过
-    pass = (ev, id) => {
-        const url = global.localhostUrl + "face/pass?faceId=" + id;
+    //pass
+    pass = (ev,id) =>{
+        const url=global.localhostUrl+"face/pass?faceId="+id;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-            .then(json => {
-                const data = json;
-                if (data.status) {
-                    message.success("操作成功！")
-                }
-                this.selectAll();
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
+            const data = json;
+            console.log(data);
+            if(data.status){
+                message.success("操作成功！")
+            }
+            this.selectAll();
+        }).catch(function (e) {
+            console.log("fetch fail");
+            alert('系统错误');
+        });
     }
-    //不通过
-    reject = (ev, id) => {
-        const url = global.localhostUrl + "face/reject?faceId=" + id;
+    //dispass
+    dispass = (ev,id) =>{
+        const url=global.localhostUrl+"face/dispass?faceId="+id;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-            .then(json => {
-                const data = json;
-                if (data.status) {
-                    message.success("操作成功！")
-                }
-                this.selectAll();
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
-    }
-
-    deleteOne = () => {
-        const url = global.localhostUrl + "face/deleteOne?faceId=" + this.state.faceId;
-        fetch(url, {
-            method: "POST",
-            mode: "cors",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({}),
-        }).then(res => res.json())
-            .then(json => {
-                const data = json;
-                if (data.status) {
-                    message.success(data.message);
-                } else {
-                    message.error(data.message);
-                }
-                this.selectAll();
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
+            const data = json;
+            console.log(data);
+            if(data.status){
+                message.success("操作成功！")
+            }
+            this.selectAll();
+        }).catch(function (e) {
+            console.log("fetch fail");
+            alert('系统错误');
+        });
     }
 
-    selectAll = () => {
-        const url = global.localhostUrl + "abnormal/selectAbnormal";
+    //deleteOne
+    deleteOne = () =>{
+        const url=global.localhostUrl+"face/deleteOne?faceId="+this.state.faceId;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-            .then(json => {
-                const data = json;
-                this.setState({
-                    dataSource: data.data,
-                    modalVisible: false,
-                })
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
+            const data = json;
+            console.log(data);
+            if(data.status){
+                message.success(data.message);
+            }else{
+                message.error(data.message);
+            }
+            this.selectAll();
+        }).catch(function (e) {
+            console.log("fetch fail");
+            alert('系统错误');
+        });
+    }
+    //selectAll
+    selectAll = () =>{
+        const url=global.localhostUrl+"abnormal/selctMyAbnormal";
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials:"include",//跨域携带cookie
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({}),
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
+            const data = json;
+            console.log(data);
+            this.setState({
+                dataSource:data.data,
+                modalVisible: false,
+            })
+        }).catch(function (e) {
+            console.log("fetch fail");
+            alert('系统错误');
+        });
     }
     render() {
-        const columns = [
+        const columns=[
             {
-                title: "序号",
-                key: "id",
-                render: (item, data, i) => {
-                    return (<div>{i + 1}</div>)
+                title:"序号",
+                key:"id",
+                render:(item,data,i)=>{
+                    return(<div>{i+1}</div>)
                 }
-            }, {
-                title: "异常人员名称",
-                render: () => {
-                    return (
+            },{
+                title:"异常人员名称",
+                render:()=>{
+                    return(
                         "陌生人"
                     )
                 }
-            }, {
-                title: "检测时间",
-                dataIndex: "time",
-                key: "time",
-                render: (item) => {
+            },{
+                title:"检测时间",
+                dataIndex:"time",
+                key:"time",
+                render:(item)=>{
                     return item
                 }
-            }, {
-                title: "会议ID",
-                dataIndex: "meetingId",
-                key: "meetingId",
-                render: () => {
-                    return (
+            },{
+                title:"会议ID",
+                dataIndex:"meetingId",
+                key:"meetingId",
+                render:()=>{
+                    return(
                         "会议室一"
                     )
                 }
-            }, {
-                title: "图片",
-                dataIndex: "imgUrl",
-                key: "imgUrl",
-                render: (item, data, i) => {
+            },{
+                title:"图片",
+                dataIndex:"imgUrl",
+                key:"imgUrl",
+                render:(item,data,i)=>{
                     switch (i) {
                         default:
-                            return (<img style={{ width: 111, height: 111 }} src={item} title={"图片"} />)
+                            return(<img style={{ width: 111, height:111 }} src={item} title={"图片"}/>)
                     }
                 }
             }
+            // ,{
+            //     title:"操作",
+            //     render:(item)=>{
+            //         return(
+            //             <div>
+            //                 <Tooltip title="审核通过">
+            //                     <Button onClick={(ev)=>{this.pass(ev,item.id)}}><Icon type="check" /></Button>
+            //                 </Tooltip>
+            //                 <Tooltip title="审核不通过">
+            //                     <Button onClick={(ev)=>{this.dispass(ev,item.id)}}><Icon style={{color:"red"}} type="close" /></Button>
+            //                 </Tooltip>
+            //                 <Tooltip title="删除">
+            //                     <Button onClick={(ev)=>{this.showDelete(ev,item.id)}}><Icon style={{color:"red"}}type={"delete"}></Icon></Button>
+            //                 </Tooltip>
+            //             </div>
+            //         )
+            //     }
+            // }
         ];
         const uploadButton = (
             <div>
-                <PlusOutlined />
+                <Icon type="plus" />
                 <div className="ant-upload-text">上传</div>
             </div>
         );
@@ -278,15 +333,15 @@ class OthersFaceManage extends Component {
                 <Row>
                     <Col span={18} offset={3}>
                         <Card
-                            title={<h2 style={{ float: 'left', marginBottom: -3 }}>异常人员</h2>}
+                            title={<h2 style={{float:'left',marginBottom:-3}}>异常人员</h2>}
                             extra={
-                                <div style={{ width: 200 }}  >
-                                    {/* <Button onClick={this.showFileModal} > 一键报警 </Button> */}
+                                <div style={{width:200}}  >
+                                    {/*<Button onClick={this.showFileModal} > 一键报警 </Button>*/}
                                 </div>
                             }>
                             <Modal
                                 className="clearfix"
-                                open={this.state.fileModalVisible}
+                                visible={this.state.fileModalVisible}
                                 onCancel={this.modalHandleCancel}
                                 onOk={this.modalHandleCancel}
                                 okText={"退出"}
@@ -307,7 +362,7 @@ class OthersFaceManage extends Component {
                                             name="file"
                                             listType="picture-card"
                                             fileList={this.state.fileList}
-                                            action={global.localhostUrl + "face/insertByManager?worknum=" + this.state.worknum}
+                                            action={global.localhostUrl+"face/insertByManager?worknum="+this.state.worknum}
                                             onPreview={this.fileHandlePreview}
                                             onChange={this.fileHandleChange}
                                         >
@@ -319,12 +374,12 @@ class OthersFaceManage extends Component {
                                     </Col>
                                 </Row>
                             </Modal>
-                            <Table rowKey={record => record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
+                            <Table rowKey={record=>record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
                         </Card>
                     </Col>
                 </Row>
                 <Modal
-                    open={this.state.modalVisible}
+                    visible={this.state.modalVisible}
                     onOk={this.deleteOne}
                     onCancel={this.handleCancel}
                     okText={"确定"}

@@ -1,0 +1,996 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="a8202be4-1918-4a7f-a577-c46990fa86e5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/RTC/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/RTC/css/baby-blue.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/RTC/css/bootstrap.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/RTC/css/pure-min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/RTC/css/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/RTC/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/RTC/js/config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/RTC/js/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/RTC/libs/jquery.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/RTC/libs/vconsole.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/RTC/video.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/myMeeting/MyVideoMeet.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/myMeeting/tool/VideoCreateForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/global.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Head.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Head.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/booking/BookingOfAdd.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/booking/BookingOfAdd.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/graph/BizDemo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/graph/BizDemo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/manage/EquipRepairManage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/manage/EquipRepairManage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/manage/JoinPersonManage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/manage/JoinPersonManage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/manage/MeetRoomManage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/manage/MeetRoomManage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/meeting/BookMeeting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/meeting/BookMeeting.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/meeting/tool/FileDrawer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/meeting/tool/FileDrawer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/meeting/tool/MeetInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/meeting/tool/MeetInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/meeting/tool/OneMeetDrawer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/meeting/tool/OneMeetDrawer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/meeting/tool/TaskDrawer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/meeting/tool/TaskDrawer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/myMeeting/OthersFaceManage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/myMeeting/OthersFaceManage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/others/EquipRepair.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/others/EquipRepair.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/user/Group.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/Group.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/user/UserInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/user/UserInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/.tmp/" />
+    <ignored path="$PROJECT_DIR$/temp/" />
+    <ignored path="$PROJECT_DIR$/tmp/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-21708328">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="2" />
+          <entry key="project.open.time.0" value="1" />
+          <entry key="project.open.time.11" value="1" />
+          <entry key="project.open.time.8" value="1" />
+          <entry key="project.opened" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="css" value="9" />
+          <entry key="js" value="37" />
+          <entry key="json" value="2" />
+          <entry key="png" value="11" />
+          <entry key="svg" value="1" />
+          <entry key="ts" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="CSS" value="9" />
+          <entry key="Image" value="11" />
+          <entry key="JSON" value="2" />
+          <entry key="JavaScript" value="37" />
+          <entry key="SVG" value="1" />
+          <entry key="TypeScript" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.js.language.service.starts">
+        <counts>
+          <entry key="ESLintLanguageService" value="3" />
+          <entry key="TypeScriptServerServiceImpl" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="css" value="497" />
+          <entry key="js" value="4948" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="CSS" value="497" />
+          <entry key="JavaScript" value="4948" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.vcs.git.usages" />
+    </session>
+    <session id="1716771546">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="31" />
+          <entry key="project.open.time.0" value="5" />
+          <entry key="project.open.time.1" value="13" />
+          <entry key="project.open.time.2" value="3" />
+          <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.5" value="4" />
+          <entry key="project.open.time.6" value="5" />
+          <entry key="project.open.time.7" value="2" />
+          <entry key="project.open.time.8" value="1" />
+          <entry key="project.opened" value="34" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.js.language.service.starts">
+        <counts>
+          <entry key="ESLintLanguageService" value="32" />
+          <entry key="TypeScriptServerServiceImpl" value="6" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="css" value="147" />
+          <entry key="html" value="10" />
+          <entry key="js" value="50921" />
+          <entry key="json" value="3" />
+          <entry key="less" value="186" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="CSS" value="147" />
+          <entry key="HTML" value="10" />
+          <entry key="JSON" value="3" />
+          <entry key="JavaScript" value="50921" />
+          <entry key="Less" value="186" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="css" value="33" />
+          <entry key="gitignore" value="1" />
+          <entry key="html" value="5" />
+          <entry key="jpg" value="3" />
+          <entry key="js" value="614" />
+          <entry key="json" value="6" />
+          <entry key="jsx" value="1" />
+          <entry key="less" value="13" />
+          <entry key="lock" value="6" />
+          <entry key="md" value="8" />
+          <entry key="mks" value="1" />
+          <entry key="png" value="1" />
+          <entry key="rnc" value="1" />
+          <entry key="svg" value="3" />
+          <entry key="ts" value="11" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="CSS" value="33" />
+          <entry key="HTML" value="5" />
+          <entry key="Image" value="4" />
+          <entry key="JSON" value="5" />
+          <entry key="JSX Harmony" value="1" />
+          <entry key="JavaScript" value="614" />
+          <entry key="Less" value="13" />
+          <entry key="PLAIN_TEXT" value="10" />
+          <entry key="RNG Compact" value="1" />
+          <entry key="SVG" value="3" />
+          <entry key="TypeScript" value="11" />
+          <entry key="tsconfig" value="1" />
+          <entry key="yarn.lock" value="6" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="jgn-ant4" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/App.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="427" column="12" lean-forward="true" selection-start-line="427" selection-start-column="12" selection-end-line="427" selection-end-column="12" />
+              <folding>
+                <element signature="e#380#418#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pages/Demo.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="e#0#41#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pages/Head.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="e#0#41#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pages/myMeeting/MyJoinMeeting.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="e#0#41#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pages/basicPage.js">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pages/myMeeting/MyMeetLeave.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="375">
+              <caret line="25" column="20" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pages/meeting/tool/TaskDrawer.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2955">
+              <caret line="199" column="21" selection-start-line="199" selection-start-column="21" selection-end-line="199" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pages/myMeeting/tool/TaskDrawerMe.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1200">
+              <caret line="82" column="12" selection-start-line="82" selection-start-column="12" selection-end-line="93" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pages/meeting/tool/OneMeetDrawer.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="5955">
+              <caret line="400" column="75" selection-start-line="400" selection-start-column="75" selection-end-line="400" selection-end-column="75" />
+              <folding>
+                <element signature="e#0#41#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+        <option value="Less File" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>checkedKeys</find>
+      <find>drawerVisible</find>
+      <find>showDeal</find>
+      <find>equipChange</find>
+      <find>modalVisible</find>
+      <find>login</find>
+      <find>equip_id</find>
+      <find>下载</find>
+      <find>check</find>
+      <find>had</find>
+      <find>othersList</find>
+      <find>handleOk</find>
+      <find>state</find>
+      <find>//页面</find>
+      <find>签到状态</find>
+      <find>othersFace</find>
+      <find>199</find>
+      <find>1992</find>
+      <find>index</find>
+      <find>meet_room_id</find>
+      <find>报修</find>
+      <find>searchMeetInfo</find>
+      <find>form</find>
+      <find>申请调用</find>
+      <find>登陆</find>
+      <find>Tabl</find>
+      <find>Table</find>
+      <find>image</find>
+      <find>case</find>
+      <find>switch</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>groupList1</replace>
+      <replace>groupList</replace>
+      <replace>state.othersList</replace>
+      <replace />
+      <replace>设备</replace>
+      <replace>showAddEquip</replace>
+      <replace>meetRoom</replace>
+      <replace>roomName</replace>
+      <replace>userId</replace>
+      <replace>faceId</replace>
+      <replace>160</replace>
+      <replace>toJoinPersonIndex</replace>
+      <replace>7</replace>
+      <replace>equipList</replace>
+      <replace>xs={{span:24,offset:0}} sm={{span:20,offset:2}} md={12} lg={6} xl={4}</replace>
+      <replace>{...mode1}&gt;</replace>
+      <replace>className={'card'}</replace>
+      <replace>card2</replace>
+      <replace>会议室</replace>
+      <replace>TooltipAnt</replace>
+      <replace>handleWayChange</replace>
+      <replace>manageShow</replace>
+      <replace>speaker</replace>
+      <replace>visible</replace>
+      <replace>name</replace>
+      <replace>fileList</replace>
+      <replace>showDeal</replace>
+      <replace>登录</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/pages/myMeeting/tool/LeaveDrawer.js" />
+        <option value="$PROJECT_DIR$/src/pages/manage/DepartManage.js" />
+        <option value="$PROJECT_DIR$/src/pages/manage/MeetParaManage.js" />
+        <option value="$PROJECT_DIR$/src/pages/manage/DetailManage.js" />
+        <option value="$PROJECT_DIR$/src/pages/myMeeting/WeekMeeting.js" />
+        <option value="$PROJECT_DIR$/src/pages/meeting/tool/WeekMeetCreateForm.js" />
+        <option value="$PROJECT_DIR$/src/pages/meeting/WeekMeeting.js" />
+        <option value="$PROJECT_DIR$/src/pages/others/DoorApply.js" />
+        <option value="$PROJECT_DIR$/src/pages/others/tool/OpenDoorCreateForm.js" />
+        <option value="$PROJECT_DIR$/src/pages/manage/WeekMeetManage.js" />
+        <option value="$PROJECT_DIR$/src/pages/meeting/tool/FreeTimePopover.js" />
+        <option value="$PROJECT_DIR$/src/pages/manage/BookMeetingManager.js" />
+        <option value="$PROJECT_DIR$/src/pages/manage/tool/CollectionCreateFormM.js" />
+        <option value="$PROJECT_DIR$/src/pages/Demo.js" />
+        <option value="$PROJECT_DIR$/src/pages/meeting/tool/OutLineDrawer.js" />
+        <option value="$PROJECT_DIR$/src/pages/myMeeting/MyJoinMeeting.js" />
+        <option value="$PROJECT_DIR$/src/pages/myMeeting/tool/OutLineDrawerMe.js" />
+        <option value="$PROJECT_DIR$/src/pages/user/mks" />
+        <option value="$PROJECT_DIR$/src/pages/myMeeting/tool/TaskDrawerMe.js" />
+        <option value="$PROJECT_DIR$/src/pages/manage/MeetInfoManage.js" />
+        <option value="$PROJECT_DIR$/src/pages/meeting/tool/MeetingGraph.js" />
+        <option value="$PROJECT_DIR$/src/pages/manage/tool/DoorCreateForm.js" />
+        <option value="$PROJECT_DIR$/src/pages/manage/DoorManage.js" />
+        <option value="$PROJECT_DIR$/src/pages/manage/ManageIndex.js" />
+        <option value="$PROJECT_DIR$/src/pages/meeting/tool/MyMeetInfo.js" />
+        <option value="$PROJECT_DIR$/src/pages/myMeeting/tool/MyJoinMeetInfo.js" />
+        <option value="$PROJECT_DIR$/src/pages/graph/GGIndex.js" />
+        <option value="$PROJECT_DIR$/src/pages/graph/GGDemo1.js" />
+        <option value="$PROJECT_DIR$/src/pages/graph/ViserDemo1.js" />
+        <option value="$PROJECT_DIR$/node_modules/bizcharts/typings/index.d.ts" />
+        <option value="$PROJECT_DIR$/src/pages/manage/MeetRoomManage.js" />
+        <option value="$PROJECT_DIR$/src/pages/manage/EquipRepairManage.js" />
+        <option value="$PROJECT_DIR$/src/pages/myMeeting/config/config.js" />
+        <option value="$PROJECT_DIR$/src/pages/myMeeting/config/WebRTCAPI.min.js" />
+        <option value="$PROJECT_DIR$/src/pages/myMeeting/tool/FileDrawerMe.js" />
+        <option value="$PROJECT_DIR$/src/pages/manage/FileManage.js" />
+        <option value="$PROJECT_DIR$/src/pages/user/UserInfo.js" />
+        <option value="$PROJECT_DIR$/src/pages/myMeeting/tool/VideoCreateForm.js" />
+        <option value="$PROJECT_DIR$/src/pages/myMeeting/MyVideoMeet.js" />
+        <option value="$PROJECT_DIR$/src/pages/user/Group.js" />
+        <option value="$PROJECT_DIR$/src/pages/meeting/BookMeeting.js" />
+        <option value="$PROJECT_DIR$/src/global.js" />
+        <option value="$PROJECT_DIR$/src/pages/meeting/tool/FileDrawer.js" />
+        <option value="$PROJECT_DIR$/src/pages/manage/JoinPersonManage.js" />
+        <option value="$PROJECT_DIR$/src/pages/graph/BizDemo.js" />
+        <option value="$PROJECT_DIR$/src/App.js" />
+        <option value="$PROJECT_DIR$/src/pages/others/EquipRepair.js" />
+        <option value="$PROJECT_DIR$/src/pages/myMeeting/OthersFaceManage.js" />
+        <option value="$PROJECT_DIR$/src/pages/meeting/tool/OneMeetDrawer.js" />
+        <option value="$PROJECT_DIR$/src/pages/meeting/tool/MeetInfo.js" />
+        <option value="$PROJECT_DIR$/src/pages/meeting/tool/TaskDrawer.js" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER">
+    <package-json value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/node_modules" />
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths>
+      <path value="$PROJECT_DIR$/package.json" />
+    </packageJsonPaths>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1234" />
+    <option name="height" value="957" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State />
+          <State>
+            <id>CSS</id>
+          </State>
+          <State>
+            <id>Probable bugsCSS</id>
+          </State>
+          <State>
+            <id>RELAX NG</id>
+          </State>
+          <State>
+            <id>XPath</id>
+          </State>
+          <State>
+            <id>XSLT</id>
+          </State>
+        </expanded-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="jgn-ant4" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jgn-ant4" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jgn-ant4" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jgn-ant4" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jgn-ant4" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jgn-ant4" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jgn-ant4" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jgn-ant4" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jgn-ant4" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jgn-ant4" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jgn-ant4" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jgn-ant4" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="myMeeting" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jgn-ant4" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jgn-ant4" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="others" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="list.type.of.created.stylesheet" value="Less" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="$PROJECT_DIR$/node_modules/eslint" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="prettierjs.PrettierConfiguration.Package" value="$PROJECT_DIR$/node_modules/prettier" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/src/pages/meeting/tool" />
+      <recent name="$PROJECT_DIR$/src/pages/others/tool" />
+      <recent name="$PROJECT_DIR$/src/pages/meeting" />
+      <recent name="$PROJECT_DIR$/src/pages/manage" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/pages/myMeeting/tool" />
+      <recent name="$PROJECT_DIR$/src/pages/RTC" />
+      <recent name="$PROJECT_DIR$/src/pages/myMeeting/config" />
+      <recent name="$PROJECT_DIR$/src/pages/myMeeting" />
+      <recent name="$PROJECT_DIR$/src/pages/meeting/tool" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="start" type="js.build_tools.npm" factoryName="npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.start" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a8202be4-1918-4a7f-a577-c46990fa86e5" name="Default Changelist" comment="" />
+      <created>1542013496035</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1542013496035</updated>
+      <workItem from="1542013497203" duration="55747000" />
+      <workItem from="1542332320731" duration="7335000" />
+      <workItem from="1542532212534" duration="839000" />
+      <workItem from="1542692961106" duration="7840000" />
+      <workItem from="1542769869467" duration="27141000" />
+      <workItem from="1543220043738" duration="4606000" />
+      <workItem from="1543634338465" duration="29384000" />
+      <workItem from="1543742377183" duration="716000" />
+      <workItem from="1543744978125" duration="2569000" />
+      <workItem from="1543816552440" duration="29315000" />
+      <workItem from="1544611928574" duration="1580000" />
+      <workItem from="1544678249252" duration="198000" />
+      <workItem from="1547275460410" duration="221895000" />
+      <workItem from="1549862818210" duration="45830000" />
+      <workItem from="1550109509406" duration="43026000" />
+      <workItem from="1550489354576" duration="62000" />
+      <workItem from="1550491077282" duration="44265000" />
+      <workItem from="1551099028180" duration="58812000" />
+      <workItem from="1551371664815" duration="31672000" />
+      <workItem from="1551836007432" duration="14928000" />
+      <workItem from="1552302368724" duration="1504000" />
+      <workItem from="1552313139063" duration="10323000" />
+      <workItem from="1552384057281" duration="25000" />
+      <workItem from="1552384292865" duration="14000" />
+      <workItem from="1552457478908" duration="622000" />
+      <workItem from="1553137936551" duration="1071000" />
+      <workItem from="1553862242219" duration="5000" />
+      <workItem from="1553906588300" duration="3527000" />
+      <workItem from="1554865512535" duration="33000" />
+      <workItem from="1554946536057" duration="13633000" />
+      <workItem from="1555926555841" duration="29574000" />
+      <workItem from="1556898510683" duration="91579000" />
+      <workItem from="1559557355839" duration="45000" />
+      <workItem from="1559570660338" duration="4340000" />
+      <workItem from="1560671060500" duration="1227000" />
+      <workItem from="1573361561507" duration="13000" />
+      <workItem from="1573378634668" duration="731000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="786026000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="1234" height="957" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.80228573" visible="true" weight="0.2143446" />
+      <window_info id="Structure" order="1" sideWeight="0.50292397" side_tool="true" weight="0.24911869" />
+      <window_info id="npm" order="2" sideWeight="0.19771428" side_tool="true" weight="0.19814241" />
+      <window_info id="Favorites" order="3" sideWeight="0.19579288" side_tool="true" weight="0.26890758" />
+      <window_info id="Designer" order="4" />
+      <window_info id="Image Layers" order="5" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info id="UI Designer" order="7" />
+      <window_info id="Learn" order="8" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3165714" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32914287" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="TypeScript" order="9" sideWeight="0.4989083" weight="0.25714287" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5010917" side_tool="true" weight="0.32949308" />
+      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.28901735" />
+      <window_info anchor="bottom" id="Database Changes" order="12" show_stripe_button="false" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Maven Projects" order="5" />
+      <window_info anchor="right" id="Database" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Theme Preview" order="8" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/node_modules/bizcharts/typings/g2.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="33" column="3" selection-start-line="33" selection-start-column="3" selection-end-line="33" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/manage/FaceManage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/manage/MeetingManage.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/manage/MeetInfoManage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="429" column="44" selection-start-line="429" selection-start-column="44" selection-end-line="429" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/manage/MeetRoomManage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="234" column="38" selection-start-line="234" selection-start-column="38" selection-end-line="234" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/manage/ManageIndex.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="611" column="44" selection-start-line="611" selection-start-column="44" selection-end-line="611" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/myMeeting/config/config.js" />
+    <entry file="file://$PROJECT_DIR$/src/pages/myMeeting/config/WebRTCAPI.min.js" />
+    <entry file="file://$PROJECT_DIR$/src/RTC/js/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RTC/js/config.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RTC/css/style.css">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RTC/css/pure-min.css">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RTC/css/baby-blue.css">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RTC/css/bootstrap.css">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RTC/libs/jquery.min.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RTC/libs/vconsole.min.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RTC/README.md">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RTC/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="7" selection-start-line="13" selection-start-column="7" selection-end-line="13" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/manage/FileManage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="275" column="59" selection-start-line="275" selection-start-column="59" selection-end-line="275" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/manage/EquipManage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="107">
+          <caret line="196" column="4" selection-start-line="196" selection-start-column="4" selection-end-line="223" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/myMeeting/tool/FileDrawerMe.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="417">
+          <caret line="56" column="21" selection-start-line="56" selection-start-column="21" selection-end-line="56" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/user/UserInfo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="47">
+          <caret line="109" selection-start-line="109" selection-end-line="135" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/myMeeting/tool/VideoCreateForm.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2725">
+          <caret line="36" column="30" selection-start-line="36" selection-start-column="30" selection-end-line="36" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/manage/tool/DoorCreateForm.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="14" selection-start-line="18" selection-start-column="14" selection-end-line="18" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/myMeeting/MyVideoMeet.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="190" column="17" selection-start-line="190" selection-start-column="17" selection-end-line="190" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/user/Group.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="451" column="49" selection-start-line="451" selection-start-column="49" selection-end-line="451" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/meeting/tool/CollectionCreateForm.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1029">
+          <caret line="205" column="9" selection-start-line="205" selection-start-column="9" selection-end-line="205" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/meeting/tool/MeetingGraph.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1752">
+          <caret line="19" column="11" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/meeting/tool/FileDrawer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="153" column="32" selection-start-line="153" selection-start-column="32" selection-end-line="153" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/manage/JoinPersonManage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="372">
+          <caret line="132" column="38" selection-start-line="132" selection-start-column="38" selection-end-line="132" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/graph/GGDemo1.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="382">
+          <caret line="114" column="26" selection-start-line="114" selection-start-column="26" selection-end-line="114" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/graph/BizDemo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="402">
+          <caret line="166" column="28" selection-start-line="166" selection-start-column="28" selection-end-line="166" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/global.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="22" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/others/EquipRepair.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5655">
+          <caret line="380" column="10" selection-start-line="380" selection-start-column="10" selection-end-line="380" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/manage/EquipRepairManage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4005">
+          <caret line="270" column="38" selection-start-line="270" selection-start-column="38" selection-end-line="270" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/myMeeting/OthersFaceManage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5010">
+          <caret line="341" column="34" selection-start-line="341" selection-start-column="34" selection-end-line="341" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/css/Layout.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="18" column="10" lean-forward="true" selection-start-line="18" selection-start-column="10" selection-end-line="18" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/meeting/BookMeeting.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6675">
+          <caret line="465" column="27" selection-start-line="465" selection-start-column="27" selection-end-line="465" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/meeting/tool/MeetInfo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6660">
+          <caret line="450" column="27" selection-start-line="450" selection-start-column="27" selection-end-line="450" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/meeting/tool/MyMeetInfo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4545">
+          <caret line="312" column="24" lean-forward="true" selection-start-line="312" selection-start-column="24" selection-end-line="312" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/yarn.lock">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19350">
+          <caret line="1290" column="15" selection-start-line="1290" selection-start-column="15" selection-end-line="1290" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="427" column="12" lean-forward="true" selection-start-line="427" selection-start-column="12" selection-end-line="427" selection-end-column="12" />
+          <folding>
+            <element signature="e#380#418#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/Demo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/Head.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/myMeeting/MyJoinMeeting.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/basicPage.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/myMeeting/MyMeetLeave.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" column="20" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/meeting/tool/TaskDrawer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2955">
+          <caret line="199" column="21" selection-start-line="199" selection-start-column="21" selection-end-line="199" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/myMeeting/tool/TaskDrawerMe.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1200">
+          <caret line="82" column="12" selection-start-line="82" selection-start-column="12" selection-end-line="93" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/meeting/tool/OneMeetDrawer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5955">
+          <caret line="400" column="75" selection-start-line="400" selection-start-column="75" selection-end-line="400" selection-end-column="75" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

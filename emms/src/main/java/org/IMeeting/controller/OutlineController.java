@@ -6,13 +6,16 @@ import org.IMeeting.entity.ServerResult;
 import org.IMeeting.repository.OutlineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(
+        origins = "http://localhost:3000",
+        methods = {RequestMethod.GET, RequestMethod.POST},
+        allowedHeaders = "*",
+        allowCredentials = "true"
+)
 @RestController
 @Transactional
 @RequestMapping("/outline")

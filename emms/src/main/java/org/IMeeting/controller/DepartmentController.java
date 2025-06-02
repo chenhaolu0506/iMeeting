@@ -4,13 +4,17 @@ import org.IMeeting.entity.Department;
 import org.IMeeting.repository.DepartmentRepository;
 import org.IMeeting.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.IMeeting.entity.ServerResult;
 
 import javax.servlet.http.HttpServletRequest;
 
+@CrossOrigin(
+        origins = "http://localhost:3000",
+        methods = {RequestMethod.GET, RequestMethod.POST},
+        allowedHeaders = "*",
+        allowCredentials = "true"
+)
 @RestController
 @RequestMapping("/department")
 public class DepartmentController {

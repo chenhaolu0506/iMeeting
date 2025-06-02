@@ -1,76 +1,176 @@
 import React, { Component } from 'react';
-import { Col, Divider, DatePicker, Row, Tooltip as TooltipAnt, Button, Radio, Table, Card } from "antd";
-import { SearchOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
-import { Axis, Chart, Coord, Geom, Label, Tooltip } from "bizcharts";
+import {Col, Divider, Icon, DatePicker, Row, Tooltip as TooltipAnt, Button, Radio, Table, Card} from "antd";
+import {Axis, Chart, Coord, Geom, Label, Legend, Tooltip} from "bizcharts";
 import DataSet from "@antv/data-set";
 import moment from "moment";
-import "../../css/graph.less";
+import "@/css/graph/graph.less"
 import global from "../../global";
+
 
 class ManageIndex extends Component {
     componentDidMount() { //初始化
-        const resizeEvent = new Event('resize', { bubbles: true, cancelable: true });
-        window.dispatchEvent(resizeEvent);
-        this.selectDataCount(1, 1);
+        const e = document.createEvent("Event");
+        e.initEvent('resize', true, true);
+        window.dispatchEvent(e);
+        this.selectDataCount(1,1);
     }
-    dateChange = (date, dateString) => { //时间回调函数
+    dateChange=(date, dateString)=>{//时间回调函数
+        console.log(date, dateString);
         this.setState({
-            beginDate: dateString[0],
-            overDate: dateString[1],
+            beginDate:dateString[0],
+            overDate:dateString[1],
         })
     }
-    handleWayChange = (e) => {
+    handleWayChange=(e)=>{
+        console.log(e)
         this.setState({
-            way: e.target.value,
-        }, this.changeTable(e.target.value, this.state.type));
+            way:e.target.value,
+        },this.changeTable(e.target.value,this.state.type));
     }
-    handleTypeChange = (e) => {
+    handleTypeChange=(e)=>{
+        console.log(e)
         this.setState({
-            type: e.target.value
-        }, this.changeTable(this.state.way, e.target.value));
+            type:e.target.value
+        },this.changeTable(this.state.way,e.target.value));
     }
-
-    changeTable = (way, type) => {
-        const indexColumn = {
-            title: "序号",
-            key: "id",
-            render: (item, data, i) => {
-                return (<div>{i + 1}</div>)
-            }
-        }
-        let secondColumn = {};
-        let thirdColumn = {};
-        switch (way) {
-            case 1:
-                secondColumn = { title: "会议室", dataIndex: "meetRoomName", key: "meetRoomName" };
-                thirdColumn = type === 1
-                    ? { title: "会议时间", dataIndex: "hour", key: "hour" }
-                    : { title: "会议次数", dataIndex: "time", key: "time" };
-                break;
-            case 2:
-                secondColumn = { title: "部门", dataIndex: "departName", key: "departName" };
-                thirdColumn = type === 1
-                    ? { title: "会议时间", dataIndex: "hour", key: "hour" }
-                    : { title: "会议次数", dataIndex: "time", key: "time" };
-                break;
-            case 3:
-                secondColumn = { title: "预定人", dataIndex: "userName", key: "userName" };
-                thirdColumn = type === 1
-                    ? { title: "会议时间", dataIndex: "hour", key: "hour" }
-                    : { title: "预定次数", dataIndex: "time", key: "time" };
-                break;
+    changeTable=(way,type)=>{
+        switch (way+","+type) {
+            case "1,1":
+                return this.setState({
+                    columns:[
+                        {
+                            title:"序号",
+                            key:"id",
+                            render:(item,data,i)=>{
+                                return(<div>{i+1}</div>)
+                            }
+                        },{
+                            title:"会议室",
+                            dataIndex:"meetRoomName",
+                            key:"meetRoomName",
+                        },{
+                            title:"会议时间",
+                            dataIndex:"hour",
+                            key:"hour",
+                        }
+                    ],
+                    dataSource:[]
+                },this.selectDataCount(1,1));
+            case "1,2":
+                return this.setState({
+                    columns:[
+                        {
+                            title:"序号",
+                            key:"id",
+                            render:(item,data,i)=>{
+                                return(<div>{i+1}</div>)
+                            }
+                        },{
+                            title:"会议室",
+                            dataIndex:"meetRoomName",
+                            key:"meetRoomName",
+                        },{
+                            title:"会议次数",
+                            dataIndex:"time",
+                            key:"time",
+                        }
+                    ],
+                    dataSource:[]
+                },this.selectDataCount(1,2));
+            case "2,1":
+                return this.setState({
+                    columns:[
+                        {
+                            title:"序号",
+                            key:"id",
+                            render:(item,data,i)=>{
+                                return(<div>{i+1}</div>)
+                            }
+                        },{
+                            title:"部门",
+                            dataIndex:"departName",
+                            key:"departName",
+                        },{
+                            title:"会议时间",
+                            dataIndex:"hour",
+                            key:"hour",
+                        }
+                    ],
+                    dataSource:[]
+                },this.selectDataCount(2,1));
+            case "2,2":
+                return this.setState({
+                    columns:[
+                        {
+                            title:"序号",
+                            key:"id",
+                            render:(item,data,i)=>{
+                                return(<div>{i+1}</div>)
+                            }
+                        },{
+                            title:"部门",
+                            dataIndex:"departName",
+                            key:"departName",
+                        },{
+                            title:"会议次数",
+                            dataIndex:"time",
+                            key:"time",
+                        }
+                    ],
+                    dataSource:[]
+                },this.selectDataCount(2,2));
+            case "3,1":
+                return this.setState({
+                    columns:[
+                        {
+                            title:"序号",
+                            key:"id",
+                            render:(item,data,i)=>{
+                                return(<div>{i+1}</div>)
+                            }
+                        },{
+                            title:"预定人",
+                            dataIndex:"userName",
+                            key:"userName",
+                        },{
+                            title:"会议时间",
+                            dataIndex:"hour",
+                            key:"hour",
+                        }
+                    ],
+                    dataSource:[]
+                },this.selectDataCount(3,1));
+            case "3,2":
+                return this.setState({
+                    columns:[
+                        {
+                            title:"序号",
+                            key:"id",
+                            render:(item,data,i)=>{
+                                return(<div>{i+1}</div>)
+                            }
+                        },{
+                            title:"预定人",
+                            dataIndex:"userName",
+                            key:"userName",
+                        },{
+                            title:"预定次数",
+                            dataIndex:"time",
+                            key:"time",
+                        }
+                    ],
+                    dataSource:[]
+                },this.selectDataCount(3,2));
             default:
-                return;
+                return null;
         }
-        const columns = [indexColumn, secondColumn, thirdColumn];
-        this.setState({ columns, dataSource: [] }, () => this.selectDataCount(way, type));
     }
-    onSearch = () => {
-        this.selectDataCount(this.state.way, this.state.type);
+    onSearch=()=>{
+        this.selectDataCount(this.state.way,this.state.type);
     }
     state = {
         autoHideXLabels: false,
-        data1: [
+        data1 : [
             {
                 year: "2月1日",
                 sales: 38
@@ -128,13 +228,13 @@ class ManageIndex extends Component {
                 sales: 2
             }
         ],
-        lineData: [
+        lineData:[
             {
                 country: "空闲会议室",
                 population: 78
             }
         ],
-        pieData: [
+        pieData:[
             {
                 item: "会议室一",
                 count: 40
@@ -156,7 +256,7 @@ class ManageIndex extends Component {
                 count: 9
             }
         ],
-        areaData: [
+        areaData:[
             {
                 year: "1991",
                 value: 15468
@@ -194,7 +294,7 @@ class ManageIndex extends Component {
                 value: 33233
             }
         ],
-        polarData: [
+        polarData:[
             {
                 item: "投影仪",
                 a: 50,
@@ -218,67 +318,79 @@ class ManageIndex extends Component {
             {
                 item: "灯光",
                 a: 30,
-            }
+            },
+            // {
+            //     item: "Sales",
+            //     a: 60,
+            // },
+            // {
+            //     item: "UX",
+            //     a: 50,
+            // }
         ],
-        beginDate: "2015-01-01",
-        overDate: "2020-01-01",
-        way: "1",
-        type: "1",
-        columns: [
+        beginDate:"2015-01-01",
+        overDate:"2020-01-01",
+        way:"1",
+        type:"1",
+        columns:[
             {
-                title: "序号",
-                key: "id",
-                render: (item, data, i) => {
-                    return (<div>{i + 1}</div>)
+                title:"序号",
+                key:"id",
+                render:(item,data,i)=>{
+                    return(<div>{i+1}</div>)
                 }
-            }, {
-                title: "主题",
-                dataIndex: "meetRoomName",
-                key: "meetRoomName",
-            }, {
-                title: "会议时间",
-                dataIndex: "hour",
-                key: "hour",
+            },{
+                title:"主题",
+                dataIndex:"meetRoomName",
+                key:"meetRoomName",
+            },{
+                title:"会议时间",
+                dataIndex:"hour",
+                key:"hour",
             }
         ],
-        dataSource: [],
-        message: "",
+        dataSource:[],
+        message:"",
     };
     ///////////////////////////////////////////////////////////////////////
-    //传入参数begin查询开始时间 over结束时间 way方面 1会议室 2部门 3预定人 type方式 1时间 2次数
-    selectDataCount = (way, type) => {
-        const url = global.localhostUrl + "meeting/selectDataCount" +
+    //selectDataCount selectDataCount读取表格
+    selectDataCount = (way,type) =>{
+        const url=global.localhostUrl+"meeting/selectDataCount"+
             "?begin=" +
-            this.state.beginDate +
+            this.state.beginDate+
             "&over=" +
-            this.state.overDate +
+            this.state.overDate+
             "&way=" +
-            way +
-            "&type=" +
+            way+
+            "&type="+
             type
-            ;
+        ;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-            .then(json => {
-                const data = json;
-                this.setState({
-                    message: data.message,
-                    dataSource: data.data,
-                })
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
+            const data = json;
+            console.log(data);
+            this.setState({
+                message:data.message,
+                dataSource:data.data,
+            })
+        }).catch(function (e) {
+            console.log("fetch fail");
+            alert('系统错误');
+        });
     }
     render() {
         const { DataView } = DataSet;
+
         const ds = new DataSet();
         //条形图dv
         const lineDv = ds.createView().source(this.state.lineData);
@@ -307,26 +419,26 @@ class ManageIndex extends Component {
             // key字段
             value: "score" // value字段
         });
-        const mode1 = {//自适应大小1号
-            xs: { span: 24, offset: 0 },
-            sm: { span: 20, offset: 2 },
-            md: { span: 12, offset: 0 },
-            lg: { span: 8, offset: 0 },
-            xl: { span: 6, offset: 0 },
+        const mode1={//自适应大小1号
+            xs:{span:24,offset:0},
+            sm:{span:20,offset:2},
+            md:{span:12,offset:0},
+            lg:{span:8,offset:0},
+            xl:{span:6,offset:0},
         }
-        const mode2 = {//自适应大小2号
-            xs: { span: 24, offset: 0 },
-            sm: { span: 24, offset: 0 },
-            md: { span: 24, offset: 0 },
-            lg: { span: 16, offset: 0 },
-            xl: { span: 18, offset: 0 },
+        const mode2={//自适应大小2号
+            xs:{span:24,offset:0},
+            sm:{span:24,offset:0},
+            md:{span:24,offset:0},
+            lg:{span:16,offset:0},
+            xl:{span:18,offset:0},
         }
-        const mode3 = {//自适应大小3号
-            xs: { span: 24, offset: 0 },
-            sm: { span: 24, offset: 0 },
-            md: { span: 24, offset: 0 },
-            lg: { span: 24, offset: 0 },
-            xl: { span: 24, offset: 0 },
+        const mode3={//自适应大小3号
+            xs:{span:24,offset:0},
+            sm:{span:24,offset:0},
+            md:{span:24,offset:0},
+            lg:{span:24,offset:0},
+            xl:{span:24,offset:0},
         }
         const cols2 = {
             percent: {
@@ -337,11 +449,11 @@ class ManageIndex extends Component {
             }
         };
         return (
-            <div style={{ padding: 10 }}>
+            <div style={{padding:10}}>
                 {/*时间与搜索框*/}
                 <Row gutter={16}>
                     <Col {...mode3}>
-                        <div className={'card'} style={{ height: 88, padding: 25 }}>
+                        <div className={'card'} style={{height:88,padding:25}}>
                             <Row>
                                 <Col span={6}>
                                     <DatePicker.RangePicker
@@ -350,7 +462,7 @@ class ManageIndex extends Component {
                                     />
                                 </Col>
                                 <Col span={2} >
-                                    <Button type="primary" onClick={this.onSearch}><SearchOutlined />搜索</Button>
+                                    <Button  type="primary" onClick={this.onSearch}><Icon type='search'/>搜索</Button>
                                 </Col>
 
 
@@ -361,7 +473,7 @@ class ManageIndex extends Component {
                     {/*搜索结果与筛选框*/}
                     <Col {...mode2}>
                         <div className={'card'} style={{}}>
-                            <div style={{ paddingTop: 20 }}>
+                            <div style={{paddingTop:20}}>
                                 <Row>
                                     <Col offset={12} span={6}>
                                         <Radio.Group value='large' onChange={this.handleWayChange}>
@@ -380,17 +492,17 @@ class ManageIndex extends Component {
                             </div>
                             <Divider />
                             <div>
-                                <Table rowKey={record => record.id} className={'table'} columns={this.state.columns} dataSource={this.state.dataSource} />
+                                <Table rowKey={record=>record.id} className={'table'} columns={this.state.columns} dataSource={this.state.dataSource} />
                             </div>
                         </div>
                     </Col>
                     <Col {...mode1}>
                         <CardJGN
-                            title={"智能建议"}
+                            title={"来自人工智能的建议"}
                             center={"建议"}
                             text={"建议"}
                             chart={
-                                <div style={{ height: 50 }}>
+                                <div style={{height:50}}>
                                     <Row>
                                         <Col span={20} offset={2} >
                                             &nbsp;
@@ -423,6 +535,11 @@ class ManageIndex extends Component {
                                 >
                                     <Coord type="theta" radius={1} />
                                     <Axis name="percent" />
+                                    {/*<Legend*/}
+                                    {/*position="right"*/}
+                                    {/*offsetY={-window.innerHeight / 2 + 120}*/}
+                                    {/*offsetX={-100}*/}
+                                    {/*/>*/}
                                     <Tooltip
                                         showTitle={false}
                                         itemTpl="<li><span style=&quot;background-color:{color};&quot; class=&quot;g2-tooltip-marker&quot;></span>{name}: {value}</li>"
@@ -442,10 +559,20 @@ class ManageIndex extends Component {
                                             }
                                         ]}
                                         style={{
-                                            lineWidth: 1, //间隔
-                                            stroke: "#fff", //间隔颜色
+                                            lineWidth: 1,//间隔
+                                            stroke: "#fff",//间隔颜色
                                         }}
                                     >
+                                        {/*<Label*/}
+                                        {/*content="percent"*/}
+                                        {/*offset={-40}*/}
+                                        {/*textStyle={{*/}
+                                        {/*rotate: 0,*/}
+                                        {/*textAlign: "center",*/}
+                                        {/*shadowBlur: 2,*/}
+                                        {/*shadowColor: "rgba(0, 0, 0, .45)"*/}
+                                        {/*}}*/}
+                                        {/*/>*/}
                                         <Label
                                             content="item"
                                             offset={-40}
@@ -461,25 +588,268 @@ class ManageIndex extends Component {
                             }
                         />
                     </Col>
+                    {/*<Col {...mode1}>*/}
+                        {/*<CardJGN*/}
+                            {/*title={"会议室利用率"}*/}
+                            {/*center={"14%"}*/}
+                            {/*text={"效率"}*/}
+                            {/*chart={*/}
+                                {/*<Chart*/}
+                                    {/*height={50}*/}
+                                    {/*data={this.state.areaData}*/}
+                                    {/*// scale={cols}*/}
+                                    {/*forceFit*/}
+                                    {/*padding={'auto'}*/}
+                                {/*>*/}
+                                    {/*/!*<Axis name="year" />*!/*/}
+                                    {/*/!*<Axis*!/*/}
+                                    {/*/!*name="value"*!/*/}
+                                    {/*/!*label={{*!/*/}
+                                    {/*/!*formatter: val => {*!/*/}
+                                    {/*/!*return (val / 10000).toFixed(1) + "k";*!/*/}
+                                    {/*/!*}*!/*/}
+                                    {/*/!*}}*!/*/}
+                                    {/*/>*/}
+                                    {/*<Tooltip*/}
+                                        {/*crosshairs={{*/}
+                                            {/*type: "line"*/}
+                                        {/*}}*/}
+                                    {/*/>*/}
+                                    {/*<Geom type="area" position="year*value" color={"#8f65dd"}/>*/}
+                                    {/*<Geom type="line" position="year*value" size={2} color={"#8f65dd"}/>*/}
+                                {/*</Chart>*/}
+                            {/*}*/}
+                        {/*/>*/}
+                    {/*</Col>*/}
+                    {/*<Col {...mode1} >*/}
+                        {/*<CardJGN*/}
+                            {/*title={"近两周的参会总人数"}*/}
+                            {/*text={"数量"}*/}
+                            {/*center={"528 人"}*/}
+                            {/*chart={*/}
+                                {/*<Chart*/}
+                                    {/*height={50}*/}
+                                    {/*data={this.state.data1}*/}
+                                    {/*scale={{*/}
+                                        {/*sales: {*/}
+                                            {/*formatter: val => {*/}
+                                                {/*val = val * 100 + "%";*/}
+                                                {/*return val;*/}
+                                            {/*}*/}
+                                        {/*}*/}
+                                    {/*}}*/}
+                                    {/*forceFit*/}
+                                    {/*padding={'auto'}*/}
+                                {/*>*/}
+                                    {/*/!*Axis x,y轴*!/*/}
+                                    {/*/!*<Axis name="year" />*!/*/}
+                                    {/*/!*<Axis name="sales" />*!/*/}
+                                    {/*/!*Tooltip 数据详细*!/*/}
+                                    {/*<Tooltip*/}
+                                        {/*itemTpl="<li><span style=&quot;background-color:{color};&quot; class=&quot;g2-tooltip-marker&quot;></span>{name}: {value}</li>"*/}
+                                    {/*/>*/}
+                                    {/*/!**!/*/}
+                                    {/*<Geom*/}
+                                        {/*// type="interval"*/}
+                                        {/*position="year*sales"//有效数据*/}
+                                        {/*tooltip={[*/}
+                                            {/*"year*sales",*/}
+                                            {/*(item, percent) => {*/}
+                                                {/*// percent = percent * 100 + "%";*/}
+                                                {/*return {*/}
+                                                    {/*name: "参会人数",*/}
+                                                    {/*value: percent*/}
+                                                {/*};*/}
+                                            {/*}*/}
+                                        {/*]}*/}
+                                    {/*/>*/}
+                                {/*</Chart>*/}
+                            {/*}*/}
+                        {/*/>*/}
+                    {/*</Col>*/}
+                    {/*<Col {...mode1} >*/}
+                        {/*<CardJGN*/}
+                            {/*title={"当前时段空闲会议室"}*/}
+                            {/*center={"78%"}*/}
+                            {/*text={"实时"}*/}
+                            {/*chart={*/}
+                                {/*<Chart*/}
+                                    {/*height={50}*/}
+                                    {/*data={lineDv}*/}
+                                    {/*forceFit*/}
+                                    {/*padding={'auto'}*/}
+                                    {/*scale={*/}
+                                        {/*{*/}
+                                            {/*'population':{*/}
+                                                {/*type:"linear",*/}
+                                                {/*min:0,*/}
+                                                {/*max:100,*/}
+                                            {/*}*/}
+                                        {/*}*/}
+                                    {/*}*/}
+                                {/*>*/}
+                                    {/*<Coord transpose />*/}
+                                    {/*<Axis*/}
+                                        {/*name="country"*/}
+                                        {/*visible={false}*/}
+                                    {/*/>*/}
+                                    {/*<Axis name="population" visible={false} />*/}
+                                    {/*<Tooltip*/}
+                                        {/*showTitle={false}*/}
+                                        {/*itemTpl="<li><span style=&quot;background-color:{color};&quot; class=&quot;g2-tooltip-marker&quot;></span>{name}: {value}</li>"*/}
+                                    {/*/>*/}
+                                    {/*<Geom*/}
+                                        {/*type="interval"*/}
+                                        {/*position="country*population"*/}
+                                        {/*tooltip={[*/}
+                                            {/*"country*population",*/}
+                                            {/*(item, percent) => {*/}
+                                                {/*percent = percent + "%";*/}
+                                                {/*return {*/}
+                                                    {/*name: item,*/}
+                                                    {/*value: percent*/}
+                                                {/*};*/}
+                                            {/*}*/}
+                                        {/*]}*/}
+                                        {/*color={"#a5f465"}*/}
+                                    {/*/>*/}
+                                {/*</Chart>*/}
+                            {/*}*/}
+                        {/*/>*/}
+                    {/*</Col>*/}
+                    {/*<Col {...mode1} >*/}
+                        {/*<CardJGN*/}
+                            {/*title={"会议室排名"}*/}
+                            {/*center={*/}
+                                {/*<div >*/}
+                                    {/*1.会议室二<Icon style={{color:"red"}} type="caret-up" theme="filled" />*/}
+                                {/*</div>*/}
+                            {/*}*/}
+                            {/*text={"数据"}*/}
+                            {/*chart={*/}
+                                {/*<div style={{height:"56px"}}>*/}
+                                    {/*<Row>*/}
+                                        {/*<Col span={24}>*/}
+                                            {/*<div style={{float:"left",paddingLeft:"20px"}}>*/}
+                                                {/*2.会议室一{" 88"}<Icon style={{color:"green"}} type="caret-down" theme="filled" />*/}
+                                            {/*</div>*/}
+                                        {/*</Col>*/}
+                                        {/*<Col span={24}>*/}
+                                            {/*<div style={{float:"left",paddingLeft:"20px"}}>*/}
+                                                {/*3.会议室三{"  68"}<Icon style={{color:"red"}} type="caret-up" theme="filled" />*/}
+                                            {/*</div>*/}
+                                        {/*</Col>*/}
+                                        {/*<Col span={24}>*/}
+                                            {/*<div style={{float:"left",paddingLeft:"20px"}}>*/}
+                                                {/*4.会议室四{"  65"}<Icon style={{color:"green"}} type="caret-down" theme="filled" />*/}
+                                            {/*</div>*/}
+                                        {/*</Col>*/}
+                                    {/*</Row>*/}
+                                {/*</div>*/}
+                            {/*}*/}
+                        {/*/>*/}
+                    {/*</Col>*/}
+                    {/*<Col {...mode1} >*/}
+                        {/*<CardJGN*/}
+                            {/*title={"设备数量总览"}*/}
+                            {/*center={"公司设备"}*/}
+                            {/*text={"图表"}*/}
+                            {/*chart={*/}
+                                {/*<Chart*/}
+                                    {/*style={{marginLeft:"0px"}}*/}
+                                    {/*height={200}*/}
+                                    {/*data={polarDv}*/}
+                                    {/*padding={'auto'}*/}
+                                    {/*scale={{*/}
+                                        {/*score:{*/}
+                                            {/*min:0,*/}
+                                            {/*max:100,*/}
+                                        {/*}*/}
+                                    {/*}}*/}
+                                    {/*forceFit*/}
+                                {/*>*/}
+                                    {/*<Coord type="polar" radius={0.8} />*/}
+                                    {/*<Axis*/}
+                                        {/*name="item"*/}
+                                        {/*// label={null}*/}
+                                        {/*line={null}*/}
+                                        {/*tickLine={{*/}
+                                            {/*lineWidth: 1*/}
+                                        {/*}}*/}
+                                        {/*grid={{*/}
+                                            {/*lineStyle: {*/}
+                                                {/*lineDash: null*/}
+                                            {/*},*/}
+                                            {/*hideFirstLine: false*/}
+                                        {/*}}*/}
+                                    {/*/>*/}
+                                    {/*<Tooltip />*/}
+                                    {/*<Axis*/}
+                                        {/*name="score"*/}
+                                        {/*line={null}*/}
+                                        {/*label={null}*/}
+                                        {/*tickLine={null}*/}
+                                        {/*grid={{*/}
+                                            {/*type: "polygon",*/}
+                                            {/*lineStyle: {*/}
+                                                {/*lineDash: null*/}
+                                            {/*},*/}
+                                            {/*alternateColor: "rgba(0, 0, 0, 0.04)"*/}
+                                        {/*}}*/}
+                                    {/*/>*/}
+                                    {/*/!*<Legend name="user" marker="circle" offset={30} />*!/*/}
+                                    {/*<Geom type="area" position="item*score" color="user" />*/}
+                                    {/*<Geom type="line" position="item*score" color="user" size={2} />*/}
+                                    {/*<Geom*/}
+                                        {/*type="point"*/}
+                                        {/*position="item*score"*/}
+                                        {/*color="user"*/}
+                                        {/*shape="circle"*/}
+                                        {/*size={4}*/}
+                                        {/*style={{*/}
+                                            {/*stroke: "#fff",*/}
+                                            {/*lineWidth: 1,*/}
+                                            {/*fillOpacity: 1*/}
+                                        {/*}}*/}
+                                    {/*/>*/}
+                                {/*</Chart>*/}
+                            {/*}*/}
+                        {/*/>*/}
+                    {/*</Col>*/}
+                    {/*<Col {...mode1} >*/}
+                        {/*<CardJGN*/}
+                            {/*text={"图表"}*/}
+                        {/*/>*/}
+                    {/*</Col>*/}
+                    {/*<Col {...mode1} >*/}
+                        {/*<CardJGN*/}
+                            {/*text={"图表"}*/}
+                        {/*/>*/}
+                    {/*</Col>*/}
+                    {/*<Col {...mode1} >*/}
+                        {/*<CardJGN*/}
+                            {/*text={"图表"}*/}
+                        {/*/>*/}
+                    {/*</Col>*/}
                 </Row>
             </div>
         );
     }
 }
-class CardJGN extends Component {
-    render() {
+class CardJGN extends Component{
+    render(){
         return (
             <div className={'card'}>
-                <div style={{ width: "100%", height: "88px" }}>
+                <div style={{width:"100%",height:"88px"}}>
                     <Row>
                         <Col>
-                            <div style={{ margin: "20px" }}>
-                                <div style={{ float: "left" }}>
+                            <div style={{margin:"20px"}}>
+                                <div style={{float:"left"}}>
                                     {this.props.title}
                                 </div>
-                                <div style={{ float: "right" }}>
+                                <div style={{float:"right"}}>
                                     <TooltipAnt title="指标说明">
-                                        <ExclamationCircleOutlined />
+                                        <Icon type="exclamation-circle" />
                                     </TooltipAnt>
                                 </div>
                             </div>
@@ -487,7 +857,7 @@ class CardJGN extends Component {
                     </Row>
                     <Row>
                         <Col>
-                            <div style={{ fontSize: "30px", float: "left", marginLeft: "20px" }}>
+                            <div style={{fontSize:"30px",float:"left",marginLeft:"20px"}}>
                                 {
                                     this.props.center
                                 }

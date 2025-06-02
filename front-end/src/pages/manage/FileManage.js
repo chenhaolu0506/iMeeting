@@ -1,24 +1,22 @@
 import React, { Component } from 'react';
-import { Table, Card, Col, Row, Button, Tooltip, message, Input, Drawer, Modal } from "antd";
-import { SearchOutlined, CloseOutlined, CheckOutlined, DownloadOutlined, DeleteOutlined } from "@ant-design/icons";
-import global from "../../global";
+import {Table, Card, Col, Row, Button, Tooltip, Icon, message, Input, Drawer, Modal} from "antd";
+import global from '@/global';
 import Highlighter from 'react-highlight-words';
-
 class FileManage extends Component {
-    componentDidMount() {
+    componentDidMount(){
         this.findAllOnManage();
     }
-    state = {
-        dataSource: [],
-        drawerVisible: false,
+    state={
+        dataSource:[],
+        drawerVisible:false,
         modalVisible: false,
-        searchText: "",
+        searchText:"",
     }
     //表格查询
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
-            setSelectedKeys, selectedKeys, confirm, clearFilters,
-        }) => (
+                             setSelectedKeys, selectedKeys, confirm, clearFilters,
+                         }) => (
             <div style={{ padding: 8 }}>
                 <Input
                     ref={node => { this.searchInput = node; }}
@@ -35,18 +33,18 @@ class FileManage extends Component {
                     size="small"
                     style={{ width: 90, marginRight: 8 }}
                 >
-                    查找
+                    Search
                 </Button>
                 <Button
                     onClick={() => this.handleReset(clearFilters)}
                     size="small"
                     style={{ width: 90 }}
                 >
-                    重置
+                    Reset
                 </Button>
             </div>
         ),
-        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+        filterIcon: filtered => <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />,
         onFilter: (value, record) => record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
         onFilterDropdownVisibleChange: (visible) => {
             if (visible) {
@@ -71,13 +69,16 @@ class FileManage extends Component {
         clearFilters();
         this.setState({ searchText: '' });
     }
+    //表格查询
 
     handleCancel = (e) => {
+        console.log(e);
         this.setState({
             modalVisible: false,
         });
     }
     onClose = (e) => {
+        console.log(e);
         this.setState({
             drawerVisible: false,
         });
@@ -85,43 +86,49 @@ class FileManage extends Component {
 
 
     /////////////////////////////////////////////////////////////////////
-    
-    findAllOnManage = () => {
-        const url = global.localhostUrl + "file/findAllOnManage";
+    //
+    findAllOnManage=()=>{
+        const url=global.localhostUrl+"file/findAllOnManage";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-        .then(json => {
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
             const data = json;
+            console.log(data);
             this.setState({
-                dataSource: data.data
+                dataSource:data.data
             })
         }).catch(function (e) {
             console.log("fetch fail");
             alert('系统错误');
         });
     }
-    
-    updateOne = (id, status) => {
-        const url = global.localhostUrl + "file/editOne?fileId=" + id + "&status=" + status;
+    //updateOne
+    updateOne = (id,status) =>{
+        const url=global.localhostUrl+"file/editOne?fileId="+id+"&status="+status;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-        .then(json => {    
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
             const data = json;
-            if (data.status) {
+            console.log(data);
+            if(data.status){
                 message.success(data.message)
             }
             this.findAllOnManage();
@@ -130,23 +137,26 @@ class FileManage extends Component {
             alert('系统错误');
         });
     }
-    
-    deleteOne = (id) => {
-        const url = global.localhostUrl + "file/deleteOne?fileId=" + id;
+    //deleteOne
+    deleteOne = (id) =>{
+        const url=global.localhostUrl+"file/deleteOne?fileId="+id;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-        .then(json => {
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
             const data = json;
-            if (data.status) {
+            console.log(data);
+            if(data.status){
                 message.success(data.message);
-            } else {
+            }else{
                 message.error(data.message);
             }
             this.findAllOnManage();
@@ -155,21 +165,23 @@ class FileManage extends Component {
             alert('系统错误');
         });
     }
-
-    download = (id) => {
-        const url = global.localhostUrl + "file/download?fileId=" + id;
+    download=(id)=>{
+        const url=global.localhostUrl+"file/downLoad?fileId="+id;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-        .then(json => {    
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
             const data = json;
-            if (data.status) {
+            console.log(data);
+            if(data.status){
                 message.success("操作成功！")
             }
         }).catch(function (e) {
@@ -177,35 +189,63 @@ class FileManage extends Component {
             alert('系统错误');
         });
     }
+    // //selectAll
+    // selectAll = () =>{
+    //     const url=global.localhostUrl+"equip/selectAll";
+    //     fetch(url, {
+    //         method: "POST",
+    //         mode: "cors",
+    //         credentials:"include",//跨域携带cookie
+    //         headers: {
+    //             "Content-Type": "application/json;charset=utf-8",
+    //         },
+    //         body: JSON.stringify({}),
+    //     }).then(function (res) {//function (res) {} 和 res => {}效果一致
+    //         return res.json()
+    //     }).then(json => {
+    //         // get result
+    //         const data = json;
+    //         console.log(data);
+    //         this.setState({
+    //             dataSource:data.data,
+    //             drawerVisible:false,
+    //             addOrChange:false,
+    //             modalVisible: false,
+    //         })
+    //     }).catch(function (e) {
+    //         console.log("fetch fail");
+    //         alert('系统错误');
+    //     });
+    // }
     render() {
-        const columns = [
+        const columns=[
             {
-                title: "序号",
-                key: "id",
-                render: (item, data, i) => {
-                    return (<div>{i + 1}</div>)
+                title:"序号",
+                key:"id",
+                render:(item,data,i)=>{
+                    return(<div>{i+1}</div>)
                 }
-            }, {
-                title: "文件名",
-                dataIndex: "fileName",
-                key: "fileName",
+            },{
+                title:"文件名",
+                dataIndex:"fileName",
+                key:"fileName",
                 ...this.getColumnSearchProps("fileName")
-            }, {
-                title: "会议室名",
-                dataIndex: "meetroom",
-                render: (item) => {
+            },{
+                title:"会议室名",
+                dataIndex:"meetroom",
+                render:(item)=>{
                     return item.name
                 }
-            }, {
-                title: "会议名",
-                dataIndex: "meeting",
-                render: (item) => {
+            },{
+                title:"会议名",
+                dataIndex:"meeting",
+                render:(item)=>{
                     return item.topic
                 }
-            }, {
-                title: "状态",
-                dataIndex: "status",
-                render: (item) => {
+            },{
+                title:"状态",
+                dataIndex:"status",
+                render:(item)=>{
                     switch (item) {
                         case 1:
                             return "允许下载"
@@ -215,24 +255,29 @@ class FileManage extends Component {
                             return item
                     }
                 }
-            }, {
-                title: "操作",
-                render: (item) => {
-                    return (
+            },{
+                title:"操作",
+                render:(item)=>{
+                    return(
                         <div>
                             <Tooltip title="允许下载">
-                                <Button onClick={() => { this.updateOne(item.id, 1) }}><CheckOutlined /></Button>
+                                <Button onClick={()=>{this.updateOne(item.id,1)}}><Icon type="check" /></Button>
                             </Tooltip>
                             <Tooltip title="禁止下载">
-                                <Button onClick={() => { this.updateOne(item.id, 2) }}><CloseOutlined style={{ color: "red" }} /></Button>
+                                <Button onClick={()=>{this.updateOne(item.id,2)}}><Icon style={{color:"red"}} type="close" /></Button>
                             </Tooltip>
                             <Tooltip title="下载">
-                                <Button onClick={() => { window.location.href = item.fileUrl + "/" + item.fileName}}>
-                                    <DownloadOutlined />
+                                {/*<Button onClick={()=>{this.download(item.id)}}><Icon type="download" /></Button>*/}
+                                <Button
+                                    onClick={()=>{
+                                        window.location.href = item.fileUrl+"/"+item.fileName
+                                    }}
+                                >
+                                    <Icon type="download" />
                                 </Button>
                             </Tooltip>
                             <Tooltip title="删除">
-                                <Button onClick={() => { this.deleteOne(item.id) }}><DeleteOutlined style={{ color: "red" }} /></Button>
+                                <Button onClick={()=>{this.deleteOne(item.id)}}><Icon style={{color:"red"}} type="delete" /></Button>
                             </Tooltip>
                         </div>
                     )
@@ -244,9 +289,9 @@ class FileManage extends Component {
                 <Row>
                     <Col span={18} offset={3}>
                         <Card
-                            title={<h2 style={{ float: 'left', marginBottom: -3 }}>文件管理</h2>}
+                            title={<h2 style={{float:'left',marginBottom:-3}}>文件管理</h2>}
                             extra={
-                                <div style={{ width: 200 }} >
+                                <div style={{width:200}} >
                                     <Row>
                                         <Col span={24}>
                                         </Col>
@@ -254,7 +299,7 @@ class FileManage extends Component {
                                 </div>
                             }
                         >
-                            <Table rowKey={record => record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
+                            <Table rowKey={record=>record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
                         </Card>
                     </Col>
                 </Row>

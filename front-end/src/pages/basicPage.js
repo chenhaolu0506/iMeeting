@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-class BasicPage extends Component {
+class basicPage extends Component {
     render() {
         return (
-            <div>
+            <div >
 
             </div>
         );
     }
 }
 
-export default BasicPage;
+export default basicPage;

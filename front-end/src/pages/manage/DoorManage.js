@@ -1,28 +1,29 @@
 import React, { Component } from 'react';
-import { Table, Card, Col, Row, Button, Tooltip, message, Input, Drawer, Modal } from "antd";
-import { SearchOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import global from "../../global";
+import {Table, Card, Col, Row, Button, Tooltip, Icon, message, Input, Drawer, Modal} from "antd";
+import global from '@/global';
 import Highlighter from 'react-highlight-words';
-import DoorCreateForm from "./tools/DoorCreateForm";
-class DoorManage extends Component {
-    componentDidMount() {
+import DoorCreateForm from "@/pages/manage/tool/DoorCreateForm";
+class DoorApply extends Component {
+    componentDidMount(){
+        //this.selectAll();
         this.getEffectiveMeetroom();
         this.manageShow();
         this.selectAllPeople();
     }
-    state = {
-        dataSource: [],
-        roomList: [],
-        userList: [[], [], [], []],
-        drawerVisible: false,
-        addOrChange: false,
+    state={
+        dataSource:[],
+        roomList:[],
+        userList:[[],[],[],[]],
+        drawerVisible:false,
+        addOrChange:false,
         modalVisible: false,
-        searchText: "",
+        searchText:"",
     }
+    //表格查询
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
-            setSelectedKeys, selectedKeys, confirm, clearFilters,
-        }) => (
+                             setSelectedKeys, selectedKeys, confirm, clearFilters,
+                         }) => (
             <div style={{ padding: 8 }}>
                 <Input
                     ref={node => { this.searchInput = node; }}
@@ -39,18 +40,18 @@ class DoorManage extends Component {
                     size="small"
                     style={{ width: 90, marginRight: 8 }}
                 >
-                    查找
+                    Search
                 </Button>
                 <Button
                     onClick={() => this.handleReset(clearFilters)}
                     size="small"
                     style={{ width: 90 }}
                 >
-                    重置
+                    Reset
                 </Button>
             </div>
         ),
-        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+        filterIcon: filtered => <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />,
         onFilter: (value, record) => record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
         onFilterDropdownVisibleChange: (visible) => {
             if (visible) {
@@ -75,13 +76,16 @@ class DoorManage extends Component {
         clearFilters();
         this.setState({ searchText: '' });
     }
+    //表格查询
 
     handleCancel = (e) => {
+        console.log(e);
         this.setState({
             modalVisible: false,
         });
     }
     onClose = (e) => {
+        console.log(e);
         this.setState({
             drawerVisible: false,
         });
@@ -89,51 +93,59 @@ class DoorManage extends Component {
     saveFormRef = (formRef) => {
         this.formRef = formRef;
     }
-    showAddEquip = () => {
+    showAddEquip=()=>{
         this.setState({
             drawerVisible: true,
         });
     }
+
     /////////////////////////////////////////////////////////////////////
-    approveRequest = (id) => {
-        const url = global.localhostUrl + "openApply/approveOpenRequest?id=" + id;
+    agreeOne=(id)=>{
+        const url=global.localhostUrl+"openApply/agreeOne?id="+id;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-            .then(json => {
-                const data = json;
-                if (data.status) {
-                    message.success(data.message);
-                } else {
-                    message.error(data.message);
-                }
-                this.manageFindAll();
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
-    }
-    rejectRequest = (id) => {
-        const url = global.localhostUrl + "openApply/rejectOpenRequest?id=" + id;
-        fetch(url, {
-            method: "POST",
-            mode: "cors",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({}),
-        }).then(res => res.json()).then(json => {
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
             const data = json;
-            if (data.status) {
+            console.log(data);
+            if(data.status){
                 message.success(data.message);
-            } else {
+            }else{
+                message.error(data.message);
+            }
+            this.manageFindAll();
+        }).catch(function (e) {
+            console.log("fetch fail");
+            alert('系统错误');
+        });
+    }
+    disagreeOne=(id)=>{
+        const url=global.localhostUrl+"openApply/disagreeOne?id="+id;
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials:"include",//跨域携带cookie
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({}),
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
+            const data = json;
+            console.log(data);
+            if(data.status){
+                message.success(data.message);
+            }else{
                 message.error(data.message);
             }
             this.manageFindAll();
@@ -143,48 +155,54 @@ class DoorManage extends Component {
         });
     }
     //获取用户列表
-    selectAllPeople = () => {
-        const url = global.localhostUrl + "userInfo/selectAllPeople";
+    selectAllPeople=()=>{
+        const url=global.localhostUrl+"userInfo/selectAllPeople";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-            .then(json => {
-                const data = json;
-                this.setState({
-                    userList: data.data,
-                })
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
+            const data = json;
+            console.log(data);
+            this.setState({
+                userList:data.data,
+            })
+        }).catch(function (e) {
+            console.log("fetch fail");
+            alert('系统错误');
+        });
     }
     //获取会议室列表
-    getEffectiveMeetroom = () => {
-        const url = global.localhostUrl + "meetingRoom/getEffectiveMeetingRoom";
+    getEffectiveMeetroom=()=>{
+        const url=global.localhostUrl+"meetRoom/getEffectiveMeetroom";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-            .then(json => {
-                const data = json;
-                this.setState({
-                    roomList: data.data,
-                })
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
+            const data = json;
+            console.log(data);
+            this.setState({
+                roomList:data.data,
+            })
+        }).catch(function (e) {
+            console.log("fetch fail");
+            alert('系统错误');
+        });
     }
     //提交预定
     handleCreate = () => {
@@ -194,129 +212,157 @@ class DoorManage extends Component {
                 return;
             }
 
-            const url = global.localhostUrl + "openApply/insertByManager";
+            const url=global.localhostUrl+"openApply/insertByManage";
             fetch(url, {
                 method: "POST",
                 mode: "cors",
-                credentials: "include",
+                credentials:"include",//跨域携带cookie
                 headers: {
                     "Content-Type": "application/json;charset=utf-8",
                 },
                 body: JSON.stringify({
-                    beginDate: values.beginDate.format("YYYY-MM-DD"),
-                    overDate: values.overDate.format("YYYY-MM-DD"),
-                    meetRoomId: values.meetRoomId,
-                    beginTime: values.beginTime.format("HH:mm"),
-                    overTime: values.overTime.format("HH:mm"),
-                    note: values.note,
-                    userId: values.userId,
+                    beginDate:values.beginDate.format("YYYY-MM-DD"),
+                    overDate:values.overDate.format("YYYY-MM-DD"),
+                    meetRoomId:values.meetRoomId,
+                    beginTime:values.beginTime.format("HH:mm"),
+                    overTime:values.overTime.format("HH:mm"),
+                    note:values.note,
+                    userId:values.userId,
                 }),
-            }).then(res => res.json())
-                .then(json => {
-                    const data = json;
-                    if (data.status) {
-                        message.success(data.message)
-                        this.setState({
-                            drawerVisible: false,
-                        })
-                        form.resetFields();
-                        this.manageShow();
-                    } else {
-                        message.error(data.message);
-                    }
-                }).catch(function (e) {
-                    console.log("fetch fail");
-                    alert('系统错误');
-                });
+            }).then(function (res) {//function (res) {} 和 res => {}效果一致
+                return res.json()
+            }).then(json => {
+                // get result
+                const data = json;
+                console.log(data);
+                if(data.status){
+                    message.success(data.message)
+                    this.setState({
+                        drawerVisible: false,
+                    })
+                    form.resetFields();
+                    this.manageShow();
+                }else {
+                    message.error(data.message);
+                }
+
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+
+            console.log('Received values of form: ', values);
+            console.log("开始日期",values.beginDate.format("YYYY-MM-DD"));
+            console.log("结束日期",values.overDate.format("YYYY-MM-DD"));
+            console.log("会议室ID",values.meetRoomId);
+            console.log("开始时间",values.beginTime.format("HH:mm"));
+            console.log("结束时间",values.overTime.format("HH:mm"));
+            console.log("备注",values.note);
+            //form.resetFields();//数据清空
+
         });
     }
     //openApply/manageShow显示申请列表
-    manageShow = () => {
-        const url = global.localhostUrl + "openApply/manageOpenRequest";
+    manageShow=()=>{
+        const url=global.localhostUrl+"openApply/manageShow";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-            .then(json => {
-                const data = json;
-                this.setState({
-                    dataSource: data.data,
-                })
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
+            const data = json;
+            console.log(data);
+            this.setState({
+                dataSource:data.data,
+            })
+        }).catch(function (e) {
+            console.log("fetch fail");
+            alert('系统错误');
+        });
     }
-
-    cancelOne = (id) => {
-        const url = global.localhostUrl + "openApply/cancelOpenRequest?id=" + id;
+    //
+    cancelOne=(id)=>{
+        const url=global.localhostUrl+"openApply/cancelOne?id="+id;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",
+            credentials:"include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(res => res.json())
-            .then(json => {
-                const data = json;
-                this.manageShow();
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
+        }).then(function (res) {//function (res) {} 和 res => {}效果一致
+            return res.json()
+        }).then(json => {
+            // get result
+            const data = json;
+            console.log(data);
+            this.manageShow();
+        }).catch(function (e) {
+            console.log("fetch fail");
+            alert('系统错误');
+        });
     }
     render() {
-        const columns = [
+        const columns=[
             {
-                title: "序号",
-                key: "id",
-                render: (item, data, i) => {
-                    return (<div>{i + 1}</div>)
+                title:"序号",
+                key:"id",
+                render:(item,data,i)=>{
+                    return(<div>{i+1}</div>)
                 }
-            }, {
-                title: "会议室名",
-                dataIndex: "meetroom",
-                render: (item) => {
+            },{
+                title:"会议室名",
+                dataIndex:"meetroom",
+                render:(item)=>{
                     return item.name
                 }
-            }, {
-                title: "开始时间",
-                dataIndex: "beginDate",
-                key: "beginDate",
+            },{
+                title:"开始时间",
+                dataIndex:"beginDate",
+                key:"beginDate",
                 ...this.getColumnSearchProps("beginDate")
-            }, {
-                title: "结束时间",
-                dataIndex: "overDate",
-                key: "overDate",
+            },{
+                title:"结束时间",
+                dataIndex:"overDate",
+                key:"overDate",
                 ...this.getColumnSearchProps("overDate")
-            }, {
-                title: "准入时间",
-                render: (item => {
-                    return item.beginTime + "-" + item.overTime
+            },{
+                title:"准入时间",
+                render:(item=>{
+                    return item.beginTime+"-"+item.overTime
                 })
-            }, {
-                title: "创建时间",
-                dataIndex: "createTime",
-                key: "createTime",
+            },{
+                title:"创建时间",
+                dataIndex:"createTime",
+                key:"createTime",
                 ...this.getColumnSearchProps("createTime")
-            }, {
-                title: "申请人",
-                render: (item) => {
-                    return <Tooltip title={<div>联系方式：{item.userinfo.phone}<br /></div>}>
+            },{
+                title:"申请人",
+                render:(item)=>{
+
+                    return <Tooltip
+                        title={
+                            <div>
+                                联系方式：{item.userinfo.phone}
+                                <br/>
+                            </div>
+                        }
+                    >
                         {item.userinfo.name}
                     </Tooltip>
                 }
-            }, {
-                title: "状态",
-                dataIndex: "status",
-                render: (item) => {
+            },{
+                title:"状态",
+                dataIndex:"status",
+                render:(item)=>{
                     switch (item) {
                         case 0:
                             return "未处理"
@@ -330,16 +376,16 @@ class DoorManage extends Component {
                             return null
                     }
                 }
-            }, {
-                title: "操作",
-                render: (item) => {
-                    return (
+            },{
+                title:"操作",
+                render:(item)=>{
+                    return(
                         <div>
                             <Tooltip title="通过">
-                                <Button onClick={() => { this.approveRequest(item.id) }}><CheckOutlined /></Button>
+                                <Button onClick={()=>{this.agreeOne(item.id)}}><Icon type="check" /></Button>
                             </Tooltip>
                             <Tooltip title="不通过/取消权限">
-                                <Button onClick={() => { this.rejectRequest(item.id) }}><CloseOutlined style={{ color: "red" }} /></Button>
+                                <Button onClick={()=>{this.disagreeOne(item.id)}}><Icon style={{color:"red"}} type="close" /></Button>
                             </Tooltip>
                         </div>
                     )
@@ -351,9 +397,9 @@ class DoorManage extends Component {
                 <Row>
                     <Col span={18} offset={3}>
                         <Card
-                            title={<h2 style={{ float: 'left', marginBottom: -3 }}>开门申请</h2>}
+                            title={<h2 style={{float:'left',marginBottom:-3}}>开门申请</h2>}
                             extra={
-                                <div style={{ width: 200 }} >
+                                <div style={{width:200}} >
                                     <Row>
                                         <Col span={24}>
                                             <Button type="primary" onClick={this.showAddEquip}>申请</Button>
@@ -362,7 +408,7 @@ class DoorManage extends Component {
                                 </div>
                             }
                         >
-                            <Table rowKey={record => record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
+                            <Table rowKey={record=>record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
                         </Card>
                     </Col>
                 </Row>
@@ -376,9 +422,10 @@ class DoorManage extends Component {
                     getOthersList={this.getOthersList}
                 >
                 </DoorCreateForm>
+
             </div>
         );
     }
 }
 
-export default DoorManage;
+export default DoorApply;

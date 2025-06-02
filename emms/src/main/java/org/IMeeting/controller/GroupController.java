@@ -9,15 +9,18 @@ import org.IMeeting.repository.GroupRepository;
 import org.IMeeting.repository.UserInfoRepository;
 import org.IMeeting.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.IMeeting.entity.ServerResult;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+@CrossOrigin(
+        origins = "http://localhost:3000",
+        methods = {RequestMethod.GET, RequestMethod.POST},
+        allowedHeaders = "*",
+        allowCredentials = "true"
+)
 @RestController
 @RequestMapping("/group")
 public class GroupController {

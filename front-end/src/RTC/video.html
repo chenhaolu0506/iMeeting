@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script>
+    function createVideoElement(id, isLocal) {
+        var videoDiv = document.createElement("div");
+        videoDiv.innerHTML = '<video id="' + id + '" autoplay ' + (isLocal ? 'muted' : '') + ' playsinline ></video>';
+        document.querySelector("#remote-video-wrap").appendChild(videoDiv);
+        return document.getElementById(id);
+    }
+</script>
+<body>
+    <div id="remote-video-wrap">
+    </div>
+    <button onclick="createVideoElement(1,true)"></button>
+</body>
+</html>

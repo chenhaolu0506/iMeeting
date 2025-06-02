@@ -4,19 +4,27 @@ import org.IMeeting.entity.AbnormalInfo;
 import org.IMeeting.entity.ServerResult;
 import org.IMeeting.repository.AbnormalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+@CrossOrigin(
+        origins = "http://localhost:3000",
+        methods = {RequestMethod.GET, RequestMethod.POST},
+        allowedHeaders = "*",
+        allowCredentials = "true"
+)
 @RestController
 @RequestMapping("/abnormal")
 public class AbnormalController {
     @Autowired
     private AbnormalRepository abnormalRepository;
 
-//    Retrieve abnormal info for the current user
+    //    Retrieve abnormal info for the current user
     @RequestMapping("/selectAbnormal")
     public ServerResult selectAbnormal(HttpServletRequest request) {
         int userId = (int) request.getSession().getAttribute("userId");
