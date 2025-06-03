@@ -46,7 +46,6 @@ const CollectionCreateFormM = Form.create({ name: 'form_in_modal' })(
                 name: this.state.othersName,
                 phone: this.state.othersPhone,
             })
-            console.log(othersList)
             //内存中添加名字与信息
             this.setState({
                 othersList: othersList
@@ -55,7 +54,6 @@ const CollectionCreateFormM = Form.create({ name: 'form_in_modal' })(
             })
             //列表中添加名字
             const form = this.props.form.getFieldsValue();
-            console.log(form)
             const others = form.others;
             others.push(this.state.othersName)
             this.props.form.setFieldsValue({
@@ -92,19 +90,18 @@ const CollectionCreateFormM = Form.create({ name: 'form_in_modal' })(
                     "Content-Type": "application/json;charset=utf-8",
                 },
                 body: JSON.stringify({}),
-            }).then(function (res) {//function (res) {} 和 res => {}效果一致
-                return res.json()
-            }).then(json => {
-                // get result
-                const data = json;
-                console.log(data);
-                this.setState({
-                    groupList: data.data,
-                })
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
+            }).then(res => res.json())
+                .then(json => {
+                    // get result
+                    const data = json;
+                    // console.log(data);
+                    this.setState({
+                        groupList: data.data,
+                    })
+                }).catch(function (e) {
+                    console.log("fetch fail");
+                    alert('系统错误');
+                });
         }
         //selectPeople
         selectPeople = () => {
@@ -117,24 +114,23 @@ const CollectionCreateFormM = Form.create({ name: 'form_in_modal' })(
                     "Content-Type": "application/json;charset=utf-8",
                 },
                 body: JSON.stringify({}),
-            }).then(function (res) {//function (res) {} 和 res => {}效果一致
-                return res.json()
-            }).then(json => {
-                // get result
-                const data = json;
-                console.log(data);
-                this.setState({
-                    departList: data.data[0],
-                    userList: data.data[1],
-                })
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
+            }).then(res => res.json())
+                .then(json => {
+                    // get result
+                    const data = json;
+                    // console.log(data);
+                    this.setState({
+                        departList: data.data[0],
+                        userList: data.data[1],
+                    })
+                }).catch(function (e) {
+                    console.log("fetch fail");
+                    alert('系统错误');
+                });
         }
         //this.handleChange
         groupChange = (e) => {
-            console.log(e)
+            // console.log(e)
             this.setState({
                 selectedGroup: e
             }, () => {
@@ -149,27 +145,21 @@ const CollectionCreateFormM = Form.create({ name: 'form_in_modal' })(
                             "Content-Type": "application/json;charset=utf-8",
                         },
                         body: JSON.stringify({}),
-                    }).then(function (res) {//function (res) {} 和 res => {}效果一致
-                        return res.json()
-                    }).then(json => {
-                        // get result
-                        const data = json;
-                        console.log(data);
-                        // const selectedUsers = data.data[1].filter(o => !this.state.selectedUsers.includes(o.userId));
-                        data.data[1].map((item) => {
-                            selectedUsers.includes(item.userId) ? selectedUsers.push() : selectedUsers.push(item.userId)
-                            // selectedUsers.includes(item.userId)?null:selectedUsers.push(item.userId)
-                            return null;
-                        })
-                        console.log(selectedUsers)
-                        //跟新数据
-                        this.props.form.setFieldsValue({
-                            guests: selectedUsers
-                        })
-                    }).catch(function (e) {
-                        console.log("fetch fail");
-                        alert('系统错误');
-                    });
+                    }).then(res => res.json())
+                        .then(json => {
+                            const data = json;
+                            data.data[1].map((item) => {
+                                selectedUsers.includes(item.userId) ? selectedUsers.push() : selectedUsers.push(item.userId)
+                                return null;
+                            })
+                            // 更新数据
+                            this.props.form.setFieldsValue({
+                                guests: selectedUsers
+                            })
+                        }).catch(function (e) {
+                            console.log("fetch fail");
+                            alert('系统错误');
+                        });
                     return null;
                 })
                 //刷新
@@ -182,22 +172,21 @@ const CollectionCreateFormM = Form.create({ name: 'form_in_modal' })(
         }
 
         userChange = (e) => {
-            console.log(e)
             this.props.form.setFieldsValue({
                 guests: e
             })
         }
         othersChange = (e) => {
-            console.log("第e步", e)
-            const L = this.state.othersList.filter((item, i) => {
-                let flag = false
-                e.map(item2 => item.name === item2 ? flag = true : null)
-                console.log(i + ":" + flag)
-                return flag;
-            })
-            console.log("L=", L)
+            // const L = this.state.othersList.filter((item, i) => {
+            //     let flag = false
+            //     e.map(item2 => item.name === item2 ? flag = true : null)
+            //     console.log(i + ":" + flag)
+            //     return flag;
+            // })
+            // console.log("L=", L)
+            const filteredList = this.state.othersList.filter(item => e.includes(item.name));
             this.setState({
-                othersList: L
+                othersList: filteredList
             }, function () {
                 this.props.getOthersList(this.state.othersList);
             })
@@ -257,7 +246,6 @@ const CollectionCreateFormM = Form.create({ name: 'form_in_modal' })(
                                     <Form.Item
                                         {...formItemLayout}
                                         label="会议负责人"
-
                                     >
                                         <Row>
                                             <Col span={12}>
@@ -307,7 +295,6 @@ const CollectionCreateFormM = Form.create({ name: 'form_in_modal' })(
                                     <Form.Item
                                         {...formItemLayout}
                                         label="会议室"
-
                                     >
                                         {getFieldDecorator('meetingRoom', {
                                             rules: [{ required: true, message: '请选择会议室！' }],
@@ -325,7 +312,6 @@ const CollectionCreateFormM = Form.create({ name: 'form_in_modal' })(
                                     </Form.Item>
                                 </Col>
                             </Row>
-
                             <Row>
                                 <Col span={6} >
                                     <Form.Item

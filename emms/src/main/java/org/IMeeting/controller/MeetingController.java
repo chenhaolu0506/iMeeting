@@ -270,7 +270,7 @@ public class MeetingController {
         int[] equips = recommendParam.getEquip();
         double[] weight = recommendParam.getWeights();
         List<MeetingRoom> meetingRoomList = meetingService.getEffectiveMeetingRoom(request);
-        int equipLength = equips.length;
+        int equipLength = equips == null ? 0 : equips.length;
         double[] target = new double[equipLength + 1]; //需求
         for (int j = 0; j < equipLength; j++) {
             target[j] = 1;

@@ -55,7 +55,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer>, JpaS
     List<Meeting> findIntersectMeeting(String beginTime, String endTime, Integer meetingRoomId);
 
     @Query(value = "select m from Meeting m where m.userId=?1 and m.meetDate like?2 group by m.meetDate")
-    List<Meeting> groupByMeetingDate(Integer userId, String yearMonth);
+    List<Meeting> groupByMeetDate(Integer userId, String yearMonth);
 
     @Query(value = "select count (m) from Meeting m where m.userId=?1 and m.meetDate=?2")
     Long countReservation(Integer userId, String meetDate);

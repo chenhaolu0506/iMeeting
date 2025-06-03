@@ -308,21 +308,19 @@ class App extends Component {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if (data.data !== undefined) {
-                this.setState({
-                    roleList: data.data,
-                })
-            }
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                console.log("Data:" + data.data);
+                if (data.data !== null) {
+                    this.setState({
+                        roleList: data.data,
+                    })
+                }
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     //发送登录请求
     sendAjax = () => {

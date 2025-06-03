@@ -216,13 +216,16 @@ public class MeetingServiceImpl implements MeetingService {
     public ServerResult getOneDayReserve(OneDayReservation oneDayReservation){
         ServerResult serverResult = new ServerResult();
         List<List> meetings = new ArrayList<>();
-        for (Integer meetingRoomId : oneDayReservation.getMeetingRooms()) {
-            List<Meeting> meetings1 = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoomId, oneDayReservation.getReserveDate(), 1);
-            List<Meeting> meetings2 = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoomId, oneDayReservation.getReserveDate(), 3);
-            List<Meeting> meetings3 = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoomId, oneDayReservation.getReserveDate(), 4);
-            meetings1.addAll(meetings2);
-            meetings1.addAll(meetings3);
-            meetings.add(meetings1);
+        List<Integer> meetingRooms = oneDayReservation.getMeetingRooms();
+        if (meetingRooms != null && !meetingRooms.isEmpty()) {
+            for (Integer meetingRoomId : oneDayReservation.getMeetingRooms()) {
+                List<Meeting> meetings1 = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoomId, oneDayReservation.getReserveDate(), 1);
+                List<Meeting> meetings2 = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoomId, oneDayReservation.getReserveDate(), 3);
+                List<Meeting> meetings3 = meetingRepository.findByMeetroomIdAndMeetDateAndStatusOrderByBegin(meetingRoomId, oneDayReservation.getReserveDate(), 4);
+                meetings1.addAll(meetings2);
+                meetings1.addAll(meetings3);
+                meetings.add(meetings1);
+            }
         }
         serverResult.setStatus(true);
         serverResult.setData(meetings);
@@ -532,9 +535,10 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public ServerResult showMyReserve(HttpServletRequest request) {
         Integer userId = (Integer) request.getSession().getAttribute("userId");
+        System.out.println("userId=" + userId);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String yearMonth = sdf.format(new Date()).substring(0, 7);
-        List<Meeting> groupMeetings = meetingRepository.groupByMeetingDate(userId, yearMonth + "%");
+        List<Meeting> groupMeetings = meetingRepository.groupByMeetDate(userId, yearMonth + "%");
         List<MyReserveCount> myReserveCounts = new ArrayList<>();
         for (Meeting groupMeeting : groupMeetings) {
             MyReserveCount myReserveCount = new MyReserveCount();
@@ -601,7 +605,7 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public ServerResult specifiedMyReserve(HttpServletRequest request, String yearMonth) {
         Integer userId = (Integer) request.getSession().getAttribute("userId");
-        List<Meeting> groupMeetings = meetingRepository.groupByMeetingDate(userId, yearMonth + "%");
+        List<Meeting> groupMeetings = meetingRepository.groupByMeetDate(userId, yearMonth + "%");
         List<MyReserveCount> myReserveCounts = new ArrayList<>();
         for (Meeting groupMeeting : groupMeetings) {
             MyReserveCount myReserveCount = new MyReserveCount();
@@ -912,7 +916,7 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public ServerResult selectMyJoinMeeting(HttpServletRequest request, String yearMonth) {
         Integer userId = (Integer) request.getSession().getAttribute("userId");
-        List<Meeting> meetings = meetingRepository.groupByMeetingDate(userId, yearMonth + "%");
+        List<Meeting> meetings = meetingRepository.groupByMeetDate(userId, yearMonth + "%");
         List<MyJoinCount> myJoinCounts = new ArrayList<>();
         for (Meeting meeting : meetings) {
             MyJoinCount myJoinCount = new MyJoinCount();
