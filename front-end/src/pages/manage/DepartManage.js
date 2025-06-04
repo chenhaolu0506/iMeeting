@@ -1,34 +1,34 @@
 import React, { Component } from 'react';
-import {Table, Card, Col, Row, Button, Tooltip, Icon, message, Input, Drawer, Modal} from "antd";
+import { Table, Card, Col, Row, Button, Tooltip, Icon, message, Input, Drawer, Modal } from "antd";
 import global from '@/global';
 import Highlighter from "react-highlight-words";
 
 class DepartManage extends Component {
-    componentDidMount(){
+    componentDidMount() {
         this.selectAll();
-        this.selectPosition();
+        this.selectPositions();
     }
-    state={
+    state = {
 
-        dataSource:[],
-        departName:"",
-        departId:0,
-        positionList:[],
-        positionId:0,
-        positionName:"",
-        positionVisible:false,
-        drawerVisible:false,
-        addOrChange:false,
-        addPositionVisible:false,
+        dataSource: [],
+        departName: "",
+        departId: 0,
+        positionList: [],
+        positionId: 0,
+        positionName: "",
+        positionVisible: false,
+        drawerVisible: false,
+        addOrChange: false,
+        addPositionVisible: false,
         modalVisible: false,
-        positionModalVisible:false,
+        positionModalVisible: false,
     }
 
     //表格查询
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
-                             setSelectedKeys, selectedKeys, confirm, clearFilters,
-                         }) => (
+            setSelectedKeys, selectedKeys, confirm, clearFilters,
+        }) => (
             <div style={{ padding: 8 }}>
                 <Input
                     ref={node => { this.searchInput = node; }}
@@ -68,7 +68,7 @@ class DepartManage extends Component {
                 highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
                 searchWords={[this.state.searchText]}
                 autoEscape
-                textToHighlight={text.toString()}
+                textToHighlight={text == null ? "" : text.toString()}
             />
         ),
     })
@@ -83,16 +83,16 @@ class DepartManage extends Component {
     }
     //表格查询
 
-    showPosition = (ev,id,name) => {
+    showPosition = (ev, id, name) => {
         this.setState({
-            positionVisible:true,
-            positionId:id,
-            positionName:name,
+            positionVisible: true,
+            positionId: id,
+            positionName: name,
         })
     }
-    positionNameChange=(e)=>{
+    positionNameChange = (e) => {
         this.setState({
-            positionName:e.target.value,
+            positionName: e.target.value,
         })
     }
     handleCancel = (e) => {
@@ -100,8 +100,8 @@ class DepartManage extends Component {
         this.setState({
             modalVisible: false,
             positionVisible: false,
-            positionModalVisible:false,
-            addPositionVisible:false,
+            positionModalVisible: false,
+            addPositionVisible: false,
         });
     }
     onClose = (e) => {
@@ -110,39 +110,39 @@ class DepartManage extends Component {
             drawerVisible: false,
         });
     }
-    showDeletePosition=(ev,id)=>{
+    showDeletePosition = (ev, id) => {
         this.setState({
             positionModalVisible: true,
-            positionId:id,
+            positionId: id,
         });
     }
-    showDelete=(ev,id)=>{
+    showDelete = (ev, id) => {
         this.setState({
             modalVisible: true,
-            departId:id,
+            departId: id,
         });
     }
-    showUpdate=(ev,id,name)=>{
+    showUpdate = (ev, id, name) => {
         this.setState({
-            addOrChange:false,
+            addOrChange: false,
             drawerVisible: true,
-            departName:name,
-            departId:id,
+            departName: name,
+            departId: id,
         });
     }
-    showAddPosition=()=>{
+    showAddPosition = () => {
         this.setState({
             addPositionVisible: true,
         });
     }
-    showAddDepart=()=>{
+    showAddDepart = () => {
         this.setState({
-            addOrChange:true,
+            addOrChange: true,
             drawerVisible: true,
-            departName:"",
+            departName: "",
         });
     }
-    departNameChange=(e)=>{
+    departNameChange = (e) => {
         this.setState({
             departName: e.target.value,
         });
@@ -150,179 +150,157 @@ class DepartManage extends Component {
 
     /////////////////////////////////////////////////////////////////////
     //positionEditOne
-    positionEditOne = () =>{
-        const url=global.localhostUrl+"position/editOne";
+    positionEditOne = () => {
+        const url = global.localhostUrl + "position/editPosition";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({
-                id:this.state.positionId,
-                name:this.state.positionName,
-                departId:this.state.departId,
+                id: this.state.positionId,
+                name: this.state.positionName,
+                departId: this.state.departId,
             }),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success("操作成功！");
-            }
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！");
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
 
-    //positionInsertOne
-    positionInsertOne = () =>{
-        const url=global.localhostUrl+"position/insertOne?departId="+this.state.departId+"&positionName="+this.state.positionName;
+    insertPosition = () => {
+        const url = global.localhostUrl + "position/insertPosition?departId=" + this.state.departId + "&positionName=" + this.state.positionName;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success("操作成功！");
-                this.handleCancel();
-            }
-            this.selectPosition();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！");
+                    this.handleCancel();
+                }
+                this.selectPositions();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
-    //insertOne
-    insertOne = () =>{
-        const url=global.localhostUrl+"depart/insertOne?departName="+this.state.departName;
+
+    insertDepartment = () => {
+        const url = global.localhostUrl + "department/insertOne?departName=" + this.state.departName;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success("操作成功！");
-            }
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！");
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch failed");
+                alert('系统错误');
+            });
     }
-    //updateOne
-    updateOne = () =>{
-        const url=global.localhostUrl+"depart/editOne?departName="+this.state.departName+"&departId="+this.state.departId;
+
+    editDepartment = () => {
+        const url = global.localhostUrl + "department/editOne?departName=" + this.state.departName + "&departId=" + this.state.departId;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success("操作成功！")
-            }
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch failed");
+                alert('系统错误');
+            });
     }
-    //deleteOnePosition
-    deleteOnePosition = () =>{
-        const url=global.localhostUrl+"position/deleteOne?positionId="+this.state.positionId;
+    deletePosition = () => {
+        const url = global.localhostUrl + "position/deletePosition?positionId=" + this.state.positionId;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success(data.message);
-                this.handleCancel();
-            }else{
-                message.error(data.message);
-            }
-            this.selectPosition();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message);
+                    this.handleCancel();
+                } else {
+                    message.error(data.message);
+                }
+                this.selectPositions();
+            }).catch(function (e) {
+                console.log("fetch failed");
+                alert('系统错误');
+            });
     }
-    //deleteOne
-    deleteOne = () =>{
-        const url=global.localhostUrl+"depart/deleteOne?departId="+this.state.departId;
+    deleteDepartment = () => {
+        const url = global.localhostUrl + "department/deleteOne?departId=" + this.state.departId;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success(data.message);
-            }else{
-                message.error(data.message);
-            }
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message);
+                } else {
+                    message.error(data.message);
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch failed");
+                alert('系统错误');
+            });
     }
-    //selectPosition
-    selectPosition = () =>{
-        const url=global.localhostUrl+"position/selectAll";
+    selectPositions = () => {
+        const url = global.localhostUrl + "position/selectAll";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
@@ -334,7 +312,7 @@ class DepartManage extends Component {
             const data = json;
             console.log(data);
             this.setState({
-                positionList:data.data[0],
+                positionList: data.data[0],
             })
         }).catch(function (e) {
             console.log("fetch fail");
@@ -342,56 +320,53 @@ class DepartManage extends Component {
         });
     }
     //selectAll
-    selectAll = () =>{
-        const url=global.localhostUrl+"depart/selectAll";
+    selectAll = () => {
+        const url = global.localhostUrl + "department/selectAll";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.setState({
-                dataSource:data.data,
-                drawerVisible:false,
-                addOrChange:false,
-                modalVisible: false,
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    dataSource: data.data,
+                    drawerVisible: false,
+                    addOrChange: false,
+                    modalVisible: false,
+                })
+            }).catch(function (e) {
+                console.log("fetch failed");
+                alert('系统错误');
+            });
     }
     render() {
-        const columns=[
+        const columns = [
             {
-                title:"序号",
-                key:"id",
-                render:(item,data,i)=>{
-                    return(<div>{i+1}</div>)
+                title: "序号",
+                key: "id",
+                render: (item, data, i) => {
+                    return (<div>{i + 1}</div>)
                 }
-            },{
-                title:"名称",
-                dataIndex:"name",
-                key:"name",
+            }, {
+                title: "名称",
+                dataIndex: "name",
+                key: "name",
                 ...this.getColumnSearchProps("name"),
-            },{
-                title:"操作",
-                render:(item)=>{
-                    return(
+            }, {
+                title: "操作",
+                render: (item) => {
+                    return (
                         <div>
                             <Tooltip title="修改">
-                                <Button onClick={(ev)=>{this.showUpdate(ev,item.id,item.name)}}><Icon type="edit" /></Button>
+                                <Button onClick={(ev) => { this.showUpdate(ev, item.id, item.name) }}><Icon type="edit" /></Button>
                             </Tooltip>
                             <Tooltip title="删除">
-                                <Button onClick={(ev)=>{this.showDelete(ev,item.id)}}><Icon style={{color:"red"}}type={"delete"}></Icon></Button>
+                                <Button onClick={(ev) => { this.showDelete(ev, item.id) }}><Icon style={{ color: "red" }} type={"delete"}></Icon></Button>
                             </Tooltip>
                         </div>
                     )
@@ -403,9 +378,9 @@ class DepartManage extends Component {
                 <Row>
                     <Col span={18} offset={3}>
                         <Card
-                            title={<h2 style={{float:'left',marginBottom:-3}}>部门管理</h2>}
+                            title={<h2 style={{ float: 'left', marginBottom: -3 }}>部门管理</h2>}
                             extra={
-                                <div style={{width:200}} >
+                                <div style={{ width: 200 }} >
                                     <Row>
                                         <Col span={24}>
                                             <Button type="primary" onClick={this.showAddDepart}>添加部门</Button>
@@ -414,16 +389,16 @@ class DepartManage extends Component {
                                 </div>
                             }
                         >
-                            <Table rowKey={record=>record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
+                            <Table rowKey={record => record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
                         </Card>
                     </Col>
                 </Row>
                 <Drawer
                     title={
-                        this.state.addOrChange?
-                            <Button href="#" type={"primary"} onClick={this.insertOne}>添加</Button>
+                        this.state.addOrChange ?
+                            <Button href="#" type={"primary"} onClick={this.insertDepartment}>添加</Button>
                             :
-                            <Button href="#" type={"primary"} onClick={this.updateOne}>保存修改</Button>
+                            <Button href="#" type={"primary"} onClick={this.editDepartment}>保存修改</Button>
                     }
                     placement="right"
                     closable={false}
@@ -433,38 +408,36 @@ class DepartManage extends Component {
                 >
                     <Card>
                         部门名称：
-                        <Input value={this.state.departName} onChange={this.departNameChange}/>
-                        <br/>
-                        <div style={{display:this.state.addOrChange?"none":"block"}}>
+                        <Input value={this.state.departName} onChange={this.departNameChange} />
+                        <br />
+                        <div style={{ display: this.state.addOrChange ? "none" : "block" }}>
                             所属职位：
                             <Button type="primary" onClick={this.showAddPosition}>添加职位</Button>
                             {
-                                this.state.positionList.map((item)=>{
-                                    if(item.departId===this.state.departId){
+                                this.state.positionList.map((item) => {
+                                    if (item.departId === this.state.departId) {
                                         return (
                                             <div key={item.id}>
-                                                <Button  onClick={ev=>{this.showPosition(ev,item.id,item.name)}}>
+                                                <Button onClick={ev => { this.showPosition(ev, item.id, item.name) }}>
                                                     {item.name}
                                                 </Button>
                                                 <Tooltip title="删除">
-                                                    <Button onClick={(ev)=>{this.showDeletePosition(ev,item.id)}}><Icon style={{color:"red"}}type={"delete"}></Icon></Button>
+                                                    <Button onClick={(ev) => { this.showDeletePosition(ev, item.id) }}><Icon style={{ color: "red" }} type={"delete"}></Icon></Button>
                                                 </Tooltip>
-                                                <br/>
+                                                <br />
                                             </div>
                                         )
-                                    }else{
+                                    } else {
                                         return null;
                                     }
-
                                 })
                             }
                         </div>
-
                     </Card>
                 </Drawer>
                 <Modal
                     visible={this.state.modalVisible}
-                    onOk={this.deleteOne}
+                    onOk={this.deleteDepartment}
                     onCancel={this.handleCancel}
                     okText={"确定"}
                     cancelText={"我再想想"}
@@ -473,7 +446,7 @@ class DepartManage extends Component {
                 </Modal>
                 <Modal
                     visible={this.state.positionModalVisible}
-                    onOk={this.deleteOnePosition}
+                    onOk={this.deletePosition}
                     onCancel={this.handleCancel}
                     okText={"确定"}
                     cancelText={"我再想想"}
@@ -488,17 +461,17 @@ class DepartManage extends Component {
                     okText={"保存"}
                     cancelText={"取消"}
                 >
-                    <Input value={this.state.positionName} onChange={this.positionNameChange}/>
+                    <Input value={this.state.positionName} onChange={this.positionNameChange} />
                 </Modal>
                 <Modal
                     title={"添加职位"}
                     visible={this.state.addPositionVisible}
-                    onOk={this.positionInsertOne}
+                    onOk={this.insertPosition}
                     onCancel={this.handleCancel}
                     okText={"添加"}
                     cancelText={"取消"}
                 >
-                    <Input value={this.state.positionName} onChange={this.positionNameChange}/>
+                    <Input value={this.state.positionName} onChange={this.positionNameChange} />
                 </Modal>
             </div>
         );

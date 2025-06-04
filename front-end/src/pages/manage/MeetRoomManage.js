@@ -1,32 +1,32 @@
 import React, { Component } from 'react';
-import {Table, Card, Col, Row, Button, Tooltip, Icon, message, Input, Drawer, Tree, Badge} from "antd";
+import { Table, Card, Col, Row, Button, Tooltip, Icon, message, Input, Drawer, Tree, Badge } from "antd";
 import global from '@/global';
 import Highlighter from "react-highlight-words";
 
 class MeetRoomManage extends Component {
-    componentDidMount(){
+    componentDidMount() {
         this.selectAll();
     }
-    state={
-        dataSource:[],
-        allMenuList:[],
-        allDepartList:[],
+    state = {
+        dataSource: [],
+        allMenuList: [],
+        allDepartList: [],
         drawerVisible: false,
-        roomName:"",
-        num:"",
-        place:"",
-        contain:"",
-        menuList:[],
-        addOrChange:true,
-        roleId:0,
-        checkedKeys:[],
-        checkedDepartKeys:[],
+        roomName: "",
+        num: "",
+        place: "",
+        contain: "",
+        menuList: [],
+        addOrChange: true,
+        roleId: 0,
+        checkedKeys: [],
+        checkedDepartKeys: [],
     }
     //表格查询...this.getColumnSearchProps("name"),
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
-                             setSelectedKeys, selectedKeys, confirm, clearFilters,
-                         }) => (
+            setSelectedKeys, selectedKeys, confirm, clearFilters,
+        }) => (
             <div style={{ padding: 8 }}>
                 <Input
                     ref={node => { this.searchInput = node; }}
@@ -66,7 +66,7 @@ class MeetRoomManage extends Component {
                 highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
                 searchWords={[this.state.searchText]}
                 autoEscape
-                textToHighlight={text.toString()}
+                textToHighlight={text == null ? "" : text.toString()}
             />
         ),
     })
@@ -78,49 +78,47 @@ class MeetRoomManage extends Component {
         clearFilters();
         this.setState({ searchText: '' });
     }
-    //表格查询
-
     onClose = () => {
         this.setState({
             drawerVisible: false,
         });
     };
-    showDrawer=(e)=>{
+    showDrawer = (e) => {
         this.setState({
             drawerVisible: true,
-            id:e
+            id: e
         });
     }
-    showAddRole=()=>{
+    showAddRole = () => {
         this.setState({
-            roomName:"",
-            num:"",
-            place:"",
-            contain:"",
-            menuList:[],
+            roomName: "",
+            num: "",
+            place: "",
+            contain: "",
+            menuList: [],
             drawerVisible: true,
-            addOrChange:true,
-            checkedKeys:[],
-            checkedDepartKeys:[],
+            addOrChange: true,
+            checkedKeys: [],
+            checkedDepartKeys: [],
 
         });
     }
-    roomNameChange=(e)=>{
+    roomNameChange = (e) => {
         this.setState({
             roomName: e.target.value,
         });
     }
-    numChange=(e)=>{
+    numChange = (e) => {
         this.setState({
             num: e.target.value,
         });
     }
-    placeChange=(e)=>{
+    placeChange = (e) => {
         this.setState({
             place: e.target.value,
         });
     }
-    containChange=(e)=>{
+    containChange = (e) => {
         this.setState({
             contain: e.target.value,
         });
@@ -129,306 +127,270 @@ class MeetRoomManage extends Component {
         console.log('selected', selectedKeys, info);
     }
     departOnCheck = (checkedDepartKeys, info) => {
-        console.log('onCheck', checkedDepartKeys, info);
         this.setState({
-            checkedDepartKeys:checkedDepartKeys,
+            checkedDepartKeys: checkedDepartKeys,
         })
     }
     onCheck = (checkedKeys, info) => {
-        console.log('onCheck', checkedKeys, info);
         this.setState({
-            checkedKeys:checkedKeys,
+            checkedKeys: checkedKeys,
         })
     }
     /////////////////////////////////////////////////////////////////////
     //insertOne
-    insertOne = () =>{
-        const url=global.localhostUrl+"meetRoom/insertOne";
+    insertOne = () => {
+        const url = global.localhostUrl + "meetingRoom/insertOne";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({
-                roleId:this.state.roleId,
-                name:this.state.roomName,
-                num:this.state.num,
-                place:this.state.place,
-                contain:this.state.contain,
-                equips:this.state.checkedKeys,
-                enables:this.state.checkedDepartKeys,
+                roleId: this.state.roleId,
+                name: this.state.roomName,
+                num: this.state.num,
+                place: this.state.place,
+                contain: this.state.contain,
+                equips: this.state.checkedKeys,
+                enables: this.state.checkedDepartKeys,
             }),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success("操作成功！")
-            }
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     //updateOne
-    updateOne = () =>{
-        const url=global.localhostUrl+"meetRoom/editOne";
+    updateOne = () => {
+        const url = global.localhostUrl + "meetingRoom/editOne";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({
-                id:this.state.id,
-                roleId:this.state.roleId,
-                name:this.state.roomName,
-                num:this.state.num,
-                place:this.state.place,
-                contain:this.state.contain,
-                equips:this.state.checkedKeys,
-                enables:this.state.checkedDepartKeys,
+                id: this.state.id,
+                roleId: this.state.roleId,
+                name: this.state.roomName,
+                num: this.state.num,
+                place: this.state.place,
+                contain: this.state.contain,
+                equips: this.state.checkedKeys,
+                enables: this.state.checkedDepartKeys,
             }),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success("操作成功！")
-            }
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     //showOne
-    showOne = (ev,id,name,num,place,contain) =>{
-        console.log(ev)
-        console.log(id)
-        const url=global.localhostUrl+"meetRoom/showOne?MeetRoomId="+id;
+    showOne = (ev, id, name, num, place, contain) => {
+        const url = global.localhostUrl + "meetingRoom/showOne?MeetRoomId=" + id;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            let checkedKeys=[];
-            let checkedDepartKeys=[];
-            data.data[2].map( item =>{
-                return checkedKeys.push(item.equipId);
-            })
-            data.data[4].map( item =>{
-                return checkedDepartKeys.push(item.departId);
-            })
-            this.setState({
-                id:id,
-                drawerVisible:true,
-                roomName:data.data[0].name,
-                num:data.data[0].num,
-                place:data.data[0].place,
-                contain:data.data[0].contain,
-                checkedKeys:checkedKeys,
-                checkedDepartKeys:checkedDepartKeys,
-                addOrChange:false,
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                let checkedKeys = data.data[2].map(item => item.equipId);
+                let checkedDepartKeys = data.data[4].map(item => item.departId);
+                this.setState({
+                    id: id,
+                    drawerVisible: true,
+                    roomName: data.data[0].name,
+                    num: data.data[0].num,
+                    place: data.data[0].place,
+                    contain: data.data[0].contain,
+                    checkedKeys: checkedKeys,
+                    checkedDepartKeys: checkedDepartKeys,
+                    addOrChange: false,
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     //banOne
-    banOne = (ev,text) =>{
-        console.log(ev)
-        console.log(text)
-        const url=global.localhostUrl+"meetRoom/banOne?MeetRoomId="+text;
+    banOne = (ev, text) => {
+        const url = global.localhostUrl + "meetingRoom/banOne?MeetRoomId=" + text;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     //enableOne
-    enableOne = (ev,text) =>{
-        console.log(ev)
-        console.log(text)
-        const url=global.localhostUrl+"meetRoom/enableOne?MeetRoomId="+text;
+    enableOne = (ev, text) => {
+        const url = global.localhostUrl + "meetingRoom/enableOne?MeetRoomId=" + text;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     //deleteOne
-    deleteOne = (ev,text) =>{
+    deleteOne = (ev, text) => {
         console.log(ev)
         console.log(text)
-        const url=global.localhostUrl+"meetRoom/deleteOne?MeetRoomId="+text;
+        const url = global.localhostUrl + "meetingRoom/deleteOne?MeetRoomId=" + text;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success(data.message);
-            }else{
-                message.error(data.message);
-            }
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message);
+                } else {
+                    message.error(data.message);
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     //selectAll
-    selectAll = () =>{
-        const url=global.localhostUrl+"meetRoom/selectAll";
+    selectAll = () => {
+        const url = global.localhostUrl + "meetingRoom/selectAll";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.setState({
-                dataSource:data.data[0],
-                allMenuList:data.data[1],
-                allDepartList:data.data[2],
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    dataSource: data.data[0],
+                    allMenuList: data.data[1],
+                    allDepartList: data.data[2],
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     render() {
-        const columns=[
+        const columns = [
             {
-                title:"序号",
-                key:"id",
-                render:(item,data,i)=>{
-                    return(<div>{i+1}</div>)
+                title: "序号",
+                key: "id",
+                render: (item, data, i) => {
+                    return (<div>{i + 1}</div>)
                 }
-            },{
-                title:"名称",
-                dataIndex:"name",
-                key:"name",
+            }, {
+                title: "名称",
+                dataIndex: "name",
+                key: "name",
                 ...this.getColumnSearchProps("name"),
-            },{
-                title:"编号",
-                dataIndex:"num",
-                key:"num",
+            }, {
+                title: "编号",
+                dataIndex: "num",
+                key: "num",
                 ...this.getColumnSearchProps("num"),
-            },{
-                title:"地址",
-                dataIndex:"place",
-                key:"place",
+            }, {
+                title: "地址",
+                dataIndex: "place",
+                key: "place",
                 ...this.getColumnSearchProps("place"),
-            },{
-                title:"容量",
-                dataIndex:"contain",
-                key:"contain",
+            }, {
+                title: "容量",
+                dataIndex: "contain",
+                key: "contain",
                 ...this.getColumnSearchProps("contain"),
-            },{
-                title:"启用状态",
-                dataIndex:"availStatus",
-                key:"availStatus",
-                render:(item)=>{
-                    if(item===1){
-                        return(<Badge status="success">可用</Badge>)
-                    }else{
-                        return(<Badge status="default">被禁用</Badge>)
+            }, {
+                title: "启用状态",
+                dataIndex: "availStatus",
+                key: "availStatus",
+                render: (item) => {
+                    if (item === 1) {
+                        return (<Badge status="success">可用</Badge>)
+                    } else {
+                        return (<Badge status="default">被禁用</Badge>)
                     }
                 }
-            },{
-                title:"目前状态",
-                dataIndex:"nowStatus",
-                key:"nowStatus",
-                render:(item)=>{
-                    if(item===0){
-                        return(<Badge status="success">空闲</Badge>)
-                    }else{
-                        return(<Badge status="warning">使用中</Badge>)
+            }, {
+                title: "目前状态",
+                dataIndex: "nowStatus",
+                key: "nowStatus",
+                render: (item) => {
+                    if (item === 0) {
+                        return (<Badge status="success">空闲</Badge>)
+                    } else {
+                        return (<Badge status="warning">使用中</Badge>)
                     }
                 }
-            },{
-                title:"操作",
-                render:(item)=>{
-                    return(
+            }, {
+                title: "操作",
+                render: (item) => {
+                    return (
                         <div>
                             <Tooltip title="查看">
-                                <Button onClick={(ev)=>{this.showOne(ev,item.id,item.name,item.num,item.place,item.contain)}}><Icon type={"eye"}></Icon></Button>
+                                <Button onClick={(ev) => { this.showOne(ev, item.id, item.name, item.num, item.place, item.contain) }}><Icon type={"eye"}></Icon></Button>
                             </Tooltip>
                             <Tooltip title="删除">
-                                <Button onClick={(ev)=>{this.deleteOne(ev,item.id)}}><Icon style={{color:"red"}}type={"delete"}></Icon></Button>
+                                <Button onClick={(ev) => { this.deleteOne(ev, item.id) }}><Icon style={{ color: "red" }} type={"delete"}></Icon></Button>
                             </Tooltip>
                             {
-                                item.availStatus===0?
+                                item.availStatus === 0 ?
                                     <Tooltip title="启用">
-                                        <Button onClick={(ev)=>{this.enableOne(ev,item.id)}}><Icon type="unlock" /></Button>
-                                    </Tooltip>:
+                                        <Button onClick={(ev) => { this.enableOne(ev, item.id) }}><Icon type="unlock" /></Button>
+                                    </Tooltip> :
                                     <Tooltip title="禁用">
-                                        <Button onClick={(ev)=>{this.banOne(ev,item.id)}}><Icon type="lock" /></Button>
+                                        <Button onClick={(ev) => { this.banOne(ev, item.id) }}><Icon type="lock" /></Button>
                                     </Tooltip>
                             }
-
                         </div>
                     )
                 }
@@ -439,9 +401,9 @@ class MeetRoomManage extends Component {
                 <Row>
                     <Col span={18} offset={3}>
                         <Card
-                            title={<h2 style={{float:'left',marginBottom:-3}}>会议室管理</h2>}
+                            title={<h2 style={{ float: 'left', marginBottom: -3 }}>会议室管理</h2>}
                             extra={
-                                <div style={{width:200}} >
+                                <div style={{ width: 200 }} >
                                     <Row>
                                         <Col span={24}>
                                             <Button type="primary" onClick={this.showAddRole}>添加会议室</Button>
@@ -450,13 +412,13 @@ class MeetRoomManage extends Component {
                                 </div>
                             }
                         >
-                            <Table rowKey={record=>record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
+                            <Table rowKey={record => record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
                         </Card>
                     </Col>
                 </Row>
                 <Drawer
                     title={
-                        this.state.addOrChange?
+                        this.state.addOrChange ?
                             <Button href="#" type={"primary"} onClick={this.insertOne}>添加</Button>
                             :
                             <Button href="#" type={"primary"} onClick={this.updateOne}>保存修改</Button>
@@ -469,13 +431,13 @@ class MeetRoomManage extends Component {
                 >
                     <Card>
                         会议室名：
-                        <Input value={this.state.roomName} onChange={this.roomNameChange}/>
+                        <Input value={this.state.roomName} onChange={this.roomNameChange} />
                         会议室编号：
-                        <Input value={this.state.num} onChange={this.numChange}/>
+                        <Input value={this.state.num} onChange={this.numChange} />
                         会议室地址
-                        <Input value={this.state.place} onChange={this.placeChange}/>
+                        <Input value={this.state.place} onChange={this.placeChange} />
                         会议室容量：（人）
-                        <Input value={this.state.contain} onChange={this.containChange}/>
+                        <Input value={this.state.contain} onChange={this.containChange} />
                         拥有设备：
                         <Tree
                             checkable
@@ -483,13 +445,10 @@ class MeetRoomManage extends Component {
                             onCheck={this.onCheck}
                             checkedKeys={this.state.checkedKeys}
                         >
-
                             {
-                                this.state.allMenuList.map((item)=>{
-                                    return(
-                                        <Tree.TreeNode title={item.name} key={item.id}>
-
-                                        </Tree.TreeNode>
+                                this.state.allMenuList.map((item) => {
+                                    return (
+                                        <Tree.TreeNode title={item.name} key={item.id}></Tree.TreeNode>
                                     )
                                 })
                             }
@@ -502,18 +461,14 @@ class MeetRoomManage extends Component {
                         >
                             <Tree.TreeNode title="所有部门" key={0}>
                                 {
-                                    this.state.allDepartList.map((item)=>{
-                                        return(
-                                            <Tree.TreeNode title={item.name} key={item.id}>
-
-                                            </Tree.TreeNode>
+                                    this.state.allDepartList.map((item) => {
+                                        return (
+                                            <Tree.TreeNode title={item.name} key={item.id}></Tree.TreeNode>
                                         )
                                     })
                                 }
                             </Tree.TreeNode>
                         </Tree>
-
-
                     </Card>
                 </Drawer>
             </div>

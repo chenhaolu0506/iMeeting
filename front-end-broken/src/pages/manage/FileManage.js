@@ -85,7 +85,7 @@ class FileManage extends Component {
 
 
     /////////////////////////////////////////////////////////////////////
-    
+
     findAllOnManage = () => {
         const url = global.localhostUrl + "file/findAllOnManage";
         fetch(url, {
@@ -97,17 +97,17 @@ class FileManage extends Component {
             },
             body: JSON.stringify({}),
         }).then(res => res.json())
-        .then(json => {
-            const data = json;
-            this.setState({
-                dataSource: data.data
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+            .then(json => {
+                const data = json;
+                this.setState({
+                    dataSource: data.data
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
-    
+
     updateOne = (id, status) => {
         const url = global.localhostUrl + "file/editOne?fileId=" + id + "&status=" + status;
         fetch(url, {
@@ -119,18 +119,18 @@ class FileManage extends Component {
             },
             body: JSON.stringify({}),
         }).then(res => res.json())
-        .then(json => {    
-            const data = json;
-            if (data.status) {
-                message.success(data.message)
-            }
-            this.findAllOnManage();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message)
+                }
+                this.findAllOnManage();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
-    
+
     deleteOne = (id) => {
         const url = global.localhostUrl + "file/deleteOne?fileId=" + id;
         fetch(url, {
@@ -142,18 +142,18 @@ class FileManage extends Component {
             },
             body: JSON.stringify({}),
         }).then(res => res.json())
-        .then(json => {
-            const data = json;
-            if (data.status) {
-                message.success(data.message);
-            } else {
-                message.error(data.message);
-            }
-            this.findAllOnManage();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message);
+                } else {
+                    message.error(data.message);
+                }
+                this.findAllOnManage();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
 
     download = (id) => {
@@ -167,15 +167,15 @@ class FileManage extends Component {
             },
             body: JSON.stringify({}),
         }).then(res => res.json())
-        .then(json => {    
-            const data = json;
-            if (data.status) {
-                message.success("操作成功！")
-            }
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     render() {
         const columns = [
@@ -227,7 +227,7 @@ class FileManage extends Component {
                                 <Button onClick={() => { this.updateOne(item.id, 2) }}><CloseOutlined style={{ color: "red" }} /></Button>
                             </Tooltip>
                             <Tooltip title="下载">
-                                <Button onClick={() => { window.location.href = item.fileUrl + "/" + item.fileName}}>
+                                <Button onClick={() => { window.location.href = item.fileUrl + "/" + item.fileName }}>
                                     <DownloadOutlined />
                                 </Button>
                             </Tooltip>

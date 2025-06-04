@@ -1,30 +1,29 @@
 import React, { Component } from 'react';
-import {Table, Card, Col, Row, Button, Tooltip, Icon, message, Input, Drawer, Modal} from "antd";
+import { Table, Card, Col, Row, Button, Tooltip, Icon, message, Input, Drawer, Modal } from "antd";
 import global from '@/global';
 import Highlighter from 'react-highlight-words';
 import WeekMeetCreateForm from "@/pages/meeting/tool/WeekMeetCreateForm";
 class WeekMeeting extends Component {
-    componentDidMount(){
-        //this.selectAll();
-        this.getEffectiveMeetroom();
+    componentDidMount() {
+        this.getEffectiveMeetingRoom();
         this.userFindAll();
     }
-    state={
-        dataSource:[
+    state = {
+        dataSource: [
         ],
-        roomList:[],
-        equipName:"",
-        equipId:0,
-        drawerVisible:false,
-        addOrChange:false,
+        roomList: [],
+        equipName: "",
+        equipId: 0,
+        drawerVisible: false,
+        addOrChange: false,
         modalVisible: false,
-        searchText:"",
+        searchText: "",
     }
     //表格查询
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
-                             setSelectedKeys, selectedKeys, confirm, clearFilters,
-                         }) => (
+            setSelectedKeys, selectedKeys, confirm, clearFilters,
+        }) => (
             <div style={{ padding: 8 }}>
                 <Input
                     ref={node => { this.searchInput = node; }}
@@ -64,7 +63,7 @@ class WeekMeeting extends Component {
                 highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
                 searchWords={[this.state.searchText]}
                 autoEscape
-                textToHighlight={text.toString()}
+                textToHighlight={text == null ? "" : text.toString()}
             />
         ),
     })
@@ -77,45 +76,41 @@ class WeekMeeting extends Component {
         clearFilters();
         this.setState({ searchText: '' });
     }
-    //表格查询
-
     saveFormRef = (formRef) => {
         this.formRef = formRef;
     }
     handleCancel = (e) => {
-        console.log(e);
         this.setState({
             modalVisible: false,
         });
     }
     onClose = (e) => {
-        console.log(e);
         this.setState({
             drawerVisible: false,
         });
     }
-    showDelete=(ev,id)=>{
+    showDelete = (ev, id) => {
         this.setState({
             modalVisible: true,
-            equipId:id,
+            equipId: id,
         });
     }
-    showUpdate=(ev,id,name)=>{
+    showUpdate = (ev, id, name) => {
         this.setState({
-            addOrChange:false,
+            addOrChange: false,
             drawerVisible: true,
-            equipName:name,
-            equipId:id,
+            equipName: name,
+            equipId: id,
         });
     }
-    showAddEquip=()=>{
+    showAddEquip = () => {
         this.setState({
-            addOrChange:true,
+            addOrChange: true,
             drawerVisible: true,
-            equipName:"",
+            equipName: "",
         });
     }
-    equipNameChange=(e)=>{
+    equipNameChange = (e) => {
         this.setState({
             equipName: e.target.value,
         });
@@ -123,81 +118,72 @@ class WeekMeeting extends Component {
 
     /////////////////////////////////////////////////////////////////////
     //获取会议室列表
-    getEffectiveMeetroom=()=>{
-        const url=global.localhostUrl+"meetRoom/getEffectiveMeetroom";
+    getEffectiveMeetingRoom = () => {
+        const url = global.localhostUrl + "meetingRoom/getEffectiveMeetingRoom";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.setState({
-                roomList:data.data,
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    roomList: data.data,
+                })
+            }).catch(function (e) {
+                console.log(e);
+                alert('系统错误');
+            });
     }
-    cancelOne=(id)=>{
-        const url=global.localhostUrl+"weekMeeting/cancelOne?id="+id;
+    cancelOne = (id) => {
+        const url = global.localhostUrl + "weeklyMeeting/cancelWeeklyMeeting?id=" + id;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success(data.message);
-            }else{
-                message.error(data.message);
-            }
-            this.userFindAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message);
+                } else {
+                    message.error(data.message);
+                }
+                this.userFindAll();
+            }).catch(function (e) {
+                console.log(e);
+                alert('系统错误');
+            });
     }
-    //userFindAll
-    userFindAll = () =>{
-        const url=global.localhostUrl+"weekMeeting/userFindAll";
+    //用户端查看所有周会
+    userFindAll = () => {
+        const url = global.localhostUrl + "weeklyMeeting/userFindAllWeeklyMeetings";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.setState({
-                dataSource:data.data
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    dataSource: data.data
+                })
+            }).catch(function (e) {
+                console.log(e);
+                alert('系统错误');
+            });
     }
     //提交预定
     handleCreate = () => {
@@ -206,74 +192,58 @@ class WeekMeeting extends Component {
             if (err) {
                 return;
             }
-
-            const url=global.localhostUrl+"weekMeeting/insertOne";
+            const url = global.localhostUrl + "weeklyMeeting/setupWeeklyMeeting";
             fetch(url, {
                 method: "POST",
                 mode: "cors",
-                credentials:"include",//跨域携带cookie
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json;charset=utf-8",
                 },
                 body: JSON.stringify({
-                    beginTime:values.beginTime.format("YYYY-MM-DD"),
-                    overTime:values.overTime.format("YYYY-MM-DD"),
-                    week:values.week,
-                    meetRoomId:values.meetRoomId,
-                    meetBegin:values.meetBegin.format("HH:mm"),
-                    meetOver:values.meetOver.format("HH:mm"),
-                    note:values.note,
+                    beginTime: values.beginTime.format("YYYY-MM-DD"),
+                    overTime: values.overTime.format("YYYY-MM-DD"),
+                    week: values.week,
+                    meetRoomId: values.meetRoomId,
+                    meetBegin: values.meetBegin.format("HH:mm"),
+                    meetOver: values.meetOver.format("HH:mm"),
+                    note: values.note,
                 }),
-            }).then(function (res) {//function (res) {} 和 res => {}效果一致
-                return res.json()
-            }).then(json => {
-                // get result
-                const data = json;
-                console.log(data);
-                if(data.status){
-                    message.success(data.message)
-                    this.setState({
-                        bookVisible: false,
-                    })
-                    form.resetFields();
-                }else {
-                    message.error(data.message);
-                }
-
-            }).catch(function (e) {
-                console.log("fetch fail");
-                alert('系统错误');
-            });
-
-            console.log('Received values of form: ', values);
-            console.log("开始日期",values.beginTime.format("YYYY-MM-DD"));
-            console.log("结束日期",values.overTime.format("YYYY-MM-DD"));
-            console.log("星期",values.week);
-            console.log("会议室ID",values.meetRoomId);
-            console.log("开始时间",values.meetBegin.format("HH:mm"));
-            console.log("结束时间",values.meetOver.format("HH:mm"));
-            console.log("备注",values.note);
-            //form.resetFields();//数据清空
-
+            }).then(res => res.json())
+                .then(json => {
+                    const data = json;
+                    if (data.status) {
+                        message.success(data.message)
+                        this.setState({
+                            bookVisible: false,
+                        })
+                        form.resetFields();
+                    } else {
+                        message.error(data.message);
+                    }
+                }).catch(function (e) {
+                    console.log(e);
+                    alert('系统错误');
+                });
         });
     }
     render() {
-        const columns=[
+        const columns = [
             {
-                title:"序号",
-                key:"id",
-                render:(item,data,i)=>{
-                    return(<div>{i+1}</div>)
+                title: "序号",
+                key: "id",
+                render: (item, data, i) => {
+                    return (<div>{i + 1}</div>)
                 }
-            },{
-                title:"会议室",
-                render:(item)=>{
+            }, {
+                title: "会议室",
+                render: (item) => {
                     return item.meetroom.name
                 }
-            },{
-                title:"星期",
-                dataIndex:"week",
-                render:(item)=>{
+            }, {
+                title: "星期",
+                dataIndex: "week",
+                render: (item) => {
                     switch (item) {
                         case 0:
                             return "星期日"
@@ -293,25 +263,25 @@ class WeekMeeting extends Component {
                             return null
                     }
                 }
-            },{
-                title:"会议开始时间",
-                dataIndex:"meetBegin",
-                key:"meetBegin",
+            }, {
+                title: "会议开始时间",
+                dataIndex: "meetBegin",
+                key: "meetBegin",
                 ...this.getColumnSearchProps("meetBegin")
-            },{
-                title:"会议结束时间",
-                dataIndex:"meetOver",
-                key:"meetOver",
+            }, {
+                title: "会议结束时间",
+                dataIndex: "meetOver",
+                key: "meetOver",
                 ...this.getColumnSearchProps("meetOver")
-            },{
-                title:"创建时间",
-                dataIndex:"createTime",
-                key:"createTime",
+            }, {
+                title: "创建时间",
+                dataIndex: "createTime",
+                key: "createTime",
                 ...this.getColumnSearchProps("createTime")
-            },{
-                title:"状态",
-                dataIndex:"status",
-                render:(item)=>{
+            }, {
+                title: "状态",
+                dataIndex: "status",
+                render: (item) => {
                     switch (item) {
                         case 0:
                             return "未处理"
@@ -325,13 +295,13 @@ class WeekMeeting extends Component {
                             return null
                     }
                 }
-            },{
-                title:"操作",
-                render:(item)=>{
-                    return(
+            }, {
+                title: "操作",
+                render: (item) => {
+                    return (
                         <div>
                             <Tooltip title="取消周会">
-                                <Button onClick={()=>{this.cancelOne(item.id)}}><Icon style={{color:"red"}} type="delete" /></Button>
+                                <Button onClick={() => { this.cancelOne(item.id) }}><Icon style={{ color: "red" }} type="delete" /></Button>
                             </Tooltip>
                         </div>
                     )
@@ -343,9 +313,9 @@ class WeekMeeting extends Component {
                 <Row>
                     <Col span={18} offset={3}>
                         <Card
-                            title={<h2 style={{float:'left',marginBottom:-3}}>每周例会</h2>}
+                            title={<h2 style={{ float: 'left', marginBottom: -3 }}>每周例会</h2>}
                             extra={
-                                <div style={{width:200}} >
+                                <div style={{ width: 200 }} >
                                     <Row>
                                         <Col span={24}>
                                             <Button type="primary" onClick={this.showAddEquip}>申请例会</Button>
@@ -354,7 +324,7 @@ class WeekMeeting extends Component {
                                 </div>
                             }
                         >
-                            <Table rowKey={record=>record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
+                            <Table rowKey={record => record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
                         </Card>
                     </Col>
                 </Row>
@@ -380,5 +350,4 @@ class WeekMeeting extends Component {
         );
     }
 }
-
 export default WeekMeeting;

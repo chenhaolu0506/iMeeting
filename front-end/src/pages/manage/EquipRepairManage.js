@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import {Table, Card, Col, Row, Button, Tooltip, Icon, message, Input, Drawer, Modal, Select} from "antd";
+import { Table, Card, Col, Row, Button, Tooltip, Icon, message, Input, Drawer, Modal, Select } from "antd";
 import global from '@/global';
 import Highlighter from 'react-highlight-words';
 class EquipRepairManage extends Component {
-    componentDidMount(){
+    componentDidMount() {
         this.selectAll();
     }
-    state={
-        meet_room_id:0,
-        equip_id:0,
-        damage_info:"",
-        meetRoomList:[
+    state = {
+        meet_room_id: 0,
+        equip_id: 0,
+        damage_info: "",
+        meetRoomList: [
             {
                 "id": 1,
                 "name": "会议室一",
@@ -24,31 +24,31 @@ class EquipRepairManage extends Component {
                 "qrcodeAddress": null
             }
         ],
-        equipList:[],
-        dataSource:[
+        equipList: [],
+        dataSource: [
             {
-                id:1,
-                meetRoomName:"会议室一",
-                downName:"桥东",
-                upTime:"2019-02-08 12:21",
-                downTime:"2019-02-09 15:21",
-                status:"已修复",
+                id: 1,
+                meetRoomName: "会议室一",
+                downName: "桥东",
+                upTime: "2019-02-08 12:21",
+                downTime: "2019-02-09 15:21",
+                status: "已修复",
             }
         ],
-        equipName:"",
-        equipId:0,
-        drawerVisible:false,
-        addOrChange:false,
+        equipName: "",
+        equipId: 0,
+        drawerVisible: false,
+        addOrChange: false,
         modalVisible: false,
-        searchText:"",
-        repairName:"",
+        searchText: "",
+        repairName: "",
 
     }
     //表格查询
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
-                             setSelectedKeys, selectedKeys, confirm, clearFilters,
-                         }) => (
+            setSelectedKeys, selectedKeys, confirm, clearFilters,
+        }) => (
             <div style={{ padding: 8 }}>
                 <Input
                     ref={node => { this.searchInput = node; }}
@@ -88,7 +88,7 @@ class EquipRepairManage extends Component {
                 highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
                 searchWords={[this.state.searchText]}
                 autoEscape
-                textToHighlight={text.toString()}
+                textToHighlight={text == null ? "" : text.toString()}
             />
         ),
     })
@@ -102,8 +102,6 @@ class EquipRepairManage extends Component {
         this.setState({ searchText: '' });
     }
     //表格查询
-
-
     handleCancel = (e) => {
         console.log(e);
         this.setState({
@@ -116,223 +114,208 @@ class EquipRepairManage extends Component {
             drawerVisible: false,
         });
     }
-    showDeal=(ev,id)=>{
+    showDeal = (ev, id) => {
         this.setState({
-            id:id,
+            id: id,
             modalVisible: true,
         });
     }
-    showUpdate=(ev,id,name)=>{
+    showUpdate = (ev, id, name) => {
         this.setState({
-            addOrChange:false,
+            addOrChange: false,
             drawerVisible: true,
-            equipName:name,
-            equipId:id,
+            equipName: name,
+            equipId: id,
         });
     }
-    showAddEquip=()=>{
+    showAddEquip = () => {
         this.setState({
-            addOrChange:true,
+            addOrChange: true,
             drawerVisible: true,
-            equipName:"",
+            equipName: "",
         });
     }
-    damage_infoChange=(e)=>{
+    damage_infoChange = (e) => {
         this.setState({
             damage_info: e.target.value,
         });
     }
-    meetRoomChange=(e)=>{
+    meetRoomChange = (e) => {
         console.log(e)
         this.setState({
-            meet_room_id:e,
+            meet_room_id: e,
         })
     }
-    equipChange=(e)=>{
+    equipChange = (e) => {
         console.log(e)
         this.setState({
-            equip_id:e,
+            equip_id: e,
         })
     }
-    repairNameChange=(e)=>{
+    repairNameChange = (e) => {
         this.setState({
-            repairName:e.target.value,
+            repairName: e.target.value,
         })
     }
 
     /////////////////////////////////////////////////////////////////////
-    dealEquipRequair=()=>{
-        const url=global.localhostUrl+"equip/dealEquipRequair?repairName="+this.state.repairName+"&id="+this.state.id;
+    processRepair = () => {
+        const url = global.localhostUrl + "equip/processEquipRepair?repairName=" + this.state.repairName + "&id=" + this.state.id;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success("操作成功！")
-            }
-            this.handleCancel();
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+                this.handleCancel();
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     //insertOne
-    insertOne = () =>{
-        const url=global.localhostUrl+"equip/reportDemage";
+    insertOne = () => {
+        const url = global.localhostUrl + "equip/reportDemage";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({
-                meet_room_id:this.state.meet_room_id,
-                equip_id:this.state.equip_id,
-                damage_info:this.state.damage_info,
+                meet_room_id: this.state.meet_room_id,
+                equip_id: this.state.equip_id,
+                damage_info: this.state.damage_info,
             }),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success("操作成功！")
-            }
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     //deleteOne
-    deleteOne = () =>{
-        const url=global.localhostUrl+"equip/deleteOne?equipId="+this.state.equipId;
+    deleteOne = () => {
+        const url = global.localhostUrl + "equip/deleteOne?equipId=" + this.state.equipId;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success(data.message);
-            }else{
-                message.error(data.message);
-            }
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message);
+                } else {
+                    message.error(data.message);
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     //selectAll
-    selectAll = () =>{
-        this.userGetEquipRequairInfos();
-        const url=global.localhostUrl+"meetRoom/selectAll";
+    selectAll = () => {
+        this.userGetEquipRepairInfo();
+        const url = global.localhostUrl + "meetingRoom/selectAll";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.setState({
-                meetRoomList:data.data[0],
-                equipList:data.data[1],
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    meetRoomList: data.data[0],
+                    equipList: data.data[1],
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
-    //userGetEquipRequairInfos
-    userGetEquipRequairInfos=()=>{
-        const url=global.localhostUrl+"equip/getEquipRequairInfos";
+    //userGetEquipRepairInfo
+    userGetEquipRepairInfo = () => {
+        const url = global.localhostUrl + "equip/getEquipRepairInfos";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.setState({
-                dataSource:data.data
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    dataSource: data.data
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     render() {
-        const columns=[
+        const columns = [
             {
-                title:"序号",
-                key:"id",
-                render:(item,data,i)=>{
-                    return(<div>{i+1}</div>)
+                title: "序号",
+                key: "id",
+                render: (item, data, i) => {
+                    return (<div>{i + 1}</div>)
                 }
-            },{
-                title:"会议室名",
-                dataIndex:"meetRoomName",
-            },{
-                title:"设备名",
-                dataIndex:"equipName",
-            },{
-                title:"维修人",
-                dataIndex:"repairName",
-            },{
-                title:"维修时间",
-                dataIndex:"repairTime",
-            },{
-                title:"状态",
-                dataIndex:"status",
-            },{
-                title:"报修人",
-                dataIndex:"userName",
-            },{
-                title:"操作",
-                render:(item)=>{
-                    return(
+            }, {
+                title: "会议室名",
+                dataIndex: "meetRoomName",
+            }, {
+                title: "设备名",
+                dataIndex: "equipName",
+            }, {
+                title: "维修人",
+                dataIndex: "repairName",
+            }, {
+                title: "维修时间",
+                dataIndex: "repairTime",
+            }, {
+                title: "状态",
+                dataIndex: "status",
+            }, {
+                title: "报修人",
+                dataIndex: "userName",
+            }, {
+                title: "操作",
+                render: (item) => {
+                    return (
                         <div>
                             <Tooltip title="修改">
-                                <Button onClick={(ev)=>{this.showUpdate(ev,item.id,item.name)}}><Icon type="edit" /></Button>
+                                <Button onClick={(ev) => { this.showUpdate(ev, item.id, item.name) }}><Icon type="edit" /></Button>
                             </Tooltip>
                             <Tooltip title="处理">
-                                <Button onClick={(ev)=>{this.showDeal(ev,item.id)}}><Icon style={{color:"red"}}type={"check"}></Icon></Button>
+                                <Button onClick={(ev) => { this.showDeal(ev, item.id) }}><Icon style={{ color: "red" }} type={"check"}></Icon></Button>
                             </Tooltip>
                         </div>
                     )
@@ -344,9 +327,9 @@ class EquipRepairManage extends Component {
                 <Row>
                     <Col span={18} offset={3}>
                         <Card
-                            title={<h2 style={{float:'left',marginBottom:-3}}>设备报修</h2>}
+                            title={<h2 style={{ float: 'left', marginBottom: -3 }}>设备报修</h2>}
                             extra={
-                                <div style={{width:200}} >
+                                <div style={{ width: 200 }} >
                                     <Row>
                                         <Col span={24}>
                                             <Button type="primary" onClick={this.showAddEquip}>我要报修</Button>
@@ -355,14 +338,12 @@ class EquipRepairManage extends Component {
                                 </div>
                             }
                         >
-                            <Table rowKey={record=>record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
+                            <Table rowKey={record => record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
                         </Card>
                     </Col>
                 </Row>
                 <Drawer
                     title={<Button href="#" type={"primary"} onClick={this.insertOne}>报修</Button>}
-
-
                     placement="right"
                     closable={false}
                     onClose={this.onClose}
@@ -373,7 +354,7 @@ class EquipRepairManage extends Component {
                         会议室名称：
                         <Select style={{ width: 120 }} onChange={this.meetRoomChange}>
                             {
-                                this.state.meetRoomList.map((item,j)=>{
+                                this.state.meetRoomList.map((item, j) => {
                                     return <Select.Option key={j} value={item.id}>{item.name}</Select.Option>
                                 })
                             }
@@ -381,23 +362,23 @@ class EquipRepairManage extends Component {
                         设备名称：
                         <Select style={{ width: 120 }} onChange={this.equipChange}>
                             {
-                                this.state.equipList.map((item,j)=>{
+                                this.state.equipList.map((item, j) => {
                                     return <Select.Option key={j} value={item.id}>{item.name}</Select.Option>
                                 })
                             }
                         </Select>
-                        <br/>
+                        <br />
                         报修原因：
-                        <Input value={this.state.damage_info} onChange={this.damage_infoChange}/>
+                        <Input value={this.state.damage_info} onChange={this.damage_infoChange} />
                     </Card>
                 </Drawer>
                 <Modal
                     visible={this.state.modalVisible}
-                    onOk={this.dealEquipRequair}
+                    onOk={this.processRepair}
                     onCancel={this.handleCancel}
                 >
                     维修人：
-                    <Input value={this.state.repairName} onChange={this.repairNameChange}/>
+                    <Input value={this.state.repairName} onChange={this.repairNameChange} />
                 </Modal>
             </div>
         );

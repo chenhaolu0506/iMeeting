@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
-import {Table, Card, Col, Row, Button, Tooltip, Icon, message, Upload, Modal, Input} from "antd";
+import { Table, Card, Col, Row, Button, Tooltip, Icon, message, Upload, Modal, Input } from "antd";
 import global from '@/global';
 import Highlighter from "react-highlight-words";
 
 
 const props = {
-// onPreview={this.fileHandlePreview}
-// onChange={this.fileHandleChange}
-    withCredentials:true,
+    // onPreview={this.fileHandlePreview}
+    // onChange={this.fileHandleChange}
+    withCredentials: true,
     name: 'file',
     headers: {
         authorization: 'authorization-text',
-        "Access-Control-Allow-Credentials" : true ,
-        "Access-Control-Allow-Headers" : "DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type",
-        "Access-Control-Allow-Methods" : "GET, POST, OPTIONS",
-        "Access-Control-Allow-Origin" : "*",
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Headers": "DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Origin": "*",
     },
     // onPreview(e){this.fileHandlePreview(e)},
     // onChange(info) {
@@ -31,24 +31,24 @@ const props = {
 };
 
 class FaceManage extends Component {
-    componentDidMount(){
+    componentDidMount() {
         this.selectAll();
     }
-    state={
+    state = {
         previewVisible: false,
         fileModalVisible: false,
         previewImage: '',
         fileList: [],
-        worknum:"",
-        dataSource:[],
-        faceId:0,
+        worknum: "",
+        dataSource: [],
+        faceId: 0,
         modalVisible: false,
     }
     //表格查询...this.getColumnSearchProps("name"),
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
-                             setSelectedKeys, selectedKeys, confirm, clearFilters,
-                         }) => (
+            setSelectedKeys, selectedKeys, confirm, clearFilters,
+        }) => (
             <div style={{ padding: 8 }}>
                 <Input
                     ref={node => { this.searchInput = node; }}
@@ -88,7 +88,7 @@ class FaceManage extends Component {
                 highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
                 searchWords={[this.state.searchText]}
                 autoEscape
-                textToHighlight={text.toString()}
+                textToHighlight={text == null ? "" : text.toString()}
             />
         ),
     })
@@ -105,7 +105,7 @@ class FaceManage extends Component {
 
     fileHandleCancel = () => this.setState({ previewVisible: false })
     modalHandleCancel = () => this.setState({ fileModalVisible: false })
-    showFileModal=()=> this.setState({ fileModalVisible: true })
+    showFileModal = () => this.setState({ fileModalVisible: true })
 
 
     fileHandlePreview = (file) => {
@@ -115,15 +115,12 @@ class FaceManage extends Component {
         });
     }
 
-    fileHandleChange = ( {fileList} ) => {
-        console.log( "log:",fileList );
-        // console.log( "log1:",fileList[0].response );
-        if(fileList.length !== 0){
-            if(fileList[0].response!== undefined){
-                // console.log( "log2:",fileList[0].response );
-                if(fileList[0].response.status){
+    fileHandleChange = ({ fileList }) => {
+        if (fileList.length !== 0) {
+            if (fileList[0].response !== undefined) {
+                if (fileList[0].response.status) {
                     message.success(fileList[0].response.message);
-                }else {
+                } else {
                     message.warning(fileList[0].response.message);
                 }
             }
@@ -134,168 +131,154 @@ class FaceManage extends Component {
     }
 
     handleCancel = (e) => {
-        console.log(e);
         this.setState({
             modalVisible: false,
         });
     }
-    showDelete=(ev,id)=>{
+    showDelete = (ev, id) => {
         this.setState({
             modalVisible: true,
-            faceId:id,
+            faceId: id,
         });
     }
-    worknumChange=(e)=>{
+    worknumChange = (e) => {
         this.setState({
-            worknum:e.target.value,
+            worknum: e.target.value,
         })
     }
     /////////////////////////////////////////////////////////////////////
     //pass
-    pass = (ev,id) =>{
-        const url=global.localhostUrl+"face/pass?faceId="+id;
+    pass = (ev, id) => {
+        const url = global.localhostUrl + "face/pass?faceId=" + id;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success("操作成功！")
-            }
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
-    }
-    //dispass
-    dispass = (ev,id) =>{
-        const url=global.localhostUrl+"face/dispass?faceId="+id;
-        fetch(url, {
-            method: "POST",
-            mode: "cors",
-            credentials:"include",//跨域携带cookie
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success("操作成功！")
-            }
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
 
-    //deleteOne
-    deleteOne = () =>{
-        const url=global.localhostUrl+"face/deleteOne?faceId="+this.state.faceId;
+    reject = (ev, id) => {
+        const url = global.localhostUrl + "face/reject?faceId=" + id;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success(data.message);
-            }else{
-                message.error(data.message);
-            }
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
-    //selectAll
-    selectAll = () =>{
-        const url=global.localhostUrl+"face/selectAll";
+
+    deleteOne = () => {
+        const url = global.localhostUrl + "face/deleteOne?faceId=" + this.state.faceId;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.setState({
-                dataSource:data.data,
-                modalVisible: false,
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message);
+                } else {
+                    message.error(data.message);
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+    }
+
+    selectAll = () => {
+        const url = global.localhostUrl + "face/selectAll";
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({}),
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    dataSource: data.data,
+                    modalVisible: false,
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     render() {
-        const columns=[
+        const columns = [
             {
-                title:"序号",
-                key:"id",
-                render:(item,data,i)=>{
-                    return(<div>{i+1}</div>)
+                title: "序号",
+                key: "id",
+                render: (item, data, i) => {
+                    return (<div>{i + 1}</div>)
                 }
-            },{
-                title:"名称",
-                dataIndex:"name",
-                key:"name",
+            }, {
+                title: "名称",
+                dataIndex: "name",
+                key: "name",
                 ...this.getColumnSearchProps("name"),
-            },{
-                title:"状态",
-                dataIndex:"status",
-                key:"status",
+            }, {
+                title: "状态",
+                dataIndex: "status",
+                key: "status",
                 ...this.getColumnSearchProps("status"),
-            },{
-                title:"图片",
-                dataIndex:"faceAddress",
-                key:"faceAddress",
-                render:(item)=>{
-                    return(<img style={{ width: 111, height:111 }} src={item} title={"图片"}/>)
+            }, {
+                title: "图片",
+                dataIndex: "faceAddress",
+                key: "faceAddress",
+                render: (item) => {
+                    return (<img style={{ width: 111, height: 111 }} src={item} title={"图片"} />)
                 }
-            },{
-                title:"操作",
-                render:(item)=>{
-                    return(
+            }, {
+                title: "操作",
+                render: (item) => {
+                    return (
                         <div>
                             <Tooltip title="审核通过">
-                                <Button onClick={(ev)=>{this.pass(ev,item.id)}}><Icon type="check" /></Button>
+                                <Button onClick={(ev) => { this.pass(ev, item.id) }}><Icon type="check" /></Button>
                             </Tooltip>
                             <Tooltip title="审核不通过">
-                                <Button onClick={(ev)=>{this.dispass(ev,item.id)}}><Icon style={{color:"red"}} type="close" /></Button>
+                                <Button onClick={(ev) => { this.reject(ev, item.id) }}><Icon style={{ color: "red" }} type="close" /></Button>
                             </Tooltip>
                             <Tooltip title="删除">
-                                <Button onClick={(ev)=>{this.showDelete(ev,item.id)}}><Icon style={{color:"red"}}type={"delete"}></Icon></Button>
+                                <Button onClick={(ev) => { this.showDelete(ev, item.id) }}><Icon style={{ color: "red" }} type={"delete"}></Icon></Button>
                             </Tooltip>
                         </div>
                     )
@@ -313,9 +296,9 @@ class FaceManage extends Component {
                 <Row>
                     <Col span={18} offset={3}>
                         <Card
-                            title={<h2 style={{float:'left',marginBottom:-3}}>人脸管理</h2>}
+                            title={<h2 style={{ float: 'left', marginBottom: -3 }}>人脸管理</h2>}
                             extra={
-                                <div style={{width:200}}  >
+                                <div style={{ width: 200 }}  >
                                     <Button onClick={this.showFileModal} > 上传人脸 </Button>
                                 </div>
                             }>
@@ -342,7 +325,7 @@ class FaceManage extends Component {
                                             name="file"
                                             listType="picture-card"
                                             fileList={this.state.fileList}
-                                            action={global.localhostUrl+"face/insertByManager?worknum="+this.state.worknum}
+                                            action={global.localhostUrl + "face/insertByManager?worknum=" + this.state.worknum}
                                             onPreview={this.fileHandlePreview}
                                             onChange={this.fileHandleChange}
                                         >
@@ -354,7 +337,7 @@ class FaceManage extends Component {
                                     </Col>
                                 </Row>
                             </Modal>
-                            <Table rowKey={record=>record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
+                            <Table rowKey={record => record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
                         </Card>
                     </Col>
                 </Row>

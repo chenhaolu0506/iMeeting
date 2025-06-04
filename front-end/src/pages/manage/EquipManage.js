@@ -1,25 +1,25 @@
 import React, { Component } from 'react';
-import {Table, Card, Col, Row, Button, Tooltip, Icon, message, Input, Drawer, Modal} from "antd";
+import { Table, Card, Col, Row, Button, Tooltip, Icon, message, Input, Drawer, Modal } from "antd";
 import global from '@/global';
 import Highlighter from 'react-highlight-words';
 class EquipManage extends Component {
-    componentDidMount(){
+    componentDidMount() {
         this.selectAll();
     }
-    state={
-        dataSource:[],
-        equipName:"",
-        equipId:0,
-        drawerVisible:false,
-        addOrChange:false,
+    state = {
+        dataSource: [],
+        equipName: "",
+        equipId: 0,
+        drawerVisible: false,
+        addOrChange: false,
         modalVisible: false,
-        searchText:"",
+        searchText: "",
     }
     //表格查询
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
-                             setSelectedKeys, selectedKeys, confirm, clearFilters,
-                         }) => (
+            setSelectedKeys, selectedKeys, confirm, clearFilters,
+        }) => (
             <div style={{ padding: 8 }}>
                 <Input
                     ref={node => { this.searchInput = node; }}
@@ -59,7 +59,7 @@ class EquipManage extends Component {
                 highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
                 searchWords={[this.state.searchText]}
                 autoEscape
-                textToHighlight={text.toString()}
+                textToHighlight={text == null ? "" : text.toString()}
             />
         ),
     })
@@ -86,165 +86,153 @@ class EquipManage extends Component {
             drawerVisible: false,
         });
     }
-    showDelete=(ev,id)=>{
+    showDelete = (ev, id) => {
         this.setState({
             modalVisible: true,
-            equipId:id,
+            equipId: id,
         });
     }
-    showUpdate=(ev,id,name)=>{
+    showUpdate = (ev, id, name) => {
         this.setState({
-            addOrChange:false,
+            addOrChange: false,
             drawerVisible: true,
-            equipName:name,
-            equipId:id,
+            equipName: name,
+            equipId: id,
         });
     }
-    showAddEquip=()=>{
+    showAddEquip = () => {
         this.setState({
-            addOrChange:true,
+            addOrChange: true,
             drawerVisible: true,
-            equipName:"",
+            equipName: "",
         });
     }
-    equipNameChange=(e)=>{
+    equipNameChange = (e) => {
         this.setState({
             equipName: e.target.value,
         });
     }
 
     /////////////////////////////////////////////////////////////////////
-    //insertOne
-    insertOne = () =>{
-        const url=global.localhostUrl+"equip/insertOne?equipName="+this.state.equipName;
+    insertOne = () => {
+        const url = global.localhostUrl + "equip/insertOne?equipName=" + this.state.equipName;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success("操作成功！")
-            }
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
+
     //updateOne
-    updateOne = () =>{
-        const url=global.localhostUrl+"equip/updateOne?equipName="+this.state.equipName+"&equipId="+this.state.equipId;
+    updateOne = () => {
+        const url = global.localhostUrl + "equip/updateOne?equipName=" + this.state.equipName + "&equipId=" + this.state.equipId;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success("操作成功！")
-            }
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     //deleteOne
-    deleteOne = () =>{
-        const url=global.localhostUrl+"equip/deleteOne?equipId="+this.state.equipId;
+    deleteOne = () => {
+        const url = global.localhostUrl + "equip/deleteOne?equipId=" + this.state.equipId;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success(data.message);
-            }else{
-                message.error(data.message);
-            }
-            this.selectAll();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message);
+                } else {
+                    message.error(data.message);
+                }
+                this.selectAll();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     //selectAll
-    selectAll = () =>{
-        const url=global.localhostUrl+"equip/selectAll";
+    selectAll = () => {
+        const url = global.localhostUrl + "equip/selectAll";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.setState({
-                dataSource:data.data,
-                drawerVisible:false,
-                addOrChange:false,
-                modalVisible: false,
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    dataSource: data.data,
+                    drawerVisible: false,
+                    addOrChange: false,
+                    modalVisible: false,
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     render() {
-        const columns=[
+        const columns = [
             {
-                title:"序号",
-                key:"id",
-                render:(item,data,i)=>{
-                    return(<div>{i+1}</div>)
+                title: "序号",
+                key: "id",
+                render: (item, data, i) => {
+                    return (<div>{i + 1}</div>)
                 }
-            },{
-                title:"名称",
-                dataIndex:"name",
-                key:"name",
+            }, {
+                title: "名称",
+                dataIndex: "name",
+                key: "name",
                 ...this.getColumnSearchProps("name")
-            },{
-                title:"操作",
-                render:(item)=>{
-                    return(
+            }, {
+                title: "操作",
+                render: (item) => {
+                    return (
                         <div>
                             <Tooltip title="修改">
-                                <Button onClick={(ev)=>{this.showUpdate(ev,item.id,item.name)}}><Icon type="edit" /></Button>
+                                <Button onClick={(ev) => { this.showUpdate(ev, item.id, item.name) }}><Icon type="edit" /></Button>
                             </Tooltip>
                             <Tooltip title="删除">
-                                <Button onClick={(ev)=>{this.showDelete(ev,item.id)}}><Icon style={{color:"red"}}type={"delete"}></Icon></Button>
+                                <Button onClick={(ev) => { this.showDelete(ev, item.id) }}><Icon style={{ color: "red" }} type={"delete"}></Icon></Button>
                             </Tooltip>
                         </div>
                     )
@@ -256,9 +244,9 @@ class EquipManage extends Component {
                 <Row>
                     <Col span={18} offset={3}>
                         <Card
-                            title={<h2 style={{float:'left',marginBottom:-3}}>设备管理</h2>}
+                            title={<h2 style={{ float: 'left', marginBottom: -3 }}>设备管理</h2>}
                             extra={
-                                <div style={{width:200}} >
+                                <div style={{ width: 200 }} >
                                     <Row>
                                         <Col span={24}>
                                             <Button type="primary" onClick={this.showAddEquip}>添加设备</Button>
@@ -267,13 +255,13 @@ class EquipManage extends Component {
                                 </div>
                             }
                         >
-                            <Table rowKey={record=>record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
+                            <Table rowKey={record => record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
                         </Card>
                     </Col>
                 </Row>
                 <Drawer
                     title={
-                        this.state.addOrChange?
+                        this.state.addOrChange ?
                             <Button href="#" type={"primary"} onClick={this.insertOne}>添加</Button>
                             :
                             <Button href="#" type={"primary"} onClick={this.updateOne}>保存修改</Button>
@@ -286,7 +274,7 @@ class EquipManage extends Component {
                 >
                     <Card>
                         设备名称：
-                        <Input value={this.state.equipName} onChange={this.equipNameChange}/>
+                        <Input value={this.state.equipName} onChange={this.equipNameChange} />
                     </Card>
                 </Drawer>
                 <Modal

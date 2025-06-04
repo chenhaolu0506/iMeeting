@@ -391,7 +391,6 @@ class MeetingRoomManage extends Component {
                                         <Button onClick={(ev) => { this.banOne(ev, item.id) }}><LockOutlined /></Button>
                                     </Tooltip>
                             }
-
                         </div>
                     )
                 }

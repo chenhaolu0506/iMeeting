@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
-import {Table, Card, Col, Row, Button, Tooltip, Icon, message, Input, Drawer, Modal} from "antd";
+import { Table, Card, Col, Row, Button, Tooltip, Icon, message, Input, Drawer, Modal } from "antd";
 import global from '@/global';
 import Highlighter from 'react-highlight-words';
 class FileManage extends Component {
-    componentDidMount(){
+    componentDidMount() {
         this.findAllOnManage();
     }
-    state={
-        dataSource:[],
-        drawerVisible:false,
+    state = {
+        dataSource: [],
+        drawerVisible: false,
         modalVisible: false,
-        searchText:"",
+        searchText: "",
     }
     //表格查询
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
-                             setSelectedKeys, selectedKeys, confirm, clearFilters,
-                         }) => (
+            setSelectedKeys, selectedKeys, confirm, clearFilters,
+        }) => (
             <div style={{ padding: 8 }}>
                 <Input
                     ref={node => { this.searchInput = node; }}
@@ -56,7 +56,7 @@ class FileManage extends Component {
                 highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
                 searchWords={[this.state.searchText]}
                 autoEscape
-                textToHighlight={text.toString()}
+                textToHighlight={text == null ? "" : text.toString()}
             />
         ),
     })
@@ -69,16 +69,13 @@ class FileManage extends Component {
         clearFilters();
         this.setState({ searchText: '' });
     }
-    //表格查询
 
     handleCancel = (e) => {
-        console.log(e);
         this.setState({
             modalVisible: false,
         });
     }
     onClose = (e) => {
-        console.log(e);
         this.setState({
             drawerVisible: false,
         });
@@ -87,165 +84,124 @@ class FileManage extends Component {
 
     /////////////////////////////////////////////////////////////////////
     //
-    findAllOnManage=()=>{
-        const url=global.localhostUrl+"file/findAllOnManage";
+    findAllOnManage = () => {
+        const url = global.localhostUrl + "file/findAllOnManage";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.setState({
-                dataSource:data.data
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    dataSource: data.data
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
-    //updateOne
-    updateOne = (id,status) =>{
-        const url=global.localhostUrl+"file/editOne?fileId="+id+"&status="+status;
+    updateOne = (id, status) => {
+        const url = global.localhostUrl + "file/editOne?fileId=" + id + "&status=" + status;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success(data.message)
-            }
-            this.findAllOnManage();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
-    }
-    //deleteOne
-    deleteOne = (id) =>{
-        const url=global.localhostUrl+"file/deleteOne?fileId="+id;
-        fetch(url, {
-            method: "POST",
-            mode: "cors",
-            credentials:"include",//跨域携带cookie
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success(data.message);
-            }else{
-                message.error(data.message);
-            }
-            this.findAllOnManage();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
-    }
-    download=(id)=>{
-        const url=global.localhostUrl+"file/downLoad?fileId="+id;
-        fetch(url, {
-            method: "POST",
-            mode: "cors",
-            credentials:"include",//跨域携带cookie
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success("操作成功！")
-            }
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
-    }
-    // //selectAll
-    // selectAll = () =>{
-    //     const url=global.localhostUrl+"equip/selectAll";
-    //     fetch(url, {
-    //         method: "POST",
-    //         mode: "cors",
-    //         credentials:"include",//跨域携带cookie
-    //         headers: {
-    //             "Content-Type": "application/json;charset=utf-8",
-    //         },
-    //         body: JSON.stringify({}),
-    //     }).then(function (res) {//function (res) {} 和 res => {}效果一致
-    //         return res.json()
-    //     }).then(json => {
-    //         // get result
-    //         const data = json;
-    //         console.log(data);
-    //         this.setState({
-    //             dataSource:data.data,
-    //             drawerVisible:false,
-    //             addOrChange:false,
-    //             modalVisible: false,
-    //         })
-    //     }).catch(function (e) {
-    //         console.log("fetch fail");
-    //         alert('系统错误');
-    //     });
-    // }
-    render() {
-        const columns=[
-            {
-                title:"序号",
-                key:"id",
-                render:(item,data,i)=>{
-                    return(<div>{i+1}</div>)
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message)
                 }
-            },{
-                title:"文件名",
-                dataIndex:"fileName",
-                key:"fileName",
+                this.findAllOnManage();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+    }
+    deleteOne = (id) => {
+        const url = global.localhostUrl + "file/deleteOne?fileId=" + id;
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({}),
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message);
+                } else {
+                    message.error(data.message);
+                }
+                this.findAllOnManage();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+    }
+    download = (id) => {
+        const url = global.localhostUrl + "file/download?fileId=" + id;
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({}),
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
+    }
+
+    render() {
+        const columns = [
+            {
+                title: "序号",
+                key: "id",
+                render: (item, data, i) => {
+                    return (<div>{i + 1}</div>)
+                }
+            }, {
+                title: "文件名",
+                dataIndex: "fileName",
+                key: "fileName",
                 ...this.getColumnSearchProps("fileName")
-            },{
-                title:"会议室名",
-                dataIndex:"meetroom",
-                render:(item)=>{
+            }, {
+                title: "会议室名",
+                dataIndex: "meetroom",
+                render: (item) => {
                     return item.name
                 }
-            },{
-                title:"会议名",
-                dataIndex:"meeting",
-                render:(item)=>{
+            }, {
+                title: "会议名",
+                dataIndex: "meeting",
+                render: (item) => {
                     return item.topic
                 }
-            },{
-                title:"状态",
-                dataIndex:"status",
-                render:(item)=>{
+            }, {
+                title: "状态",
+                dataIndex: "status",
+                render: (item) => {
                     switch (item) {
                         case 1:
                             return "允许下载"
@@ -255,29 +211,29 @@ class FileManage extends Component {
                             return item
                     }
                 }
-            },{
-                title:"操作",
-                render:(item)=>{
-                    return(
+            }, {
+                title: "操作",
+                render: (item) => {
+                    return (
                         <div>
                             <Tooltip title="允许下载">
-                                <Button onClick={()=>{this.updateOne(item.id,1)}}><Icon type="check" /></Button>
+                                <Button onClick={() => { this.updateOne(item.id, 1) }}><Icon type="check" /></Button>
                             </Tooltip>
                             <Tooltip title="禁止下载">
-                                <Button onClick={()=>{this.updateOne(item.id,2)}}><Icon style={{color:"red"}} type="close" /></Button>
+                                <Button onClick={() => { this.updateOne(item.id, 2) }}><Icon style={{ color: "red" }} type="close" /></Button>
                             </Tooltip>
                             <Tooltip title="下载">
                                 {/*<Button onClick={()=>{this.download(item.id)}}><Icon type="download" /></Button>*/}
                                 <Button
-                                    onClick={()=>{
-                                        window.location.href = item.fileUrl+"/"+item.fileName
+                                    onClick={() => {
+                                        window.location.href = item.fileUrl + "/" + item.fileName
                                     }}
                                 >
                                     <Icon type="download" />
                                 </Button>
                             </Tooltip>
                             <Tooltip title="删除">
-                                <Button onClick={()=>{this.deleteOne(item.id)}}><Icon style={{color:"red"}} type="delete" /></Button>
+                                <Button onClick={() => { this.deleteOne(item.id) }}><Icon style={{ color: "red" }} type="delete" /></Button>
                             </Tooltip>
                         </div>
                     )
@@ -289,9 +245,9 @@ class FileManage extends Component {
                 <Row>
                     <Col span={18} offset={3}>
                         <Card
-                            title={<h2 style={{float:'left',marginBottom:-3}}>文件管理</h2>}
+                            title={<h2 style={{ float: 'left', marginBottom: -3 }}>文件管理</h2>}
                             extra={
-                                <div style={{width:200}} >
+                                <div style={{ width: 200 }} >
                                     <Row>
                                         <Col span={24}>
                                         </Col>
@@ -299,7 +255,7 @@ class FileManage extends Component {
                                 </div>
                             }
                         >
-                            <Table rowKey={record=>record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
+                            <Table rowKey={record => record.id} className={'table'} columns={columns} dataSource={this.state.dataSource} />
                         </Card>
                     </Col>
                 </Row>

@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
-import {Card, Col, Row, Badge, Table, Button, message, Input, Icon} from "antd";
+import { Card, Col, Row, Badge, Table, Button, message, Input, Icon } from "antd";
 import global from '@/global';
 import Highlighter from "react-highlight-words";
 
 class MyMeetLeave extends Component {
-    componentDidMount(){
+    componentDidMount() {
         this.CountLeaveInformation();
     }
-    state={
-        meetList:[],
-        expandedRowKeys:[],
-        leaveInfoId:"",
+    state = {
+        meetList: [],
+        expandedRowKeys: [],
+        leaveInfoId: "",
     }
     //表格查询...this.getColumnSearchProps("name"),
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
-                             setSelectedKeys, selectedKeys, confirm, clearFilters,
-                         }) => (
+            setSelectedKeys, selectedKeys, confirm, clearFilters,
+        }) => (
             <div style={{ padding: 8 }}>
                 <Input
                     ref={node => { this.searchInput = node; }}
@@ -52,11 +52,12 @@ class MyMeetLeave extends Component {
             }
         },
         render: (text) => (
+            console.log('Text', text, text == null),
             <Highlighter
                 highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
                 searchWords={[this.state.searchText]}
                 autoEscape
-                textToHighlight={text.toString()}
+                textToHighlight={text == null ? "" : text.toString()}
             />
         ),
     })
@@ -71,39 +72,39 @@ class MyMeetLeave extends Component {
     //表格查询
 
     //点击展开/隐藏相应的行
-    onExpand=(expanded, record)=>{
+    onExpand = (expanded, record) => {
         console.log(expanded)
         console.log(record)
         this.showOneMeetingLeaveInfo(record.meetingId);
-        if(expanded){
+        if (expanded) {
             this.setState({
-                expandedRowKeys:[
+                expandedRowKeys: [
                     record.meetingId
                 ]
             })
-        }else{
+        } else {
             this.setState({
-                expandedRowKeys:[]
+                expandedRowKeys: []
             })
         }
 
     }
     //点击展示会议请假内容
-    expandedRowRender=(e)=>{
+    expandedRowRender = (e) => {
         console.log(e)
 
-        let columns=[{
-            title:"姓名",
-            dataIndex:"peopleName",
-        },{
-            title:"联系电话",
-            dataIndex:"peoplePhone",
-        },{
-            title:"请假原因",
-            dataIndex:"note",
-        },{
-            title:<Button type={"primary"}>一键同意</Button>,
-            render:(item)=>{
+        let columns = [{
+            title: "姓名",
+            dataIndex: "peopleName",
+        }, {
+            title: "联系电话",
+            dataIndex: "peoplePhone",
+        }, {
+            title: "请假原因",
+            dataIndex: "note",
+        }, {
+            title: <Button type={"primary"}>一键同意</Button>,
+            render: (item) => {
                 switch (item.status) {
                     case 1:
                         return <div>已同意</div>
@@ -113,8 +114,8 @@ class MyMeetLeave extends Component {
                         return (
 
                             <div>
-                                <Button type={"primary"} onClick={(ev)=>{this.agreeLeave(ev,item.leaveInfoId)}}>同意</Button>
-                                <Button onClick={(ev)=>{this.disagreeLeave(ev,item.leaveInfoId)}}>不同意</Button>
+                                <Button type={"primary"} onClick={(ev) => { this.agreeLeave(ev, item.leaveInfoId) }}>同意</Button>
+                                <Button onClick={(ev) => { this.disagreeLeave(ev, item.leaveInfoId) }}>不同意</Button>
                             </div>
                         )
                 }
@@ -123,7 +124,7 @@ class MyMeetLeave extends Component {
         }];
 
         return <Table
-            rowKey={record=>record.leaveInfoId}
+            rowKey={record => record.leaveInfoId}
             columns={columns}
             dataSource={this.state.dataSource}
         />
@@ -131,12 +132,12 @@ class MyMeetLeave extends Component {
     }
     ///////////////////////////////////////////////////////fetch//////////////////////////////////////////////////
     //CountLeaveInformation获取会议列表
-    CountLeaveInformation = () =>{
-        const url=global.localhostUrl+"meeting/CountLeaveInformation";
+    CountLeaveInformation = () => {
+        const url = global.localhostUrl + "meeting/CountLeaveInformation";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
@@ -148,7 +149,7 @@ class MyMeetLeave extends Component {
             const data = json;
             console.log(data);
             this.setState({
-                meetList:data.data,
+                meetList: data.data,
             })
         }).catch(function (e) {
             console.log("fetch fail");
@@ -156,12 +157,12 @@ class MyMeetLeave extends Component {
         });
     }
     //showOneMeetingLeaveInfo获取本会议请假信息
-    showOneMeetingLeaveInfo = (e) =>{
-        const url=global.localhostUrl+"meeting/showOneMeetingLeaveInfo?meetingId="+e;
+    showOneMeetingLeaveInfo = (e) => {
+        const url = global.localhostUrl + "meeting/showOneMeetingLeaveInfo?meetingId=" + e;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
@@ -173,7 +174,7 @@ class MyMeetLeave extends Component {
             const data = json;
             console.log(data);
             this.setState({
-                dataSource:data.data,
+                dataSource: data.data,
             })
         }).catch(function (e) {
             console.log("fetch fail");
@@ -181,13 +182,13 @@ class MyMeetLeave extends Component {
         });
     }
     //agreeLeave
-    agreeLeave=(ev,e)=>{
+    agreeLeave = (ev, e) => {
         console.log(e)
-        const url=global.localhostUrl+"meeting/agreeLeave?leaveInfoId="+e;
+        const url = global.localhostUrl + "meeting/agreeLeave?leaveInfoId=" + e;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
@@ -205,12 +206,12 @@ class MyMeetLeave extends Component {
         });
     }
     //disagreeLeave
-    disagreeLeave=(ev,e)=>{
-        const url=global.localhostUrl+"meeting/disagreeLeave?leaveInfoId="+e;
+    disagreeLeave = (ev, e) => {
+        const url = global.localhostUrl + "meeting/disagreeLeave?leaveInfoId=" + e;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",//跨域携带cookie
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
@@ -232,20 +233,20 @@ class MyMeetLeave extends Component {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     render() {
-        const columns=[{
-            title:"会议名",
-            dataIndex:"topic",
+        const columns = [{
+            title: "会议名",
+            dataIndex: "topic",
             ...this.getColumnSearchProps("topic"),
-        },{
-            title:"会议时间",
-            dataIndex:"meetTime",
+        }, {
+            title: "会议时间",
+            dataIndex: "meetTime",
             ...this.getColumnSearchProps("meetTime"),
-        },{
-            title:"请假数量",
-            render:(item)=>{
+        }, {
+            title: "请假数量",
+            render: (item) => {
                 return <div>
-                    <Badge status="warning" text={"请假信息:"+item.allCount}/>
-                    <Badge count={item.notDealCount}/>
+                    <Badge status="warning" text={"请假信息:" + item.allCount} />
+                    <Badge count={item.notDealCount} />
                 </div>
             }
         }];
@@ -255,38 +256,38 @@ class MyMeetLeave extends Component {
                     <Col span={18} offset={3}>
                         <Card>
                             {/*<Collapse  onChange={callback}>*/}
-                                {/*{*/}
-                                    {/*this.state.meetList.map((item)=>{*/}
+                            {/*{*/}
+                            {/*this.state.meetList.map((item)=>{*/}
 
-                                        {/*return(*/}
-                                            {/*<Collapse.Panel header={*/}
-                                                {/*<div>*/}
-                                                    {/*<Row>*/}
-                                                        {/*<Col span={6}>*/}
-                                                            {/*<h3>{item.topic}</h3>*/}
-                                                        {/*</Col>*/}
-                                                        {/*<Col span={6}>*/}
-                                                            {/*{item.meetTime}*/}
-                                                        {/*</Col>*/}
-                                                        {/*<Col span={6}>*/}
-                                                            {/*<Badge status="warning" text={"请假信息:"+item.allCount}/>*/}
-                                                            {/*<Badge count={item.notDealCount}/>*/}
-                                                        {/*</Col>*/}
-                                                    {/*</Row>*/}
+                            {/*return(*/}
+                            {/*<Collapse.Panel header={*/}
+                            {/*<div>*/}
+                            {/*<Row>*/}
+                            {/*<Col span={6}>*/}
+                            {/*<h3>{item.topic}</h3>*/}
+                            {/*</Col>*/}
+                            {/*<Col span={6}>*/}
+                            {/*{item.meetTime}*/}
+                            {/*</Col>*/}
+                            {/*<Col span={6}>*/}
+                            {/*<Badge status="warning" text={"请假信息:"+item.allCount}/>*/}
+                            {/*<Badge count={item.notDealCount}/>*/}
+                            {/*</Col>*/}
+                            {/*</Row>*/}
 
 
-                                                {/*</div>*/}
-                                            {/*} key={item.meetingId}>*/}
-                                                {/*<p>{text}</p>*/}
-                                            {/*</Collapse.Panel>*/}
-                                        {/*)*/}
+                            {/*</div>*/}
+                            {/*} key={item.meetingId}>*/}
+                            {/*<p>{text}</p>*/}
+                            {/*</Collapse.Panel>*/}
+                            {/*)*/}
 
-                                    {/*})*/}
-                                {/*}*/}
+                            {/*})*/}
+                            {/*}*/}
                             {/*</Collapse>*/}
 
                             <Table
-                                rowKey={record=>record.meetingId}
+                                rowKey={record => record.meetingId}
                                 columns={columns}
                                 // expandedRowRender={record => <p style={{ margin: 0 }}>{record.description}</p>}
                                 expandedRowKeys={this.state.expandedRowKeys}

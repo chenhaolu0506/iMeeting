@@ -93,15 +93,15 @@ class JoinPersonManage extends Component {
             },
             body: JSON.stringify({}),
         }).then(res => res.json())
-        .then(json => {    
-            const data = json;
-            if (data.status) {
-                message.success("操作成功！")
-            }
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     showOneMeeting = (ev, id) => {
         const url = global.localhostUrl + "joinPerson/showOneMeeting?meetingId=" + id;
@@ -114,19 +114,19 @@ class JoinPersonManage extends Component {
             },
             body: JSON.stringify({}),
         }).then(res => res.json())
-        .then(json => {    
-            const data = json;
-            this.setState({
-                meetingId: id,
-                drawerVisible: true,
-                joinDataSource: data.data,
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+            .then(json => {
+                const data = json;
+                this.setState({
+                    meetingId: id,
+                    drawerVisible: true,
+                    joinDataSource: data.data,
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
-    
+
     insertOne = () => {
         const url = global.localhostUrl + "equip/insertOne?equipName=" + this.state.equipName;
         fetch(url, {
@@ -138,16 +138,16 @@ class JoinPersonManage extends Component {
             },
             body: JSON.stringify({}),
         }).then(res => res.json())
-        .then(json => {    
-            const data = json;
-            if (data.status) {
-                message.success("操作成功！")
-            }
-            this.toJoinPersonIndex();
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success("操作成功！")
+                }
+                this.toJoinPersonIndex();
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     toJoinPersonIndex = () => {
         const url = global.localhostUrl + "joinPerson/toJoinPersonIndex";
@@ -160,16 +160,16 @@ class JoinPersonManage extends Component {
             },
             body: JSON.stringify({}),
         }).then(res => res.json())
-        .then(json => {    
-            const data = json;
-            this.setState({
-                dataSource: data.data,
-                drawerVisible: false,
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+            .then(json => {
+                const data = json;
+                this.setState({
+                    dataSource: data.data,
+                    drawerVisible: false,
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
     render() {
         const columns = [
