@@ -8,26 +8,17 @@ class SearchMeeting extends Component {
         this.showMyReserve();
     }
     state = {
-        meetInfo: [],
-        meetDateInfo: [],
+        meetingInfo: [],
+        meetingDateInfo: [],
     };
-    //
+
     dateCellRender = (value) => {
-        console.log(value)
-        console.log(value.format("YYYY-MM-DD"));
         let time = value.format("YYYY-MM-DD");
-        let listData = [];
-        this.state.meetDateInfo.map((item) => {
-            console.log(item)
-            if (time === item.meetDate) {
-                listData.push({
-                    meetDate: item.meetDate,
-                    type: "warning",
-                    count: "有" + item.count + "条预定记录",
-                });
-            }
-            return null;
-        });
+        let listData = this.state.meetingDateInfo.filter(item => item.meetDate === time).map(item => ({
+            meetDate: item.meetDate,
+            type: "warning",
+            count: "有" + item.count + "条预定记录",
+        }));
         return (
             <ul className="events">
                 {
@@ -47,25 +38,22 @@ class SearchMeeting extends Component {
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.setState({
-                meetDateInfo: data.data[0],
-                meetInfo: data.data[1],
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    meetingDateInfo: data.data[0],
+                    meetingInfo: data.data[1],
+                })
+            }).catch(function (e) {
+                console.log(e);
+                alert('系统错误');
+            });
     }
     //showMyReserve选择某月进行显示
     showMyReserveOneMonth = (yearMonth) => {
@@ -73,54 +61,45 @@ class SearchMeeting extends Component {
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.setState({
-                meetDateInfo: data.data,
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
-    }//showMyReserve选择某月进行显示
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    meetingDateInfo: data.data,
+                })
+            }).catch(function (e) {
+                console.log(e);
+                alert('系统错误');
+            });
+    }
+    //showMyReserve选择某天进行显示
     showMyReserveOneDate = (reserveDate) => {
         const url = global.localhostUrl + "meeting/showOneDayReserve?reserveDate=" + reserveDate;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.setState({
-                meetInfo: data.data,
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    meetingInfo: data.data,
+                })
+            }).catch(function (e) {
+                console.log(e);
+                alert('系统错误');
+            });
     }
-    //onChange
     onChange = (e) => {
-        console.log("onChange:", e);
-        console.log(e.format("YYYY-MM"));
-        console.log(e.format("YYYY-MM-DD"));
         this.showMyReserveOneMonth(e.format("YYYY-MM"));
         this.showMyReserveOneDate(e.format("YYYY-MM-DD"));
     }
@@ -134,7 +113,6 @@ class SearchMeeting extends Component {
                         </Card>
                     </Col>
                 </Row>
-
                 <Row>
                     <Col span={18} offset={3}>
                         <Card
@@ -144,7 +122,7 @@ class SearchMeeting extends Component {
                                 </div>
                             }
                         >
-                            <MyMeetInfo dataSource={this.state.meetInfo}></MyMeetInfo>
+                            <MyMeetInfo dataSource={this.state.meetingInfo}></MyMeetInfo>
                         </Card>
                     </Col>
                 </Row>

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import {Button, Card, Col, DatePicker, Drawer, Input, Modal, Row, TimePicker,Form,Select} from "antd";
+import { Button, Card, Col, DatePicker, Drawer, Input, Modal, Row, TimePicker, Form, Select } from "antd";
 import global from '@/global';
 
 const OpenDoorCreateForm = Form.create({ name: 'form_in_modal' })(
     // eslint-disable-next-line
 
     class extends Component {
-        componentDidMount(){
+        componentDidMount() {
             this.props.form.setFieldsValue({
                 continuedTime: [],
                 description: [],
@@ -18,17 +18,17 @@ const OpenDoorCreateForm = Form.create({ name: 'form_in_modal' })(
                 title: [],
             })
         }
-        state={
-            selectedGroup: [],//已经被选中的群组
-            selectedUsers: [],//已经被选中的人
-            departList:[],
-            userList : [],
-            userGroup:[],
-            groupList:[],
-            othersDisplay:false,
-            othersName:"",
-            othersPhone:"",
-            othersList:[],
+        state = {
+            selectedGroup: [], //已经被选中的群组
+            selectedUsers: [], //已经被选中的用户
+            departList: [],
+            userList: [],
+            userGroup: [],
+            groupList: [],
+            othersDisplay: false,
+            othersName: "",
+            othersPhone: "",
+            othersList: [],
         };
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@ const OpenDoorCreateForm = Form.create({ name: 'form_in_modal' })(
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         render() {
             const {
-                visible, onClose,onCreate, form,
+                visible, onClose, onCreate, form,
             } = this.props;
             const { getFieldDecorator } = form;
             const formItemLayout = {
@@ -44,7 +44,7 @@ const OpenDoorCreateForm = Form.create({ name: 'form_in_modal' })(
                 wrapperCol: { span: 12 },
             };
 
-            let weekList=["星期日","星期一","星期二","星期三","星期四","星期五","星期六"]
+            let weekList = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
             return (
                 <Drawer
                     title={
@@ -63,19 +63,17 @@ const OpenDoorCreateForm = Form.create({ name: 'form_in_modal' })(
                                     <Form.Item
                                         {...formItemLayout}
                                         label="会议室"
-
                                     >
-                                        {getFieldDecorator('meetRoomId',{
-                                                rules: [{required: true, message: '请选择会议室！' }],
-                                            }
+                                        {getFieldDecorator('meetRoomId', {
+                                            rules: [{ required: true, message: '请选择会议室！' }],
+                                        }
                                         )(
-                                            <Select  style={{ width: 120 }} onChange={()=>{}}>
-                                                {this.props.roomList.map((item,i)=>{//roomList是后台数据列表
-                                                    return(
+                                            <Select style={{ width: 120 }} onChange={() => { }}>
+                                                {this.props.roomList.map((item, i) => { //roomList是后台数据列表
+                                                    return (
                                                         <Select.Option value={item.id} key={i}>{item.name}</Select.Option>
                                                     )
                                                 })}
-
                                             </Select>
                                         )}
                                     </Form.Item>
@@ -84,19 +82,17 @@ const OpenDoorCreateForm = Form.create({ name: 'form_in_modal' })(
                                     <Form.Item
                                         {...formItemLayout}
                                         label="星期"
-
                                     >
-                                        {getFieldDecorator('week',{
-                                                rules: [{required: true, message: '请选星期！' }],
-                                            }
+                                        {getFieldDecorator('week', {
+                                            rules: [{ required: true, message: '请选星期！' }],
+                                        }
                                         )(
-                                            <Select  style={{ width: 120 }} onChange={()=>{}}>
-                                                {weekList.map((item,i)=>{//roomList是后台数据列表
-                                                    return(
+                                            <Select style={{ width: 120 }} onChange={() => { }}>
+                                                {weekList.map((item, i) => { //roomList是后台数据列表
+                                                    return (
                                                         <Select.Option value={i} key={i}>{item}</Select.Option>
                                                     )
                                                 })}
-
                                             </Select>
                                         )}
                                     </Form.Item>
@@ -108,9 +104,7 @@ const OpenDoorCreateForm = Form.create({ name: 'form_in_modal' })(
                                         {getFieldDecorator('beginTime', {
                                             rules: [{ type: 'object', required: true, message: '请输入日期！' }],
                                         })(
-                                            <DatePicker
-                                                placeholder="选择日期"
-                                            />
+                                            <DatePicker placeholder="选择日期"/>
                                         )}
                                     </Form.Item>
                                 </Col>
@@ -121,9 +115,7 @@ const OpenDoorCreateForm = Form.create({ name: 'form_in_modal' })(
                                         {getFieldDecorator('overTime', {
                                             rules: [{ type: 'object', required: true, message: '请输入日期！' }],
                                         })(
-                                            <DatePicker
-                                                placeholder="选择日期"
-                                            />
+                                            <DatePicker placeholder="选择日期"/>
                                         )}
                                     </Form.Item>
                                 </Col>
@@ -134,11 +126,7 @@ const OpenDoorCreateForm = Form.create({ name: 'form_in_modal' })(
                                         {getFieldDecorator('meetBegin', {
                                             rules: [{ type: 'object', required: true, message: '请输入开始时间！' }],
                                         })(
-                                            <TimePicker
-                                                placeholder="选择时间"
-                                                minuteStep={15}
-                                                format={'HH:mm'}
-                                            />
+                                            <TimePicker placeholder="选择时间" minuteStep={15} format={'HH:mm'}/>
                                         )}
                                     </Form.Item>
                                 </Col>
@@ -149,11 +137,7 @@ const OpenDoorCreateForm = Form.create({ name: 'form_in_modal' })(
                                         {getFieldDecorator('meetOver', {
                                             rules: [{ type: 'object', required: true, message: '请输入结束时间！' }],
                                         })(
-                                            <TimePicker
-                                                placeholder="选择时间"
-                                                minuteStep={15}
-                                                format={'HH:mm'}
-                                            />
+                                            <TimePicker placeholder="选择时间" minuteStep={15} format={'HH:mm'}/>
                                         )}
                                     </Form.Item>
                                 </Col>
@@ -167,10 +151,7 @@ const OpenDoorCreateForm = Form.create({ name: 'form_in_modal' })(
                                         rules: [{ required: true, message: '请介绍一下你的会议！' }],
                                     }
                                 )(
-                                    <Input.TextArea
-                                        rows={5}
-                                    >
-                                    </Input.TextArea>
+                                    <Input.TextArea rows={5}></Input.TextArea>
                                 )}
                             </Form.Item>
                         </Form>

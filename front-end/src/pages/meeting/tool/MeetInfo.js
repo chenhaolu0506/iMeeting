@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Table, Button, Icon, message, Tooltip, Input} from "antd";
+import { Table, Button, Icon, message, Tooltip, Input } from "antd";
 import global from '@/global';
 import '@/css/meeting.less';
 import moment from 'moment'
@@ -8,12 +8,11 @@ import Highlighter from "react-highlight-words";
 
 
 class MeetInfo extends Component {
-    //
-    componentDidMount(){
+    componentDidMount() {
         this.reserveIndex();
     }
     state = {
-        bookRule:{
+        bookRule: {
             id: 1,
             begin: "07:00",
             over: "18:30",
@@ -22,8 +21,8 @@ class MeetInfo extends Component {
             timeInterval: "15",
             tenantId: 1
         },
-        bookTool:[],
-        roomList:[
+        bookTool: [],
+        roomList: [
             {
                 "id": 1,
                 "name": "A01会议室",
@@ -35,21 +34,21 @@ class MeetInfo extends Component {
                 "tenantId": 1
             },
         ],
-        roomTools:[],
+        roomTools: [],
         bookVisible: false,
-        othersList:[],
-        searchDate:"2019-01-17",
-        changeAble:true,
-        coordinate:true,
-        rob:true,
-        meetingId:0,
-
+        othersList: [],
+        searchDate: "2019-01-17",
+        changeAble: true,
+        coordinate: true,
+        rob: true,
+        meetingId: 0,
+        searchText: '',
     };
     //表格查询...this.getColumnSearchProps("name"),
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
-                             setSelectedKeys, selectedKeys, confirm, clearFilters,
-                         }) => (
+            setSelectedKeys, selectedKeys, confirm, clearFilters,
+        }) => (
             <div style={{ padding: 8 }}>
                 <Input
                     ref={node => { this.searchInput = node; }}
@@ -89,7 +88,7 @@ class MeetInfo extends Component {
                 highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
                 searchWords={[this.state.searchText]}
                 autoEscape
-                textToHighlight={text.toString()}
+                textToHighlight={text == null ? "" : text.toString()}
             />
         ),
     })
@@ -101,8 +100,6 @@ class MeetInfo extends Component {
         clearFilters();
         this.setState({ searchText: '' });
     }
-    //表格查询
-
     onClose = () => {
         this.setState({
             bookVisible: false,
@@ -116,354 +113,193 @@ class MeetInfo extends Component {
     saveFormRef = (formRef) => {
         this.formRef = formRef;
     }
-    getOthersList=(e)=>{
-        console.log(e)
+    getOthersList = (e) => {
         this.setState({
-            othersList:e
+            othersList: e
         })
     }
     ////////////////////////////////////////////fetch接口//////////////////////////////////////////////////////////////////
-    //提交预定
+    // 提交预定
+    // 第一种修改方式，修改了时间或者地点或者都修改，相当于取消原会议重新预定
+    // 第二种修改方式，修改除时间和地点外的其他内容
     handleCreate = () => {
         const form = this.formRef.props.form;
-        this.state.coordinate?this.state.rob?
+        if (this.state.coordinate) {
             form.validateFields((err, values) => {
                 if (err) {
                     return;
                 }
-
-                const url=global.localhostUrl+"meeting/coordinateMeeting";
+                const url = global.localhostUrl + 'meeting/coordinateMeeting';
+                const body = this.state.rob ? JSON.stringify({
+                    topic: values.title,
+                    content: values.description,
+                    meetRoomId: values.meetingRoom,
+                    reserveDate: values.dateTime.format("YYYY-MM-DD"),
+                    beginTime: values.startTime.format("HH:mm"),
+                    lastTime: values.continuedTime,
+                    prepareTime: values.prepareTime,
+                    joinPeopleId: values.guests,
+                    outsideJoinPersons: this.state.othersList,
+                    beforeOrLast: values.beforeOrLast,
+                    note: values.coordinateNote,
+                    beforeMeetingId: this.state.meetingId,
+                }) : JSON.stringify({
+                    topic: values.title,
+                    content: values.description,
+                    meetRoomId: values.meetingRoom,
+                    lastTime: values.continuedTime,
+                    prepareTime: values.prepareTime,
+                    joinPeopleId: values.guests,
+                    outsideJoinPersons: this.state.othersList,
+                    beforeOrLast: values.beforeOrLast,
+                    note: values.coordinateNote,
+                    beforeMeetingId: this.state.meetingId,
+                })
                 fetch(url, {
                     method: "POST",
                     mode: "cors",
-                    credentials:"include",//跨域携带cookie
+                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json;charset=utf-8",
                     },
-                    body: JSON.stringify({
-                        topic:values.title,
-                        content:values.description,
-                        meetRoomId:values.meetingRoom,
-                        reserveDate:values.dateTime.format("YYYY-MM-DD"),
-                        beginTime:values.startTime.format("HH:mm"),
-                        lastTime:values.continuedTime,
-                        prepareTime:values.prepareTime,
-                        joinPeopleId:values.guests,
-                        outsideJoinPersons:this.state.othersList,
-                        beforeOrLast:values.beforeOrLast,
-                        note:values.coordinateNote,
-                        beforeMeetingId:this.state.meetingId,
-                    }),
-                }).then(function (res) {//function (res) {} 和 res => {}效果一致
-                    return res.json()
-                }).then(json => {
-                    // get result
-                    const data = json;
-                    console.log(data);
-                    if(data.status){
-                        message.success("调用申请提交成功！")
-                        this.setState({
-                            bookVisible: false,
-                        })
-                        form.resetFields();
-                    }else {
-                        // message.error("预定时间冲突，请重新选择预定时间！")
-                        message.error(data.message);
-                    }
-
-                }).catch(function (e) {
-                    console.log("fetch fail");
-                    alert('系统错误');
-                });
-
-                console.log('Received values of form: ', values);
-                console.log("会议编号",this.state.meetingId);
-                console.log("标题",values.title);
-                console.log("会议说明",values.description);
-                console.log("会议室ID",values.meetingRoom);
-                console.log("预定日期",values.dateTime.format("YYYY-MM-DD"));
-                console.log("开始时间",values.startTime.format("HH:mm"));
-                console.log("持续时间",values.continuedTime);
-                console.log("准备时间",values.prepareTime);
-                console.log("参会人员",values.guests);
-                console.log("其它人员列表",this.state.othersList);
-                console.log("调用原因",values.coordinateNote);
-                //form.resetFields();//数据清空
-
+                    body: body,
+                }).then(res => res.json())
+                    .then(json => {
+                        const data = json;
+                        if (data.status) {
+                            message.success("调用申请提交成功");
+                            this.setState({
+                                bookVisible: false,
+                            });
+                            form.resetFields();
+                        } else {
+                            message.error(data.message);
+                        }
+                    }).catch(function (e) {
+                        console.log(e);
+                        alert('系统错误');
+                    });
             })
-            :
+        } else {
             form.validateFields((err, values) => {
                 if (err) {
                     return;
                 }
-
-                const url=global.localhostUrl+"meeting/coordinateMeeting";
+                const url = global.localhostUrl + "meeting/editOneServer";
                 fetch(url, {
                     method: "POST",
                     mode: "cors",
-                    credentials:"include",//跨域携带cookie
+                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json;charset=utf-8",
                     },
                     body: JSON.stringify({
-                        topic:values.title,
-                        content:values.description,
-                        meetRoomId:values.meetingRoom,
-                        // reserveDate:values.dateTime.format("YYYY-MM-DD"),
-                        // beginTime:values.startTime.format("HH:mm"),
-                        lastTime:values.continuedTime,
-                        prepareTime:values.prepareTime,
-                        joinPeopleId:values.guests,
-                        outsideJoinPersons:this.state.othersList,
-                        beforeOrLast:values.beforeOrLast,
-                        note:values.coordinateNote,
-                        beforeMeetingId:this.state.meetingId,
+                        meetingId: this.state.meetingId,
+                        topic: values.title,
+                        content: values.description,
+                        meetRoomId: values.meetingRoom,
+                        reserveDate: values.dateTime.format("YYYY-MM-DD"),
+                        beginTime: values.startTime.format("HH:mm"),
+                        lastTime: values.continuedTime,
+                        prepareTime: values.prepareTime,
+                        joinPeopleId: values.guests,
+                        outsideJoinPersons: this.state.othersList,
                     }),
-                }).then(function (res) {//function (res) {} 和 res => {}效果一致
-                    return res.json()
-                }).then(json => {
-                    // get result
-                    const data = json;
-                    console.log(data);
-                    if(data.status){
-                        message.success("调用申请提交成功！")
-                        this.setState({
-                            bookVisible: false,
-                        })
-                        form.resetFields();
-                    }else {
-                        // message.error("预定时间冲突，请重新选择预定时间！")
-                        message.error(data.message);
-                    }
+                }).then(res => res.json())
+                    .then(json => {
+                        const data = json;
+                        if (data.status) {
+                            message.success("预定信息提交成功！")
+                            this.setState({
+                                bookVisible: false,
+                            })
+                            form.resetFields();
+                        } else {
+                            message.error(data.message);
+                        }
 
-                }).catch(function (e) {
-                    console.log("fetch fail");
-                    alert('系统错误');
-                });
-
-                console.log('Received values of form: ', values);
-                console.log("会议编号",this.state.meetingId);
-                console.log("标题",values.title);
-                console.log("会议说明",values.description);
-                console.log("会议室ID",values.meetingRoom);
-                // console.log("预定日期",values.dateTime.format("YYYY-MM-DD"));
-                // console.log("开始时间",values.startTime.format("HH:mm"));
-                console.log("持续时间",values.continuedTime);
-                console.log("准备时间",values.prepareTime);
-                console.log("参会人员",values.guests);
-                console.log("其它人员列表",this.state.othersList);
-                console.log("调用原因",values.coordinateNote);
-                //form.resetFields();//数据清空
-
-            })
-            ://双目运算符的:
-            form.validateFields((err, values) => {
-                if (err) {
-                    return;
-                }
-
-                const url=global.localhostUrl+"meeting/editOneServer";
-                fetch(url, {
-                    method: "POST",
-                    mode: "cors",
-                    credentials:"include",//跨域携带cookie
-                    headers: {
-                        "Content-Type": "application/json;charset=utf-8",
-                    },
-                    body: JSON.stringify({
-                        meetingId:this.state.meetingId,
-                        topic:values.title,
-                        content:values.description,
-                        meetRoomId:values.meetingRoom,
-                        reserveDate:values.dateTime.format("YYYY-MM-DD"),
-                        beginTime:values.startTime.format("HH:mm"),
-                        lastTime:values.continuedTime,
-                        prepareTime:values.prepareTime,
-                        joinPeopleId:values.guests,
-                        outsideJoinPersons:this.state.othersList,
-                    }),
-                }).then(function (res) {//function (res) {} 和 res => {}效果一致
-                    return res.json()
-                }).then(json => {
-                    // get result
-                    const data = json;
-                    console.log(data);
-                    if(data.status){
-                        message.success("预定信息提交成功！")
-                        this.setState({
-                            bookVisible: false,
-                        })
-                        form.resetFields();
-                    }else {
-                        // message.error("预定时间冲突，请重新选择预定时间！")
-                        message.error(data.message);
-                    }
-
-                }).catch(function (e) {
-                    console.log("fetch fail");
-                    alert('系统错误');
-                });
-
-                console.log('Received values of form: ', values);
-                console.log("会议编号",this.state.meetingId);
-                console.log("标题",values.title);
-                console.log("会议说明",values.description);
-                console.log("会议室ID",values.meetingRoom);
-                console.log("预定日期",values.dateTime.format("YYYY-MM-DD"));
-                console.log("开始时间",values.startTime.format("HH:mm"));
-                console.log("持续时间",values.continuedTime);
-                console.log("准备时间",values.prepareTime);
-                console.log("参会人员",values.guests);
-                console.log("其它人员列表",this.state.othersList);
-                //form.resetFields();//数据清空
-
+                    }).catch(function (e) {
+                        console.log(e);
+                        alert('系统错误');
+                    });
             });
+        }
     }
-    //reserveIndex显示会议信息和规则
-    reserveIndex = () =>{
-        console.log(111)
-        const url=global.localhostUrl+"meeting/reserveIndex";
+    // 预定首页
+    reserveIndex = () => {
+        const url = global.localhostUrl + "meeting/reserveIndex";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log("+++");
-            console.log(data);
-            this.setState({
-                bookRule:data.data[0],
-                bookTool:data.data[1],
-                roomList:data.data[2],
-                roomBookInfo:data.data[3],
-                roomTools:data.data[4],
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    bookRule: data.data[0], // 会议室预定参数
+                    bookTool: data.data[1], // 该租户的设备功能
+                    roomList: data.data[2], // 可预订的会议室
+                    roomBookInfo: data.data[3], // 今天该用户能够预定的所有会议室预定情况
+                    roomTools: data.data[4], // 会议室设备集合
+                })
+            }).catch(function (e) {
+                console.log(e);
+                alert('系统错误');
+            });
     }
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    //showCoordinateMeeting调用会议
-    showCoordinateMeeting = (ev,text) =>{
-        console.log(ev)
-        console.log(text)
+    // 显示某个会议预定的信息
+    showCoordinateMeeting = (ev, text, isRob) => {
         this.setState({
-            meetingId:text,
+            meetingId: text,
         })
         const form = this.formRef.props.form;
-        const url=global.localhostUrl+"meeting/showOneReserveDetail?meetingId="+text;
+        const url = global.localhostUrl + "meeting/showOneReserveDetail?meetingId=" + text;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log("显示一个会议的具体信息",data);
-            console.log("time",moment(data.data[0].beginTime,"HH:mm"));
-            const others=[];
-            data.data[0].outsideJoinPersons.map((item)=>{
-                return others.push(item.name);
-            })
-            form.resetFields();
-            form.setFieldsValue({
-                // title:data.data[0].topic,
-                meetingRoom:data.data[0].meetRoomId,
-                // description:data.data[0].content,
-                // guests:data.data[0].joinPeopleId,
-                dateTime:moment(data.data[0].reserveDate,"YYYY-MM-DD"),
-                startTime:moment(data.data[0].beginTime),
-                prepareTime:data.data[0].prepareTime,
-                continuedTime:data.data[0].lastTime,
-                // others:others,
-            })
-            this.setState({
-                othersList:data.data[0].outsideJoinPersons,
-                changeAble:true,
-                coordinate:true,
-                rob:false,
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                const others = data.data[0].outsideJoinPersons.map(item => item.name);
+                form.resetFields();
+                form.setFieldsValue({
+                    title: data.data[0].topic,
+                    meetingRoom: data.data[0].meetRoomId,
+                    description: data.data[0].content,
+                    guests: data.data[0].joinPeopleId,
+                    dateTime: moment(data.data[0].reserveDate, "YYYY-MM-DD"),
+                    startTime: moment(data.data[0].beginTime),
+                    prepareTime: data.data[0].prepareTime,
+                    continuedTime: data.data[0].lastTime,
+                    others: others,
+                })
+                this.setState({
+                    othersList: data.data[0].outsideJoinPersons,
+                    changeAble: true,
+                    coordinate: true,
+                    rob: isRob,
+                })
+            }).catch(function (e) {
+                console.log(e);
+                alert('系统错误');
+            });
         this.setState({
-            bookVisible:true,
+            bookVisible: true,
         })
-
     }
-    //showCoordinateMeeting抢会议
-    showRobMeeting = (ev,text) =>{
-        console.log(ev)
-        console.log(text)
-        this.setState({
-            meetingId:text,
-        })
-        const form = this.formRef.props.form;
-        const url=global.localhostUrl+"meeting/showOneReserveDetail?meetingId="+text;
-        fetch(url, {
-            method: "POST",
-            mode: "cors",
-            credentials:"include",//跨域携带cookie
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log("显示一个会议的具体信息",data);
-            console.log("time",moment(data.data[0].beginTime,"HH:mm"));
-            const others=[];
-            data.data[0].outsideJoinPersons.map((item)=>{
-                return others.push(item.name);
-            })
-            form.resetFields();
-            form.setFieldsValue({
-                // title:data.data[0].topic,
-                meetingRoom:data.data[0].meetRoomId,
-                // description:data.data[0].content,
-                // guests:data.data[0].joinPeopleId,
-                dateTime:moment(data.data[0].reserveDate,"YYYY-MM-DD"),
-                startTime:moment(data.data[0].beginTime),
-                prepareTime:data.data[0].prepareTime,
-                continuedTime:data.data[0].lastTime,
-                // others:others,
-            })
-            this.setState({
-                othersList:data.data[0].outsideJoinPersons,
-                changeAble:true,
-                coordinate:true,
-                rob:true,
 
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
-        this.setState({
-            bookVisible:true,
-        })
-
-    }
     render() {
         const columns = [{
             title: '预定时间',
@@ -497,38 +333,38 @@ class MeetInfo extends Component {
             key: 'phone',
             ...this.getColumnSearchProps("phone"),
         },
-            // {
-            //     title: '创建时间',
-            //     dataIndex: 'createTime',
-            //     key: 'createTime',
-            // },
-            {
-                title: '操作',
-                dataIndex: 'id',
-                render: (text) => {
-                    return(
-                        <div>
-                            {/*<Button onClick={(ev)=>{this.showOneReserveDetail(ev,text)}}><Icon type={"eye"}></Icon></Button>*/}
-                            <Tooltip title="调用会议">
-                                <Button onClick={(ev)=>{this.showCoordinateMeeting(ev,text)}}>
-                                    <Icon type="exclamation-circle" />
-                                </Button>
-                            </Tooltip>
-                            <Tooltip title="抢会议">
-                                <Button onClick={(ev)=>{this.showRobMeeting(ev,text)}}>
-                                    <Icon type="issues-close" />
-                                </Button>
-                            </Tooltip>
-                        </div>
-                    )
-                }
-            }];
+        // {
+        //     title: '创建时间',
+        //     dataIndex: 'createTime',
+        //     key: 'createTime',
+        // },
+        {
+            title: '操作',
+            dataIndex: 'id',
+            render: (text) => {
+                return (
+                    <div>
+                        {/*<Button onClick={(ev)=>{this.showOneReserveDetail(ev,text)}}><Icon type={"eye"}></Icon></Button>*/}
+                        <Tooltip title="调用会议">
+                            <Button onClick={(ev) => { this.showCoordinateMeeting(ev, text, false) }}>
+                                <Icon type="exclamation-circle" />
+                            </Button>
+                        </Tooltip>
+                        <Tooltip title="抢会议">
+                            <Button onClick={(ev) => { this.showCoordinateMeeting(ev, text, true) }}>
+                                <Icon type="issues-close" />
+                            </Button>
+                        </Tooltip>
+                    </div>
+                )
+            }
+        }];
         return (
             <div >
-                <Table rowKey={record=>record.id} className={'table'} columns={columns} dataSource={this.props.dataSource} />
+                <Table rowKey={record => record.id} className={'table'} columns={columns} dataSource={this.props.dataSource} />
                 <OneMeetDrawer
                     wrappedComponentRef={this.saveFormRef}
-                    roomList={this.state.roomList||[]}
+                    roomList={this.state.roomList || []}
                     visible={this.state.bookVisible}
                     onClose={this.onClose}
                     onCreate={this.handleCreate}

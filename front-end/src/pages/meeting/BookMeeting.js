@@ -276,7 +276,7 @@ class BookMeeting extends Component {
             .then(json => {
                 // get result
                 const data = json;
-                console.log("data",data);
+                console.log("data", data);
                 this.setState({
                     bookRule: data.data[0],
                     equipList: data.data[1],

@@ -49,7 +49,6 @@ class ShowMeeting extends Component {
         console.log('focus');
     }
 
-
     render() {
         return (
             <div>

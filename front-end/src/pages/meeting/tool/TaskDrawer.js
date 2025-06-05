@@ -1,172 +1,164 @@
 import React, { Component } from 'react';
 import global from '@/global';
-import {Button, Drawer, Icon, Modal, Table, Tooltip, Input, message} from "antd"
+import { Button, Drawer, Icon, Modal, Table, Tooltip, Input, message } from "antd"
 class TaskDrawer extends Component {
-    componentDidMount(){
+    componentDidMount() {
     }
-    state={
-        id:"",
-        speaker:"",
-        content:"",
-        visible:false,
-        update:false,
+    state = {
+        id: "",
+        speaker: "",
+        content: "",
+        visible: false,
+        update: false,
     }
-    showAddTask=()=>{
+    showAddTask = () => {
         this.setState({
-            speaker:"",
-            content:"",
-            visible:true,
-            update:false,
+            speaker: "",
+            content: "",
+            visible: true,
+            update: false,
         })
     }
-    speakerChange=(e)=>{
+    speakerChange = (e) => {
         this.setState({
-            speaker:e.target.value
+            speaker: e.target.value
         })
     }
-    contentChange=(e)=>{
+    contentChange = (e) => {
         this.setState({
-            content:e.target.value
+            content: e.target.value
         })
     }
-    onCancel=()=>{
+    onCancel = () => {
         this.setState({
-            visible:false,
+            visible: false,
         })
     }
-    showUpdate=(id,speaker,content)=>{
+    showUpdate = (id, speaker, content) => {
         this.setState({
-            id:id,
-            speaker:speaker,
-            content:content,
-            visible:true,
-            update:true,
+            id: id,
+            speaker: speaker,
+            content: content,
+            visible: true,
+            update: true,
         })
     }
-    insertOne=()=>{
-        const url=global.localhostUrl+"task/insertOne";
+    insertOne = () => {
+        const url = global.localhostUrl + "task/insertTask";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({
-                name:this.state.speaker,
-                content:this.state.content,
-                meetingId:this.props.meetingId,
+                name: this.state.speaker,
+                content: this.state.content,
+                meetingId: this.props.meetingId,
             }),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success(data.message)
-                this.props.findByMeeting("",this.props.meetingId)
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message)
+                    this.props.findByMeeting("", this.props.meetingId)
+                    this.setState({
+                        visible: false,
+                    })
+                } else {
+                    message.error(data.message)
+                }
+            }).catch(function (e) {
+                console.log(e);
+                alert('系统错误');
+            });
+    }
+    updateOne = () => {
+        const url = global.localhostUrl + "task/updateTask";
+        fetch(url, {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({
+                id: this.state.id,
+                speaker: this.state.speaker,
+                content: this.state.content,
+                meetingId: this.props.meetingId,
+            }),
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message)
+                    this.props.findByMeeting("", this.props.meetingId)
+                } else {
+                    message.error(data.message)
+                }
                 this.setState({
-                    visible:false,
+                    visible: false,
                 })
-            }else{
-                message.error(data.message)
-            }
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+            }).catch(function (e) {
+                console.log(e);
+                alert('系统错误');
+            });
     }
-    updateOne=()=>{
-        const url=global.localhostUrl+"task/updateOne";
+    deleteOne = (id) => {
+        const url = global.localhostUrl + "task/deleteTask?taskId=" + id;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({
-                id:this.state.id,
-                speaker:this.state.speaker,
-                content:this.state.content,
-                meetingId:this.props.meetingId,
-            }),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success(data.message)
-                this.props.findByMeeting("",this.props.meetingId)
-            }else{
-                message.error(data.message)
-            }
-            this.setState({
-                visible:false,
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
-    }
-    deleteOne=(id)=>{
-        const url=global.localhostUrl+"task/deleteOne?taskId="+id;
-        fetch(url, {
-            method: "POST",
-            mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({
             }),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success(data.message)
-                this.props.findByMeeting("",this.props.meetingId)
-                this.setState({
-                    visible:false,
-                })
-            }else{
-                message.error(data.message)
-            }
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message)
+                    this.props.findByMeeting("", this.props.meetingId)
+                    this.setState({
+                        visible: false,
+                    })
+                } else {
+                    message.error(data.message)
+                }
+            }).catch(function (e) {
+                console.log(e);
+                alert('系统错误');
+            });
     }
 
     render() {
         const {
             visible, onClose
         } = this.props;
-        const columns=[
-            {   title:"序号",
-                key:"id",
-                render:(item,data,i)=>{
-                    return(<div>{i+1}</div>)
+        const columns = [
+            {
+                title: "序号",
+                key: "id",
+                render: (item, data, i) => {
+                    return (<div>{i + 1}</div>)
                 }
-            },{
-                title:"会议任务",
-                dataIndex:"name",
-            },{
-                title:"任务要求",
-                dataIndex:"content",
-            },{
-                title:"操作",
-                render:(item)=>{
-                    return(
+            }, {
+                title: "会议任务",
+                dataIndex: "name",
+            }, {
+                title: "任务要求",
+                dataIndex: "content",
+            }, {
+                title: "操作",
+                render: (item) => {
+                    return (
                         <div>
                             <Tooltip title="删除">
-                                <Button onClick={()=>{this.deleteOne(item.id)}}><Icon style={{color:"red"}}type={"delete"}></Icon></Button>
+                                <Button onClick={() => { this.deleteOne(item.id) }}><Icon style={{ color: "red" }} type={"delete"}></Icon></Button>
                             </Tooltip>
                         </div>
                     )
@@ -185,17 +177,17 @@ class TaskDrawer extends Component {
                 width={"60%"}
             >
                 <Table
-                    rowKey={record=>record.id}
+                    rowKey={record => record.id}
                     columns={columns}
                     dataSource={this.props.taskList} />
                 <Modal
                     title={"会议任务"}
                     visible={this.state.visible}
                     onCancel={this.onCancel}
-                    onOk={this.state.update?this.updateOne:this.insertOne}
+                    onOk={this.state.update ? this.updateOne : this.insertOne}
                 >
-                    任务名：<Input value={this.state.speaker} onChange={this.speakerChange}/>
-                    任务要求：<Input.TextArea value={this.state.content} onChange={this.contentChange}/>
+                    任务名：<Input value={this.state.speaker} onChange={this.speakerChange} />
+                    任务要求：<Input.TextArea value={this.state.content} onChange={this.contentChange} />
                 </Modal>
             </Drawer>
         );
