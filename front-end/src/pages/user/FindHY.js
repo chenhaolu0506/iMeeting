@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Table,Input,Button,Icon} from 'antd';
+import { Table, Input, Button, Icon } from 'antd';
 
 
 //表格
@@ -27,12 +27,12 @@ const data = [{
     address: 'Sidney No. 1 Lake Park',
 }];
 //表格内容可以用for循环添加
-for ( let i=5;i<1300000;i++){
+for (let i = 5; i < 20; i++) {
     data.push({
         key: i,
         name: 'GJW',
-        age: i+10,
-        address: 'New York No. 1 Lake Park',
+        age: i + 10,
+        address: `${i} Lake St., NY, USA`,
     });
 }
 
@@ -57,7 +57,11 @@ class FindHY extends Component {
         this.setState({ searchText: selectedKeys[0] });
     }
 
-     
+    handleReset = clearFilters => () => {
+        clearFilters();
+        this.setState({ searchText: '' });
+    }
+
     render() {
         //表格条目
         const columns = [{
@@ -89,11 +93,11 @@ class FindHY extends Component {
                 const { searchText } = this.state;
                 return searchText ? (
                     <span>
-            {text.split(new RegExp(`(?<=${searchText})|(?=${searchText})`, 'i')).map((fragment, i) => (
-                fragment.toLowerCase() === searchText.toLowerCase()
-                    ? <span key={i} className="highlight">{fragment}</span> : fragment // eslint-disable-line
-            ))}
-          </span>
+                        {text.split(new RegExp(`(?<=${searchText})|(?=${searchText})`, 'i')).map((fragment, i) => (
+                            fragment.toLowerCase() === searchText.toLowerCase()
+                                ? <span key={i} className="highlight">{fragment}</span> : fragment // eslint-disable-line
+                        ))}
+                    </span>
                 ) : text;
             },
         }, {

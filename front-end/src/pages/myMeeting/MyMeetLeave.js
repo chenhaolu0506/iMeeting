@@ -69,12 +69,9 @@ class MyMeetLeave extends Component {
         clearFilters();
         this.setState({ searchText: '' });
     }
-    //表格查询
 
     //点击展开/隐藏相应的行
     onExpand = (expanded, record) => {
-        console.log(expanded)
-        console.log(record)
         this.showOneMeetingLeaveInfo(record.meetingId);
         if (expanded) {
             this.setState({
@@ -87,12 +84,9 @@ class MyMeetLeave extends Component {
                 expandedRowKeys: []
             })
         }
-
     }
     //点击展示会议请假内容
     expandedRowRender = (e) => {
-        console.log(e)
-
         let columns = [{
             title: "姓名",
             dataIndex: "peopleName",
@@ -119,7 +113,6 @@ class MyMeetLeave extends Component {
                             </div>
                         )
                 }
-
             }
         }];
 
@@ -131,102 +124,89 @@ class MyMeetLeave extends Component {
 
     }
     ///////////////////////////////////////////////////////fetch//////////////////////////////////////////////////
-    //CountLeaveInformation获取会议列表
+    //显示未开始和进行中会议的请假请求总数和未处理请假数量
     CountLeaveInformation = () => {
         const url = global.localhostUrl + "meeting/CountLeaveInformation";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.setState({
-                meetList: data.data,
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    meetList: data.data,
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
-    //showOneMeetingLeaveInfo获取本会议请假信息
+    //获取本会议请假信息
     showOneMeetingLeaveInfo = (e) => {
         const url = global.localhostUrl + "meeting/showOneMeetingLeaveInfo?meetingId=" + e;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            this.setState({
-                dataSource: data.data,
-            })
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                this.setState({
+                    dataSource: data.data,
+                })
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
-    //agreeLeave
+    //批准请假
     agreeLeave = (ev, e) => {
-        console.log(e)
         const url = global.localhostUrl + "meeting/agreeLeave?leaveInfoId=" + e;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            message.success("操作成功!");
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                message.success("操作成功!");
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
-    //disagreeLeave
+    // 拒绝请假
     disagreeLeave = (ev, e) => {
         const url = global.localhostUrl + "meeting/disagreeLeave?leaveInfoId=" + e;
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials: "include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({}),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            message.success("操作成功!");
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                message.success("操作成功!");
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -255,8 +235,8 @@ class MyMeetLeave extends Component {
                 <Row>
                     <Col span={18} offset={3}>
                         <Card>
-                            {/*<Collapse  onChange={callback}>*/}
-                            {/*{*/}
+                            {/* <Collapse  onChange={callback}> */}
+                            {/* { */}
                             {/*this.state.meetList.map((item)=>{*/}
 
                             {/*return(*/}
@@ -284,7 +264,7 @@ class MyMeetLeave extends Component {
 
                             {/*})*/}
                             {/*}*/}
-                            {/*</Collapse>*/}
+                            {/*</Collapse> */}
 
                             <Table
                                 rowKey={record => record.meetingId}
@@ -295,7 +275,6 @@ class MyMeetLeave extends Component {
                                 onExpand={this.onExpand}
                                 dataSource={this.state.meetList}
                             />
-
                         </Card>
                     </Col>
                 </Row>

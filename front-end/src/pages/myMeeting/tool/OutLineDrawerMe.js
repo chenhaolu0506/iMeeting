@@ -1,111 +1,110 @@
 import React, { Component } from 'react';
 import global from '@/global';
-import {Button, Drawer, Icon, Modal, Table, Tooltip, Input, message} from "antd"
+import { Button, Drawer, Icon, Modal, Table, Tooltip, Input, message } from "antd"
 class OutLineDrawerMe extends Component {
-    componentDidMount(){
+    componentDidMount() {
     }
-    state={
-        id:"",
-        speaker:"",
-        content:"",
-        outLineVisible:false,
-        level:"",
-        update:false,
+    state = {
+        id: "",
+        speaker: "",
+        content: "",
+        outLineVisible: false,
+        level: "",
+        update: false,
     }
-    showAddOutline=()=>{
+    showAddOutline = () => {
         this.setState({
-            speaker:"",
-            content:"",
-            level:"",
-            outLineVisible:true,
-            update:false,
+            speaker: "",
+            content: "",
+            level: "",
+            outLineVisible: true,
+            update: false,
         })
     }
-    levelChange=(e)=>{
+    levelChange = (e) => {
         this.setState({
-            level:e.target.value
+            level: e.target.value
         })
     }
-    speakerChange=(e)=>{
+    speakerChange = (e) => {
         this.setState({
-            speaker:e.target.value
+            speaker: e.target.value
         })
     }
-    contentChange=(e)=>{
+    contentChange = (e) => {
         this.setState({
-            content:e.target.value
+            content: e.target.value
         })
     }
-    onCancel=()=>{
+    onCancel = () => {
         this.setState({
-            outLineVisible:false,
+            outLineVisible: false,
         })
     }
-    showUpdate=(id,level,speaker,content)=>{
+    showUpdate = (id, level, speaker, content) => {
         this.setState({
-            id:id,
-            level:level,
-            speaker:speaker,
-            content:content,
-            outLineVisible:true,
-            update:true,
+            id: id,
+            level: level,
+            speaker: speaker,
+            content: content,
+            outLineVisible: true,
+            update: true,
         })
     }
-    insertOne=()=>{
-        const url=global.localhostUrl+"outline/insertOne";
+    // 会议预定者插入某个会议的大纲
+    insertMeetingOutline = () => {
+        const url = global.localhostUrl + "outline/insertMeetingOutline";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({
-                speaker:this.state.speaker,
-                content:this.state.content,
-                level:this.state.level,
-                meetingId:this.props.meetingId,
+                speaker: this.state.speaker,
+                content: this.state.content,
+                level: this.state.level,
+                meetingId: this.props.meetingId,
             }),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success(data.message)
-                this.props.findByMeeting("",this.props.meetingId)
-                this.setState({
-                    outLineVisible:false,
-                })
-            }else{
-                message.error(data.message)
-            }
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message)
+                    this.props.findByMeeting("", this.props.meetingId)
+                    this.setState({
+                        outLineVisible: false,
+                    })
+                } else {
+                    message.error(data.message)
+                }
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
 
     render() {
         const {
             visible, onClose
         } = this.props;
-        const columns=[
-            {   title:"序号",
-                key:"id",
-                render:(item,data,i)=>{
-                    return(<div>{i+1}</div>)
+        const columns = [
+            {
+                title: "序号",
+                key: "id",
+                render: (item, data, i) => {
+                    return (<div>{i + 1}</div>)
                 }
-            },{
-                title:"level",
-                dataIndex:"level",
-            },{
-                title:"主讲人",
-                dataIndex:"speaker",
-            },{
-                title:"主要内容",
-                dataIndex:"content",
+            }, {
+                title: "level",
+                dataIndex: "level",
+            }, {
+                title: "主讲人",
+                dataIndex: "speaker",
+            }, {
+                title: "主要内容",
+                dataIndex: "content",
             }
         ];
         return (
@@ -118,18 +117,18 @@ class OutLineDrawerMe extends Component {
                 width={"60%"}
             >
                 <Table
-                    rowKey={record=>record.id}
+                    rowKey={record => record.id}
                     columns={columns}
                     dataSource={this.props.outLineList} />
                 <Modal
                     title={"大纲概要"}
                     visible={this.state.outLineVisible}
                     onCancel={this.onCancel}
-                    onOk={this.state.update?this.updateOne:this.insertOne}
+                    onOk={this.state.update ? this.updateOne : this.insertOne}
                 >
-                    level：<Input value={this.state.level} onChange={this.levelChange}/>
-                    主讲人：<Input value={this.state.speaker} onChange={this.speakerChange}/>
-                    主要内容：<Input.TextArea value={this.state.content} onChange={this.contentChange}/>
+                    level：<Input value={this.state.level} onChange={this.levelChange} />
+                    主讲人：<Input value={this.state.speaker} onChange={this.speakerChange} />
+                    主要内容：<Input.TextArea value={this.state.content} onChange={this.contentChange} />
                 </Modal>
             </Drawer>
         );

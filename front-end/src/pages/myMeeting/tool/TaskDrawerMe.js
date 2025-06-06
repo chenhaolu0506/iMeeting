@@ -1,96 +1,94 @@
 import React, { Component } from 'react';
 import global from '@/global';
-import {Button, Drawer, Icon, Modal, Table, Tooltip, Input, message} from "antd"
+import { Button, Drawer, Icon, Modal, Table, Tooltip, Input, message } from "antd"
 class TaskDrawerMe extends Component {
-    componentDidMount(){
+    componentDidMount() {
     }
-    state={
-        id:"",
-        name:"",
-        content:"",
-        taskVisible:false,
-        update:false,
+    state = {
+        id: "",
+        name: "",
+        content: "",
+        taskVisible: false,
+        update: false,
     }
-    levelChange=(e)=>{
+    levelChange = (e) => {
         this.setState({
-            level:e.target.value
+            level: e.target.value
         })
     }
-    nameChange=(e)=>{
+    nameChange = (e) => {
         this.setState({
-            name:e.target.value
+            name: e.target.value
         })
     }
-    contentChange=(e)=>{
+    contentChange = (e) => {
         this.setState({
-            content:e.target.value
+            content: e.target.value
         })
     }
-    onCancel=()=>{
+    onCancel = () => {
         this.setState({
-            taskVisible:false,
+            taskVisible: false,
         })
     }
-    showUpdate=(id,name,content)=>{
+    showUpdate = (id, name, content) => {
         this.setState({
-            id:id,
-            name:name,
-            content:content,
-            taskVisible:true,
-            update:true,
+            id: id,
+            name: name,
+            content: content,
+            taskVisible: true,
+            update: true,
         })
     }
-    insertOne=()=>{
-        const url=global.localhostUrl+"task/insertOne";
+    insertOne = () => {
+        const url = global.localhostUrl + "task/insertTask";
         fetch(url, {
             method: "POST",
             mode: "cors",
-            credentials:"include",//跨域携带cookie
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({
-                name:this.state.name,
-                content:this.state.content,
-                meetingId:this.props.meetingId,
+                name: this.state.name,
+                content: this.state.content,
+                meetingId: this.props.meetingId,
             }),
-        }).then(function (res) {//function (res) {} 和 res => {}效果一致
-            return res.json()
-        }).then(json => {
-            // get result
-            const data = json;
-            console.log(data);
-            if(data.status){
-                message.success(data.message)
-                this.props.findByMeeting("",this.props.meetingId)
-                this.setState({
-                    taskVisible:false,
-                })
-            }else{
-                message.error(data.message)
-            }
-        }).catch(function (e) {
-            console.log("fetch fail");
-            alert('系统错误');
-        });
+        }).then(res => res.json())
+            .then(json => {
+                const data = json;
+                if (data.status) {
+                    message.success(data.message)
+                    this.props.findByMeeting("", this.props.meetingId)
+                    this.setState({
+                        taskVisible: false,
+                    })
+                } else {
+                    message.error(data.message)
+                }
+            }).catch(function (e) {
+                console.log("fetch fail");
+                alert('系统错误');
+            });
     }
 
     render() {
         const {
             visible, onClose
         } = this.props;
-        const columns=[
-            {   title:"序号",
-                key:"id",
-                render:(item,data,i)=>{
-                    return(<div>{i+1}</div>)
+        const columns = [
+            {
+                title: "序号",
+                key: "id",
+                render: (item, data, i) => {
+                    return (<div>{i + 1}</div>)
                 }
-            },{
-                title:"会议任务",
-                dataIndex:"name",
-            },{
-                title:"任务要求",
-                dataIndex:"content",
+            }, {
+                title: "会议任务",
+                dataIndex: "name",
+            }, {
+                title: "任务要求",
+                dataIndex: "content",
             }
         ];
         return (
@@ -103,7 +101,7 @@ class TaskDrawerMe extends Component {
                 width={"60%"}
             >
                 <Table
-                    rowKey={record=>record.id}
+                    rowKey={record => record.id}
                     columns={columns}
                     dataSource={this.props.taskList}
                 />

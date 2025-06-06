@@ -9,6 +9,7 @@ import org.IMeeting.repository.GroupRepository;
 import org.IMeeting.repository.UserInfoRepository;
 import org.IMeeting.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.IMeeting.entity.ServerResult;
 
@@ -23,6 +24,7 @@ import java.util.List;
 )
 @RestController
 @RequestMapping("/group")
+@Transactional
 public class GroupController {
     @Autowired
     private DepartmentRepository departmentRepository;

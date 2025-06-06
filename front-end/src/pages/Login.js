@@ -101,7 +101,6 @@ class Login extends Component {
         setInterval(() => {this.setState({ loading: false })}, 2000);
     }
 
-
     //验证验证码
     compareCode=()=>{
         if(this.state.phone_code===this.state.pwd_code){

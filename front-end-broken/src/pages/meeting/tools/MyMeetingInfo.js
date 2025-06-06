@@ -348,18 +348,7 @@ class MyMeetingInfo extends Component {
         })
     }
 
-    [1],
-                })
-            }).catch(function (e) {
-                console.log(e);
-                alert('系统错误');
-            });
-        this.setState({
-            bookVisible: true,
-            meetingId: text,
-        })
-
-    }//showOneReserveDetail显示一个会议的具体信息
+    //showOneReserveDetail显示一个会议的具体信息
     showOneReserveDetail = (ev, text, status) => {
         this.setState({
             changeAble: status
@@ -392,7 +381,18 @@ class MyMeetingInfo extends Component {
                 })
                 this.setState({
                     othersList: data.data[0].outsideJoinPersons,
-                    dataSource: data.data
+                    dataSource: data.data[1],
+                })
+            }).catch(function (e) {
+                console.log(e);
+                alert('系统错误');
+            });
+        this.setState({
+            bookVisible: true,
+            meetingId: text,
+        })
+
+    }
     // 取消会议
     cancelMeeting = () => {
         const url = global.localhostUrl + "meeting/cancelMeeting?meetingId=" + this.state.meetingId;

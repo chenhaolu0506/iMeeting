@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import {Icon, Menu,Button,Layout} from "antd";
+import { Icon, Menu, Button, Layout } from "antd";
 
 class LeftSider extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-
             display_name: 'block', //此状态机为display的取值
-            menu_mode:'inline',//vertical
+            menu_mode: 'inline',//vertical
             width: '200px',
         }
     }
@@ -44,9 +43,9 @@ class LeftSider extends Component {
     }
 
     render() {
-        const tit1=
+        const tit1 =
             <div >
-                <Icon type={'user'}/><span ><span style={{display:this.state.display_name}}>User</span></span>
+                <Icon type={'user'} /><span ><span style={{ display: this.state.display_name }}>User</span></span>
             </div>
         return (
             <Layout >
