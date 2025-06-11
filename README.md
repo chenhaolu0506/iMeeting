@@ -35,3 +35,6 @@ iMeeting/
 - Install required dependencies with npm
 - Configure URL setup in global.js if needed
 - Run with `npm start`
+
+## Sample View
+![iMeeting Screenshot](demo.png)
