@@ -461,7 +461,7 @@ class BookMeeting extends Component {
                                 <Col span={8} >
                                     人数：
                                     <InputNumber value={this.state.contain} min={0} defaultValue={0} onChange={this.containChange} />
-                                    人以上
+                                    &nbsp;人以上
                                 </Col>
                             </Row>
                             <Row>

@@ -192,7 +192,7 @@ class BizDemo extends Component {
             },
             {
                 item: "会议室二",
-                count: 21
+                count: 22
             },
             {
                 item: "会议室三",
@@ -213,7 +213,6 @@ class BizDemo extends Component {
                 value: 15468
             }
         ]
-        let roomPercent = "14%"
         let meetCount = 0
         let meetingList = []
         const url = global.localhostUrl + "meeting/indexData";
@@ -228,7 +227,6 @@ class BizDemo extends Component {
         }).then(res => res.json())
             .then(json => {
                 const data = json;
-                // console.log(data);
                 if (data.status === true) {
                     lineData = [
                         {
@@ -298,6 +296,7 @@ class BizDemo extends Component {
             as: "percent"
         });
 
+        console.log("dv:", dv)
         const mode1 = {//自适应大小1号
             xs: { span: 24, offset: 0 },
             sm: { span: 20, offset: 2 },
@@ -324,6 +323,7 @@ class BizDemo extends Component {
         const text = `
           风湿病是一组侵犯关节、骨骼、肌肉、血管及有关软组织或结缔组织为主的疾病，其中多数为自身免疫性疾病。发病多较隐蔽而缓慢，病程较长，且大多具有遗传倾向。 诊断及治疗均有一定难度；血液中多可检查出不同的自身抗体，可能与不同HLA亚型有关；对非甾类抗炎药(NSAID)，糖皮质激素和免疫抑制剂有较好的短期或长期的缓解性反应。
          `;
+
         return (
             <div style={{ padding: 10 }}>
                 <Row gutter={16}>
@@ -340,15 +340,6 @@ class BizDemo extends Component {
                                     forceFit
                                     padding={'auto'}
                                 >
-                                    {/*<Axis name="year" />*/}
-                                    {/*<Axis*/}
-                                    {/*name="value"*/}
-                                    {/*label={{*/}
-                                    {/*formatter: val => {*/}
-                                    {/*return (val / 10000).toFixed(1) + "k";*/}
-                                    {/*}*/}
-                                    {/*}}*/}
-                                    {/*/>*/}
                                     <Tooltip
                                         crosshairs={{
                                             type: "line"
@@ -380,16 +371,11 @@ class BizDemo extends Component {
                                     forceFit
                                     padding={'auto'}
                                 >
-                                    {/*Axis x,y轴*/}
-                                    {/*<Axis name="year" />*/}
-                                    {/*<Axis name="sales" />*/}
-                                    {/*Tooltip 数据详细*/}
                                     <Tooltip
                                         itemTpl="<li><span style=&quot;background-color:{color};&quot; class=&quot;g2-tooltip-marker&quot;></span>{name}: {value}</li>"
                                     />
                                     {/**/}
                                     <Geom
-                                        // type="interval"
                                         position="year*sales"//有效数据
                                         tooltip={[
                                             "year*sales",
@@ -532,11 +518,6 @@ class BizDemo extends Component {
                                 >
                                     <Coord type="theta" radius={1} />
                                     <Axis name="percent" />
-                                    {/*<Legend*/}
-                                    {/*position="right"*/}
-                                    {/*offsetY={-window.innerHeight / 2 + 120}*/}
-                                    {/*offsetX={-100}*/}
-                                    {/*/>*/}
                                     <Tooltip
                                         showTitle={false}
                                         itemTpl="<li><span style=&quot;background-color:{color};&quot; class=&quot;g2-tooltip-marker&quot;></span>{name}: {value}</li>"
@@ -560,16 +541,6 @@ class BizDemo extends Component {
                                             stroke: "#fff",//间隔颜色
                                         }}
                                     >
-                                        {/*<Label*/}
-                                        {/*content="percent"*/}
-                                        {/*offset={-40}*/}
-                                        {/*textStyle={{*/}
-                                        {/*rotate: 0,*/}
-                                        {/*textAlign: "center",*/}
-                                        {/*shadowBlur: 2,*/}
-                                        {/*shadowColor: "rgba(0, 0, 0, .45)"*/}
-                                        {/*}}*/}
-                                        {/*/>*/}
                                         <Label
                                             content="item"
                                             offset={-40}
@@ -585,29 +556,7 @@ class BizDemo extends Component {
                             }
                         />
                     </Col>
-
-                    {/*<Col {...mode1} >*/}
-                    {/*<CardJGN*/}
-                    {/*text={"图表"}*/}
-                    {/*/>*/}
-                    {/*</Col>*/}
-                    {/*<Col {...mode1} >*/}
-                    {/*<CardJGN*/}
-                    {/*text={"图表"}*/}
-                    {/*/>*/}
-                    {/*</Col>*/}
-                    {/*<Col {...mode1} >*/}
-                    {/*<CardJGN*/}
-                    {/*text={"图表"}*/}
-                    {/*/>*/}
-                    {/*</Col>*/}
-                    {/*<Col {...mode1} >*/}
-                    {/*<CardJGN*/}
-                    {/*text={"图表"}*/}
-                    {/*/>*/}
-                    {/*</Col>*/}
                 </Row>
-
             </div>
         );
     }

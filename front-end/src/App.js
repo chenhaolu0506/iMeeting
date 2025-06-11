@@ -186,7 +186,7 @@ class App extends Component {
     }
     /////////////////////////////////////////////////登录/////////////////////////////////////////////////
     //注册
-    logUp = () => {
+    signUp = () => {
         message.warn("对不起，注册系统还未开放，请联系管理员申请账号，谢谢");
     }
     //登录与加载
@@ -725,7 +725,7 @@ class App extends Component {
                                             <Input prefix={<Icon type='lock' />} type='password' placeholder='密码' onKeyUp={this.passwordChange}></Input>
                                             <Button className={'headBtn1'} type='default' onClick={this.showForget}>忘记密码</Button>
                                             <Button className={'headBtn2'} type='primary' loading={this.state.loading} onClick={this.enterLoading} >登录</Button>
-                                            <Button className={'headBtn3'} type='default' onClick={this.logUp}>还没有账号？点击注册</Button>
+                                            <Button className={'headBtn3'} type='default' onClick={this.signUp}>还没有账号？点击注册</Button>
                                         </Card>
                                         {/*找回密码*/}
                                         <Card title="找回密码" className={"forgetCard"} style={{ display: this.state.display_Forget }}>
@@ -971,25 +971,8 @@ class Head extends Component {
 
                 {/*退出登录*/}
                 <Popover title="" content={loginOut} >
-                    <Button className={'headBtn1'} type="primary" >{this.props.name}</Button>
+                    <Button className={'headBtn1'} type="primary" >退出登录</Button>
                 </Popover>
-                {/*。。。按钮*/}
-                {/*<Button className={'headBtn1'} type='primary' onClick={this.loginRole}><Icon type="ellipsis" /></Button>*/}
-                {/*搜索框*/}
-                {/*<Input className={'searchText'} suffix={<Icon type="search"  />} />*/}
-                {/*抽屉式登录页面*/}
-                {/*<Drawer title="用户登录" placement="right" onClose={this.onClose} visible={this.state.visible}>*/}
-                {/*<p>用户</p>*/}
-                {/*<Input type='' placeholder='用户名' onKeyUp={this.usernameChange}></Input>*/}
-                {/*<br/>*/}
-                {/*<br/>*/}
-                {/*<p>密码</p>*/}
-                {/*<Input type='password' placeholder='密码' onKeyUp={this.passwordChange}></Input>*/}
-                {/*<Button className={'headBtn1'} type='default' onClick={this.onClose}>忘记密码</Button>*/}
-                {/*<Button className={'headBtn2'} type='primary' loading={this.state.loading} onClick={this.enterLoading} >登录</Button>*/}
-                {/*<Button className={'headBtn3'} type='default' onClick={this.sendAjax}>还没有账号？点击注册</Button>*/}
-                {/*</Drawer>*/}
-                {/*退出登录*/}
                 <Modal
                     visible={this.state.visible}
                     onOk={this.handleOk}
