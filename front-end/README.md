@@ -1,5 +1,16 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# Frontend (React)
+
+This is the frontend application built with **React**.
+
+## Overview
+
+- Implements the UI for the iMeeting system.
+- Provides features like meeting booking, calendar views, and user interactions.
+- Uses **Ant Design** framework for styling and layout.
+- Connects to the backend APIs for data.
+
 ## Available Scripts
 
 In the project directory, you can run:
